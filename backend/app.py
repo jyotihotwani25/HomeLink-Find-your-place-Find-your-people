@@ -29,7 +29,7 @@ def create_app():
     JWTManager(app)
     
     # Register chatbot route
-    from routes.chatbot import chatbot_bp
+    from backend.routes.chatbot import chatbot_bp
     app.register_blueprint(chatbot_bp)
     
     # ── SERVE FRONTEND ──
@@ -92,4 +92,7 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=3000, debug=True)
+    app.run(
+        host='0.0.0.0',
+        port=int(os.environ.get("PORT", 3000))
+    )
