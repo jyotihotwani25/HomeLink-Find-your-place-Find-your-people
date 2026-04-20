@@ -1,0 +1,29 @@
+<!-- ============================================
+  HOMELINK — PROPERTY CARD COMPONENT
+  Reusable card. Drop inside any .lgrid container.
+  Change values marked with CAPS.
+  ============================================ -->
+
+<div class="lc" data-r>
+  <div class="lc-img">
+    <img src="IMAGE_URL" alt="PROPERTY NAME"/>
+    <!-- Badge: swap class → lb-r (rent) | lb-b (buy) | lb-p (pg) -->
+    <span class="lb lb-r">Rent</span>
+    <button class="lfav" onclick="fv(this)">❤️</button>
+  </div>
+  <div class="lc-body">
+    <div class="lc-price">₹PRICE <small>/PERIOD</small></div>
+    <div class="lc-name">PROPERTY NAME</div>
+    <div class="lc-loc">
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+      </svg>
+      LOCATION, CITY
+    </div>
+    <div class="lc-specs">
+      <span class="lsp">🛏 BEDS</span>
+      <span class="lsp">📐 AREA sqft</span>
+      <span class="lsp">✅ TAG</span>
+    </div>
+  </div>
+</div>

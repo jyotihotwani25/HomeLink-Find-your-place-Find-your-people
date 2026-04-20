@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Finalise Deal — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/deal.css"/>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="deal-topbar">
+  <a class="deal-back" href="#" onclick="goBack(event)" aria-label="Go back">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </a>
+  <a href="../pages/home.html" class="deal-topbar-logo">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.25)"/>
+        <circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/>
+      </svg>
+    </span>
+    HomeLink
+  </a>
+  <span class="deal-topbar-step">Finalise Deal</span>
+</header>
+
+<!-- ══ PROGRESS ══ -->
+<div class="deal-progress" id="deal-progress">
+  <div class="dp-step">
+    <div class="dp-dot active" id="dp1">1</div>
+    <span class="dp-label active" id="dpl1">Deal Terms</span>
+  </div>
+  <div class="dp-line" id="dpline1"></div>
+  <div class="dp-step">
+    <div class="dp-dot" id="dp2">2</div>
+    <span class="dp-label" id="dpl2">Services</span>
+  </div>
+  <div class="dp-line" id="dpline2"></div>
+  <div class="dp-step">
+    <div class="dp-dot" id="dp3">3</div>
+    <span class="dp-label" id="dpl3">Confirm</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SETUP VIEW (steps 1–3)
+══════════════════════════════════ -->
+<div class="deal-setup" id="deal-setup">
+<div class="deal-page">
+<div class="deal-columns">
+
+<!-- ════ LEFT COLUMN ════ -->
+<div class="deal-col-left">
+
+  <!-- ① PROPERTY PREVIEW — full image card -->
+  <div class="deal-prop-card">
+    <div class="deal-prop-img-wrap">
+      <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop" alt="Property" id="prop-img"/>
+      <span class="deal-prop-badge rent" id="prop-badge">Rent</span>
+      <div class="deal-prop-price-overlay">
+        <div class="price-main" id="prop-price-overlay">₹28,000</div>
+        <div class="price-sub" id="prop-price-sub">/month</div>
+      </div>
+    </div>
+    <div class="deal-prop-body">
+      <div class="deal-prop-title" id="prop-title">2BHK Furnished Apartment</div>
+      <div class="deal-prop-loc">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+        <span id="prop-loc">Vastrapur, Ahmedabad</span>
+      </div>
+      <div class="deal-prop-chips">
+        <span class="deal-prop-chip" id="prop-chip1">2 BHK</span>
+        <span class="deal-prop-chip" id="prop-chip2">1250 sqft</span>
+        <span class="deal-prop-chip" id="prop-chip3">Furnished</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② PARTIES INVOLVED -->
+  <div class="deal-section">
+    <div class="deal-section-head">
+      <div class="deal-section-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      </div>
+      <div>
+        <div class="deal-section-title">Parties Involved</div>
+        <div class="deal-section-sub">Tenant and owner entering this deal</div>
+      </div>
+    </div>
+    <div class="deal-section-body">
+      <div class="deal-people">
+        <div class="deal-person">
+          <img class="deal-person-av" src="https://i.pravatar.cc/80?img=12" alt="" id="user-av"/>
+          <div>
+            <div class="deal-person-name" id="user-name">Aarav Shah</div>
+            <div class="deal-person-role">Tenant</div>
+          </div>
+        </div>
+        <div class="deal-people-arrow">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <div class="deal-person">
+          <img class="deal-person-av" src="https://i.pravatar.cc/80?img=11" alt="" id="owner-av"/>
+          <div>
+            <div class="deal-person-name" id="owner-name">Rohan Mehta</div>
+            <div class="deal-person-role" id="owner-role">Owner</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ PLATFORM SERVICES (left column bottom) -->
+  <div class="deal-section">
+    <div class="deal-section-head">
+      <div class="deal-section-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div>
+        <div class="deal-section-title">HomeLink Services</div>
+        <div class="deal-section-sub">Optional — protect your deal</div>
+      </div>
+    </div>
+    <div class="deal-section-body">
+
+      <div class="service-card" id="svc-agreement" onclick="toggleService('agreement')">
+        <div class="service-card-top">
+          <div class="service-icon green">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M17 3a2.828 2.828 0 114 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          </div>
+          <div class="service-info">
+            <div class="service-name">Digital Agreement</div>
+            <div class="service-desc">Legally valid rent agreement drafted, e-stamped and signed digitally.</div>
+            <div class="service-features">
+              <span class="service-feat">E-Stamp</span>
+              <span class="service-feat">e-Sign</span>
+              <span class="service-feat">PDF Copy</span>
+            </div>
+          </div>
+          <div class="service-right">
+            <div class="service-price">₹499<span class="service-price-sub"> one-time</span></div>
+            <div class="service-checkbox"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+        </div>
+        <div class="service-pay-bar" id="pay-agreement">
+          <span class="service-pay-info">Digital Agreement · ₹499</span>
+          <button class="service-pay-btn" id="paybtn-agreement" onclick="payService(event,'agreement',499,'Digital Agreement')">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Pay ₹499
+          </button>
+        </div>
+      </div>
+
+      <div class="service-card" id="svc-tracking" onclick="toggleService('tracking')">
+        <div class="service-card-top">
+          <div class="service-icon green">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <div class="service-info">
+            <div class="service-name">Transaction Tracking</div>
+            <div class="service-desc">Track rent, deposits and receipts. Automated reminders included.</div>
+            <div class="service-features">
+              <span class="service-feat">Reminders</span>
+              <span class="service-feat">Receipts</span>
+              <span class="service-feat">History</span>
+            </div>
+          </div>
+          <div class="service-right">
+            <div class="service-price">₹99<span class="service-price-sub">/month</span></div>
+            <div class="service-checkbox"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+        </div>
+        <div class="service-pay-bar" id="pay-tracking">
+          <span class="service-pay-info">Transaction Tracking · ₹99/month</span>
+          <button class="service-pay-btn" id="paybtn-tracking" onclick="payService(event,'tracking',99,'Transaction Tracking')">
+            <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Pay ₹99
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /deal-col-left -->
+
+<!-- ════ RIGHT COLUMN ════ -->
+<div class="deal-col-right">
+
+  <!-- ③ DEAL TERMS -->
+  <div class="deal-section">
+    <div class="deal-section-head">
+      <div class="deal-section-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div>
+        <div class="deal-section-title">Deal Terms</div>
+        <div class="deal-section-sub">Agreed terms — edit if needed</div>
+      </div>
+    </div>
+    <div class="deal-section-body">
+      <div class="deal-terms">
+        <div class="deal-term">
+          <span class="deal-term-lbl">Monthly Rent</span>
+          <div class="deal-term-edit">
+            <span class="deal-term-unit">₹</span>
+            <input class="deal-term-input" id="term-rent" type="number" value="27000" oninput="updateTotal()"/>
+          </div>
+        </div>
+        <div class="deal-term">
+          <span class="deal-term-lbl">Security Deposit</span>
+          <span class="deal-term-val" id="term-deposit">₹56,000</span>
+        </div>
+        <div class="deal-term">
+          <span class="deal-term-lbl">Lease Duration</span>
+          <div class="deal-term-edit">
+            <input class="deal-term-input" id="term-lease" type="number" value="11" style="width:60px;" oninput="updateTotal()"/>
+            <span style="font-size:0.78rem;color:var(--ink3);">months</span>
+          </div>
+        </div>
+        <div class="deal-term">
+          <span class="deal-term-lbl">Move-in Date</span>
+          <span class="deal-term-val green" id="term-movein">Immediate</span>
+        </div>
+        <div class="deal-term">
+          <span class="deal-term-lbl">Furnishing</span>
+          <span class="deal-term-val" id="term-furnished">Fully Furnished</span>
+        </div>
+        <div class="deal-term">
+          <span class="deal-term-lbl">Property Type</span>
+          <span class="deal-term-val" id="term-type">Apartment · 4th of 8</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ RELOCATION & MOVING PACKAGES -->
+  <div class="deal-section">
+    <div class="deal-section-head">
+      <div class="deal-section-icon" style="background:var(--amber-pale);">
+        <svg viewBox="0 0 24 24" style="stroke:var(--amber)"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+      </div>
+      <div>
+        <div class="deal-section-title">Relocation &amp; Moving</div>
+        <div class="deal-section-sub">Optional — hassle-free move-in</div>
+      </div>
+    </div>
+    <div class="deal-section-body">
+      <div class="pkg-grid">
+
+        <div class="pkg-card" id="pkg-basic" onclick="selectPkg('basic')">
+          <div class="pkg-radio"></div>
+          <div class="pkg-icon">📦</div>
+          <div class="pkg-name">Essential</div>
+          <div class="pkg-items">Packing + Loading<br/>Up to 1 BHK</div>
+          <div class="pkg-price">₹3,500</div>
+        </div>
+
+        <div class="pkg-card" id="pkg-standard" onclick="selectPkg('standard')">
+          <div class="pkg-radio"></div>
+          <div class="pkg-icon">🚚</div>
+          <div class="pkg-name">Standard</div>
+          <div class="pkg-items">Packing + Transport<br/>+ Unpacking<br/>Up to 2 BHK</div>
+          <div class="pkg-price">₹7,500</div>
+        </div>
+
+        <div class="pkg-card" id="pkg-premium" onclick="selectPkg('premium')">
+          <div class="pkg-radio"></div>
+          <div class="pkg-icon">✨</div>
+          <div class="pkg-name">Premium</div>
+          <div class="pkg-items">Full service + Cleaning<br/>+ Assembly<br/>Any size</div>
+          <div class="pkg-price">₹14,000</div>
+        </div>
+
+        <div class="pkg-card" id="pkg-cleaning" onclick="selectPkg('cleaning')">
+          <div class="pkg-radio"></div>
+          <div class="pkg-icon">🧹</div>
+          <div class="pkg-name">Deep Clean</div>
+          <div class="pkg-items">Full home cleaning<br/>before move-in<br/>+ sanitisation</div>
+          <div class="pkg-price">₹2,500</div>
+        </div>
+
+      </div>
+
+      <a class="pkg-explore" href="explore.html" target="_blank">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+        Explore more service packages
+      </a>
+
+      <!-- Package pay bar -->
+      <div class="pkg-pay-bar" id="pkg-pay-bar">
+        <span class="pkg-pay-info" id="pkg-pay-info">Standard Package · ₹7,500</span>
+        <button class="pkg-pay-btn" id="pkg-pay-btn" onclick="payPkg(event)">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Pay Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /deal-col-right -->
+</div><!-- /deal-columns -->
+</div><!-- /deal-page -->
+</div><!-- /deal-setup -->
+
+<!-- ══ STICKY FINALIZE BAR ══ -->
+<div class="deal-finalize-bar" id="deal-finalize-bar">
+  <div class="deal-finalize-inner">
+    <div class="deal-finalize-total">
+      <div class="deal-finalize-label">Monthly Commitment</div>
+      <div class="deal-finalize-amount" id="finalize-amount">₹27,000</div>
+      <div class="deal-finalize-sub" id="finalize-sub">+ ₹56,000 deposit · 11 months</div>
+    </div>
+    <button class="deal-finalize-btn" onclick="finalizeDeal()">
+      Finalise Deal
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     SUCCESS / SUMMARY VIEW
+══════════════════════════════════ -->
+<div class="deal-success" id="deal-success">
+
+  <!-- Hero -->
+  <div class="success-hero">
+    <div class="success-ring">
+      <svg class="ring" viewBox="0 0 80 80" width="80" height="80">
+        <circle cx="40" cy="40" r="35"/>
+      </svg>
+      <svg class="check" viewBox="0 0 80 80" width="80" height="80">
+        <polyline points="22,42 35,55 58,28" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2 class="success-title">Deal Locked In! 🎉</h2>
+    <p class="success-sub">Your deal is confirmed. Both parties have been notified. Here's your deal summary.</p>
+  </div>
+
+  <div class="success-body">
+
+    <!-- Deal ref -->
+    <div style="text-align:center;opacity:0;" class="summary-card animating" style="background:none;border:none;">
+      <span class="deal-ref" id="success-ref">Deal #HL-2026-00001</span>
+    </div>
+
+    <!-- Property -->
+    <div class="summary-card" id="sum-property">
+      <div class="summary-card-head">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        <span class="summary-card-title">Property</span>
+      </div>
+      <div class="summary-card-body">
+        <div class="summary-row"><span class="summary-row-lbl">Property</span><span class="summary-row-val" id="sum-prop-title">2BHK Furnished Apartment</span></div>
+        <div class="summary-row"><span class="summary-row-lbl">Location</span><span class="summary-row-val" id="sum-prop-loc">Vastrapur, Ahmedabad</span></div>
+        <div class="summary-row"><span class="summary-row-lbl">Owner</span><span class="summary-row-val" id="sum-owner">Rohan Mehta</span></div>
+      </div>
+    </div>
+
+    <!-- Terms -->
+    <div class="summary-card" id="sum-terms">
+      <div class="summary-card-head">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span class="summary-card-title">Deal Terms</span>
+      </div>
+      <div class="summary-card-body">
+        <div class="summary-row"><span class="summary-row-lbl">Monthly Rent</span><span class="summary-row-val green" id="sum-rent">₹27,000</span></div>
+        <div class="summary-row"><span class="summary-row-lbl">Security Deposit</span><span class="summary-row-val" id="sum-deposit">₹56,000</span></div>
+        <div class="summary-row"><span class="summary-row-lbl">Lease Duration</span><span class="summary-row-val" id="sum-lease">11 months</span></div>
+        <div class="summary-row"><span class="summary-row-lbl">Move-in</span><span class="summary-row-val green" id="sum-movein">Immediate</span></div>
+      </div>
+    </div>
+
+    <!-- Services -->
+    <div class="summary-card" id="sum-services" style="display:none;">
+      <div class="summary-card-head">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span class="summary-card-title">Services Added</span>
+      </div>
+      <div class="summary-card-body">
+        <div class="summary-chips" id="sum-service-chips"></div>
+        <div class="summary-row total" style="margin-top:12px;">
+          <span class="summary-row-lbl">Services Total</span>
+          <span class="summary-row-val green" id="sum-services-total">₹0</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ SUCCESS BOTTOM BAR ══ -->
+<div class="success-bar" id="success-bar">
+  <div class="success-bar-inner">
+    <button class="success-home-btn" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Go to Home
+    </button>
+  </div>
+</div>
+
+<script src="../js/data/properties.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   DEAL PAGE — state
+═══════════════════════════════════════════ */
+var P              = null;
+var paidServices   = {};   /* { agreement: {name, price}, tracking: {...} } */
+var selectedPkg    = null; /* 'basic' | 'standard' | 'premium' */
+var paidPkg        = false;
+
+var PKG_DATA = {
+  basic:    { name: 'Essential Moving',  price: 3500  },
+  standard: { name: 'Standard Moving',   price: 7500  },
+  premium:  { name: 'Premium Moving',    price: 14000 },
+  cleaning: { name: 'Deep Clean',         price: 2500  },
+};
+
+/* ── Boot ── */
+(function init() {
+  var id = parseInt(new URLSearchParams(location.search).get('id'));
+  // Get offer amount from URL if passed from chat
+  var offerAmt = parseInt(new URLSearchParams(location.search).get('offer'));
+
+  if (id && typeof getPropertyById === 'function') {
+    P = getPropertyById(id);
+  }
+  if (P) populatePage(P, offerAmt);
+  updateTotal();
+})();
+
+function goBack(e) {
+  e.preventDefault();
+  if (document.referrer && document.referrer.includes(location.host)) history.back();
+  else {
+    var id = new URLSearchParams(location.search).get('id');
+    location.href = id ? 'property.html?id=' + id : 'home.html';
+  }
+}
+
+function populatePage(P, offerAmt) {
+  // Property preview
+  document.getElementById('prop-img').src     = P.thumbnail;
+  document.getElementById('prop-title').textContent = P.title;
+  document.getElementById('prop-loc').textContent   = P.locality + ', ' + P.city;
+  if (document.getElementById('prop-price-overlay')) {
+    document.getElementById('prop-price-overlay').textContent = P.price || ('₹' + (offerAmt||P.priceNum||0).toLocaleString('en-IN'));
+    document.getElementById('prop-price-sub').textContent = P.period || '';
+  }
+  var b = document.getElementById('prop-badge');
+  b.textContent = P.category === 'pg' ? 'PG' : P.category === 'buy' ? 'Buy' : 'Rent';
+  b.className   = 'deal-prop-badge ' + P.category;
+
+  // Chips
+  if (P.bhk)  document.getElementById('prop-chip1').textContent = P.bhk + ' BHK';
+  if (P.area) document.getElementById('prop-chip2').textContent = P.area.toLocaleString('en-IN') + ' sqft';
+  if (P.furnished) document.getElementById('prop-chip3').textContent = P.furnished.replace(' Furnished','') + ' Furn.';
+
+  // Owner
+  if (P.owner) {
+    document.getElementById('owner-av').src          = P.owner.avatar;
+    document.getElementById('owner-name').textContent = P.owner.name;
+    document.getElementById('owner-role').textContent = P.owner.type;
+  }
+
+  // Deal terms
+  var rent = offerAmt || P.priceNum || 27000;
+  document.getElementById('term-rent').value           = rent;
+  document.getElementById('term-deposit').textContent   = P.deposit || ('₹' + ((P.priceNum || 0) * 2).toLocaleString('en-IN'));
+  document.getElementById('term-movein').textContent    = P.availability || 'Immediate';
+  document.getElementById('term-furnished').textContent = P.furnished || '—';
+  document.getElementById('term-type').textContent      = (P.propertyType || 'Apartment') + (P.floor ? ' · ' + P.floor : '');
+
+  document.title = 'Deal — ' + P.title + ' · HomeLink';
+  updateTotal();
+}
+
+/* ── Total in footer bar ── */
+function updateTotal() {
+  var rent  = parseInt(document.getElementById('term-rent').value) || 0;
+  var lease = parseInt(document.getElementById('term-lease').value) || 11;
+  var dep   = P ? (P.depositNum || rent * 2) : rent * 2;
+
+  document.getElementById('finalize-amount').textContent = '₹' + rent.toLocaleString('en-IN');
+  document.getElementById('finalize-sub').textContent    =
+    '+ ₹' + dep.toLocaleString('en-IN') + ' deposit · ' + lease + ' months';
+}
+
+/* ── Toggle platform service ── */
+function toggleService(key) {
+  var card = document.getElementById('svc-' + key);
+  var isOn = card.classList.toggle('selected');
+  if (!isOn) {
+    // Deselected — remove from paid if it was
+    delete paidServices[key];
+    var btn = document.getElementById('paybtn-' + key);
+    btn.classList.remove('paid');
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Pay ₹' +
+      (key === 'agreement' ? '499' : '99');
+  }
+}
+
+/* ── Pay for platform service ── */
+function payService(e, key, price, name) {
+  e.stopPropagation();
+  paidServices[key] = { name: name, price: price };
+  var btn = document.getElementById('paybtn-' + key);
+  btn.classList.add('paid');
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Paid ✓';
+  showToast(name + ' — payment confirmed');
+}
+
+/* ── Select moving package ── */
+function selectPkg(key) {
+  // Deselect all
+  ['basic','standard','premium','cleaning'].forEach(function(k) {
+    document.getElementById('pkg-' + k).classList.remove('selected');
+  });
+  // Select this one
+  document.getElementById('pkg-' + key).classList.add('selected');
+  selectedPkg = key;
+  paidPkg = false;
+
+  // Show pay bar
+  var bar  = document.getElementById('pkg-pay-bar');
+  var info = document.getElementById('pkg-pay-info');
+  var btn  = document.getElementById('pkg-pay-btn');
+  info.textContent = PKG_DATA[key].name + ' · ₹' + PKG_DATA[key].price.toLocaleString('en-IN');
+  btn.classList.remove('paid');
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Pay ₹' + PKG_DATA[key].price.toLocaleString('en-IN');
+  bar.classList.add('show');
+}
+
+/* ── Pay for moving package ── */
+function payPkg(e) {
+  e.stopPropagation();
+  if (!selectedPkg) return;
+  paidPkg = true;
+  var btn = document.getElementById('pkg-pay-btn');
+  btn.classList.add('paid');
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Paid ✓';
+  showToast(PKG_DATA[selectedPkg].name + ' — payment confirmed');
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 18px;border-radius:100px;font-size:0.78rem;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.2s;white-space:nowrap;pointer-events:none;';
+  document.body.appendChild(t);
+  requestAnimationFrame(function() { t.style.opacity = '1'; });
+  setTimeout(function() { t.style.opacity = '0'; setTimeout(function() { t.remove(); }, 300); }, 2500);
+}
+
+/* ── Finalise deal ── */
+function finalizeDeal() {
+  // Build summary data
+  var rent  = parseInt(document.getElementById('term-rent').value) || 0;
+  var lease = parseInt(document.getElementById('term-lease').value) || 11;
+  var dep   = P ? (P.depositNum || rent * 2) : rent * 2;
+
+  // Populate summary
+  document.getElementById('sum-prop-title').textContent = P ? P.title : 'Property';
+  document.getElementById('sum-prop-loc').textContent   = P ? P.locality + ', ' + P.city : '—';
+  document.getElementById('sum-owner').textContent      = P && P.owner ? P.owner.name : '—';
+  document.getElementById('sum-rent').textContent       = '₹' + rent.toLocaleString('en-IN');
+  document.getElementById('sum-deposit').textContent    = '₹' + dep.toLocaleString('en-IN');
+  document.getElementById('sum-lease').textContent      = lease + ' months';
+  document.getElementById('sum-movein').textContent     = P ? (P.availability || 'Immediate') : 'Immediate';
+
+  // Deal ref
+  var ref = 'HL-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random()*99999)).padStart(5,'0');
+  document.getElementById('success-ref').textContent = 'Deal #' + ref;
+
+  // Services summary
+  var allServices = Object.values(paidServices);
+  if (selectedPkg && paidPkg) allServices.push({ name: PKG_DATA[selectedPkg].name, price: PKG_DATA[selectedPkg].price });
+
+  if (allServices.length > 0) {
+    var total = allServices.reduce(function(s, x) { return s + x.price; }, 0);
+    document.getElementById('sum-services').style.display = 'block';
+    document.getElementById('sum-services-total').textContent = '₹' + total.toLocaleString('en-IN');
+    var chips = allServices.map(function(s) {
+      return '<div class="summary-chip"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>' + s.name + '</div>';
+    }).join('');
+    document.getElementById('sum-service-chips').innerHTML = chips;
+  }
+
+  // Hide setup, show success
+  document.getElementById('deal-setup').classList.add('hide');
+  document.getElementById('deal-finalize-bar').style.display = 'none';
+  document.getElementById('deal-progress').style.display = 'none';
+
+  var success = document.getElementById('deal-success');
+  success.classList.add('show');
+
+  // Animate
+  requestAnimationFrame(function() {
+    success.querySelector('svg.ring circle').classList.add('animating');
+    success.querySelector('svg.check').classList.add('animating');
+    success.querySelector('.success-title').classList.add('animating');
+    success.querySelector('.success-sub').classList.add('animating');
+    // Stagger summary cards
+    success.querySelectorAll('.summary-card').forEach(function(el, i) {
+      el.style.animationDelay = (1.3 + i * 0.12) + 's';
+      el.classList.add('animating');
+    });
+  });
+
+  // Show bottom bar
+  setTimeout(function() {
+    document.getElementById('success-bar').classList.add('show');
+  }, 2200);
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

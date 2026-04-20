@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Post a Property — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<style>
+/* ── POST PROPERTY PAGE ── */
+.pg { padding: 0; }
+
+/* Progress stepper */
+.pp-progress {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 28px;
+  display: flex; align-items: center; gap: 0;
+}
+.pp-step { display: flex; align-items: center; gap: 8px; flex: 1; }
+.pp-step:last-child { flex: 0; }
+.pp-dot {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700; transition: all 0.25s;
+  border: 2px solid var(--border); background: var(--white); color: var(--ink3);
+}
+.pp-dot.active { background: var(--forest); border-color: var(--forest); color: #fff; }
+.pp-dot.done   { background: var(--forest-pale); border-color: var(--forest); color: var(--forest); font-size: 0; }
+.pp-dot.done::before { content: '✓'; font-size: 0.68rem; font-weight: 800; }
+.pp-step-lbl  { font-size: 0.68rem; font-weight: 600; color: var(--ink3); white-space: nowrap; }
+.pp-step-lbl.active { color: var(--forest); font-weight: 700; }
+.pp-step-line { flex: 1; height: 1px; background: var(--border); margin: 0 6px; }
+.pp-step-line.done { background: var(--forest-mid); }
+
+/* Outer wrap */
+.pp-wrap {
+  max-width: 680px; margin: 0 auto;
+  padding: 32px 28px 120px;
+}
+
+/* Step heading */
+.pp-heading { margin-bottom: 24px; }
+.pp-heading-tag {
+  font-size: 0.61rem; font-weight: 700; letter-spacing: 0.11em;
+  text-transform: uppercase; color: var(--forest);
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px;
+}
+.pp-heading-tag::before { content: ''; width: 14px; height: 2px; background: var(--forest); border-radius: 2px; }
+.pp-heading h2 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.45rem; font-weight: 700; color: var(--ink); letter-spacing: -0.03em; margin-bottom: 4px;
+}
+.pp-heading p { font-size: 0.82rem; color: var(--ink3); line-height: 1.6; }
+
+/* Card */
+.pp-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden; margin-bottom: 16px;
+}
+.pp-card-head {
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  font-size: 0.62rem; font-weight: 800; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: 0.09em;
+}
+.pp-card-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Type selector */
+.pp-type-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.pp-type-btn {
+  border: 1.5px solid var(--border); border-radius: 14px;
+  padding: 14px 10px; text-align: center; cursor: pointer;
+  transition: all 0.18s; background: var(--white);
+  font-family: inherit;
+}
+.pp-type-btn:hover { border-color: var(--forest-mid); background: var(--forest-pale); }
+.pp-type-btn.sel  { border-color: var(--forest); background: var(--forest-pale); box-shadow: 0 0 0 3px rgba(28,107,69,0.1); }
+.pp-type-icon { font-size: 1.4rem; margin-bottom: 5px; }
+.pp-type-name { font-size: 0.78rem; font-weight: 700; color: var(--ink); }
+.pp-type-sub  { font-size: 0.62rem; color: var(--ink3); margin-top: 2px; }
+.pp-type-btn.sel .pp-type-name { color: var(--forest); }
+
+/* Field */
+.pp-field { display: flex; flex-direction: column; gap: 5px; }
+.pp-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pp-lbl { font-size: 0.7rem; font-weight: 700; color: var(--ink2); }
+.pp-lbl span { color: var(--coral); }
+.pp-input {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 11px; padding: 11px 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem; color: var(--ink); outline: none; width: 100%;
+  transition: border-color 0.2s, background 0.2s;
+}
+.pp-input:focus { border-color: var(--forest); background: var(--white); }
+.pp-input::placeholder { color: var(--ink3); }
+textarea.pp-input { resize: vertical; min-height: 90px; line-height: 1.65; }
+select.pp-input { cursor: pointer; }
+
+/* Amenity chips */
+.pp-amenities { display: flex; flex-wrap: wrap; gap: 7px; }
+.pp-amenity {
+  padding: 6px 14px; border: 1.5px solid var(--border);
+  border-radius: 100px; font-size: 0.74rem; font-weight: 600;
+  color: var(--ink3); cursor: pointer; transition: all 0.16s;
+  background: var(--white); font-family: inherit;
+  display: flex; align-items: center; gap: 5px;
+}
+.pp-amenity:hover { border-color: var(--forest-mid); color: var(--forest); background: var(--forest-pale); }
+.pp-amenity.sel   { border-color: var(--forest); color: var(--forest); background: var(--forest-pale); }
+.pp-amenity.sel::before { content: '✓ '; font-size: 0.65rem; }
+
+/* Image upload zone */
+.pp-upload-zone {
+  border: 2px dashed var(--border); border-radius: 16px;
+  padding: 32px 20px; text-align: center; cursor: pointer;
+  transition: all 0.18s; position: relative;
+}
+.pp-upload-zone:hover { border-color: var(--forest-mid); background: var(--forest-pale); }
+.pp-upload-zone svg { width: 36px; height: 36px; stroke: var(--bg3); fill: none; stroke-width: 1.5; margin: 0 auto 10px; display: block; }
+.pp-upload-title { font-size: 0.85rem; font-weight: 700; color: var(--ink2); margin-bottom: 3px; }
+.pp-upload-sub   { font-size: 0.72rem; color: var(--ink3); }
+.pp-upload-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; }
+
+/* Preview thumbnails */
+.pp-thumbs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.pp-thumb  {
+  width: 72px; height: 72px; border-radius: 10px;
+  object-fit: cover; border: 1.5px solid var(--border);
+  position: relative;
+}
+
+/* Step panels */
+.pp-panel { display: none; }
+.pp-panel.active { display: block; }
+
+/* Review summary */
+.review-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 9px 0; border-bottom: 1px solid var(--border);
+  font-size: 0.82rem;
+}
+.review-row:last-child { border-bottom: none; }
+.review-lbl { color: var(--ink3); font-weight: 500; }
+.review-val { font-weight: 700; color: var(--ink); text-align: right; max-width: 60%; }
+.review-val.green { color: var(--forest); }
+
+/* Sticky bottom bar */
+.pp-bottom {
+  background: rgba(253,250,245,0.98);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 12px 28px; padding-bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: 12px;
+}
+.pp-bottom-inner { max-width: 680px; margin: 0 auto; display: flex; gap: 12px; flex: 1; align-items: center; }
+.pp-back-btn {
+  flex: 0.35;
+  justify-content: center;
+  padding: 13px 22px;
+  background: var(--bg2); color: var(--ink2);
+  border: 1.5px solid var(--border); border-radius: 12px; cursor: pointer;
+  font-family: 'Clash Display', sans-serif; font-size: 0.86rem; font-weight: 700;
+
+  display: flex; align-items: center; gap: 6px; transition: background 0.15s; white-space: nowrap;
+}
+.pp-back-btn:hover { background: var(--bg3); }
+.pp-back-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.pp-next-btn {
+  flex: 0.65; padding: 14px;
+  background: var(--forest); color: #fff;
+  border: none; border-radius: 12px; cursor: pointer;
+  font-family: 'Clash Display', sans-serif; font-size: 0.92rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 4px 18px rgba(28,107,69,0.26);
+}
+.pp-next-btn:hover { background: var(--forest2); transform: translateY(-1px); }
+.pp-next-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* Success */
+.pp-success { display: none; text-align: center; padding: 52px 24px; }
+.pp-success.show { display: block; }
+.pp-success-ring { position: relative; width: 88px; height: 88px; margin: 0 auto 24px; }
+.pp-success-ring::before { content: ''; position: absolute; inset: 5px; background: var(--forest-pale); border-radius: 50%; }
+.pp-success-ring svg.ring  { position: absolute; inset: 0; transform: rotate(-90deg); }
+.pp-success-ring svg.ring circle { fill: none; stroke: var(--forest); stroke-width: 3; stroke-dasharray: 252; stroke-dashoffset: 252; stroke-linecap: round; }
+.pp-success-ring svg.ring circle.animating { animation: ring-draw 0.7s 0.1s ease forwards; }
+@keyframes ring-draw { to { stroke-dashoffset: 0; } }
+.pp-success-ring svg.check { position: absolute; inset: 0; opacity: 0; }
+.pp-success-ring svg.check.animating { animation: check-pop 0.3s 0.72s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes check-pop { from{opacity:0;transform:scale(0.5);}to{opacity:1;transform:scale(1);} }
+.pp-success-title { font-family: 'Clash Display', sans-serif; font-size: 1.55rem; font-weight: 700; color: var(--ink); letter-spacing: -0.03em; margin-bottom: 8px; opacity: 0; transform: translateY(10px); }
+.pp-success-title.in { animation: fadeup 0.4s 0.9s ease forwards; }
+.pp-success-sub { font-size: 0.85rem; color: var(--ink3); line-height: 1.65; max-width: 320px; margin: 0 auto 28px; opacity: 0; transform: translateY(8px); }
+.pp-success-sub.in { animation: fadeup 0.4s 1.05s ease forwards; }
+@keyframes fadeup { to { opacity:1; transform:translateY(0); } }
+.pp-success-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; opacity: 0; }
+.pp-success-btns.in { animation: fadeup 0.4s 1.2s ease forwards; }
+.pp-suc-btn { padding: 12px 26px; border-radius: 100px; cursor: pointer; font-family: 'Clash Display', sans-serif; font-size: 0.84rem; font-weight: 700; border: none; transition: all 0.18s; display: flex; align-items: center; gap: 6px; }
+.pp-suc-btn.primary { background: var(--forest); color: #fff; box-shadow: 0 4px 16px rgba(28,107,69,0.28); }
+.pp-suc-btn.primary:hover { background: var(--forest2); }
+.pp-suc-btn.ghost { background: var(--bg2); color: var(--ink2); border: 1.5px solid var(--border); }
+.pp-suc-btn.ghost:hover { background: var(--bg3); }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .pp-progress { padding: 10px 16px; }
+  .pp-step-lbl { display: none; }
+  .pp-step-line { margin: 0 3px; }
+  .pp-wrap { padding: 20px 14px 60px; }
+  .pp-type-grid { grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+  .pp-field-row { grid-template-columns: 1fr; }
+  .pp-bottom { padding: 10px 14px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+}
+</style>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- SIDEBAR -->   
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni" href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni act" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="visits.html" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr" id="visit-bdg">1</span></a>
+    <a class="ni" href="brokers.html" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    </span><span class="ni-lbl">Saved</span><span class="nbdg gr">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">User · Ahmedabad</div></div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+
+<div class="main" id="main">
+
+  <!-- Topbar -->
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-greet">
+      <div class="top-greet-sub">Your Listings</div>
+      <h1 class="top-greet-h">Post a Property</h1>
+    </div>
+  </header>
+
+  <div class="pg">
+
+    <!-- Progress bar -->
+    <div class="pp-progress" id="pp-progress">
+      <div class="pp-step">
+        <div class="pp-dot active" id="dot-1">1</div>
+        <span class="pp-step-lbl active" id="lbl-1">Type</span>
+      </div>
+      <div class="pp-step-line" id="line-1"></div>
+      <div class="pp-step">
+        <div class="pp-dot" id="dot-2">2</div>
+        <span class="pp-step-lbl" id="lbl-2">Details</span>
+      </div>
+      <div class="pp-step-line" id="line-2"></div>
+      <div class="pp-step">
+        <div class="pp-dot" id="dot-3">3</div>
+        <span class="pp-step-lbl" id="lbl-3">Amenities</span>
+      </div>
+      <div class="pp-step-line" id="line-3"></div>
+      <div class="pp-step">
+        <div class="pp-dot" id="dot-4">4</div>
+        <span class="pp-step-lbl" id="lbl-4">Photos</span>
+      </div>
+      <div class="pp-step-line" id="line-4"></div>
+      <div class="pp-step">
+        <div class="pp-dot" id="dot-5">5</div>
+        <span class="pp-step-lbl" id="lbl-5">Review</span>
+      </div>
+    </div>
+
+    <div class="pp-wrap">
+
+      <!-- ═══ STEP 1: LISTING TYPE ═══ -->
+      <div class="pp-panel active" id="step-1">
+        <div class="pp-heading">
+          <div class="pp-heading-tag">Step 1 of 5</div>
+          <h2>What are you listing?</h2>
+          <p>Choose the type of property you want to post.</p>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Listing Type</div>
+          <div class="pp-card-body">
+            <div class="pp-type-grid">
+              <button class="pp-type-btn" id="type-rent" onclick="selType('rent')">
+                <div class="pp-type-icon">🏠</div>
+                <div class="pp-type-name">Rent</div>
+                <div class="pp-type-sub">Monthly tenancy</div>
+              </button>
+              <button class="pp-type-btn" id="type-buy" onclick="selType('buy')">
+                <div class="pp-type-icon">🏗️</div>
+                <div class="pp-type-name">Sell</div>
+                <div class="pp-type-sub">Outright sale</div>
+              </button>
+              <button class="pp-type-btn" id="type-pg" onclick="selType('pg')">
+                <div class="pp-type-icon">🛏️</div>
+                <div class="pp-type-name">PG / Hostel</div>
+                <div class="pp-type-sub">Shared living</div>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Property Type</div>
+          <div class="pp-card-body">
+            <div class="pp-field">
+              <label class="pp-lbl">Category <span>*</span></label>
+              <select class="pp-input" id="prop-type">
+                <option value="">Select type…</option>
+                <option>Apartment</option>
+                <option>Independent House</option>
+                <option>Villa</option>
+                <option>Studio Flat</option>
+                <option>Builder Floor</option>
+                <option>PG / Hostel</option>
+              </select>
+            </div>
+            <div class="pp-field-row">
+              <div class="pp-field">
+                <label class="pp-lbl">BHK</label>
+                <select class="pp-input" id="prop-bhk">
+                  <option value="">Select…</option>
+                  <option>1 BHK</option>
+                  <option>2 BHK</option>
+                  <option>3 BHK</option>
+                  <option>4+ BHK</option>
+                  <option>Studio</option>
+                  <option>Shared Room</option>
+                </select>
+              </div>
+              <div class="pp-field">
+                <label class="pp-lbl">Furnishing</label>
+                <select class="pp-input" id="prop-furnished">
+                  <option value="">Select…</option>
+                  <option>Fully Furnished</option>
+                  <option>Semi Furnished</option>
+                  <option>Unfurnished</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom action bar -->
+            <div class="pp-bottom" id="pp-bottom">
+              <div class="pp-bottom-inner">
+                <button class="pp-back-btn" id="back-btn" onclick="goBack()" style="display:none;">
+                  <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                  Back
+                </button>
+                <button class="pp-next-btn" id="next-btn" onclick="goNext()">
+                  Continue
+                  <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+        <!-- Mobile nav -->
+        <nav class="mob-nav">
+          <div class="mob-nw">
+            <div class="mn-i" onclick="location.href='home.html'">
+              <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+              Home
+            </div>
+            <div class="mn-i" onclick="location.href='explore.html'">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+              Explore
+            </div>
+            <div class="mn-fab on" style="width:50px;height:50px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 18px rgba(28,107,69,0.4);cursor:pointer;border:3px solid var(--bg);flex-shrink:0;">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+            <div class="mn-i mn-premium" onclick="location.href='roommates.html'">
+              
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Roommates
+            </div>
+            <div class="mn-i" onclick="location.href='profile.html'">
+              <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Profile
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- ═══ STEP 2: DETAILS ═══ -->
+      <div class="pp-panel" id="step-2">
+        <div class="pp-heading">
+          <div class="pp-heading-tag">Step 2 of 5</div>
+          <h2>Property details</h2>
+          <p>Fill in the key information about your property.</p>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Title &amp; Location</div>
+          <div class="pp-card-body">
+            <div class="pp-field">
+              <label class="pp-lbl">Listing title <span>*</span></label>
+              <input class="pp-input" id="prop-title" type="text" placeholder="e.g. 2BHK Fully Furnished near Metro, Vastrapur"/>
+            </div>
+            <div class="pp-field-row">
+              <div class="pp-field">
+                <label class="pp-lbl">City <span>*</span></label>
+                <select class="pp-input" id="prop-city">
+                  <option value="">Select city…</option>
+                  <option>Ahmedabad</option>
+                  <option>Mumbai</option>
+                  <option>Bangalore</option>
+                  <option>Pune</option>
+                  <option>Hyderabad</option>
+                  <option>Delhi</option>
+                  <option>Chennai</option>
+                  <option>Kochi</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="pp-field">
+                <label class="pp-lbl">Locality <span>*</span></label>
+                <input class="pp-input" id="prop-locality" type="text" placeholder="e.g. Vastrapur"/>
+              </div>
+            </div>
+            <div class="pp-field">
+              <label class="pp-lbl">Full address</label>
+              <input class="pp-input" id="prop-address" type="text" placeholder="Building name, street, landmark…"/>
+            </div>
+          </div>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Pricing &amp; Size</div>
+          <div class="pp-card-body">
+            <div class="pp-field-row">
+              <div class="pp-field">
+                <label class="pp-lbl" id="price-lbl">Monthly Rent <span>*</span></label>
+                <input class="pp-input" id="prop-price" type="number" placeholder="e.g. 25000"/>
+              </div>
+              <div class="pp-field" id="deposit-field">
+                <label class="pp-lbl">Security deposit</label>
+                <input class="pp-input" id="prop-deposit" type="number" placeholder="e.g. 50000"/>
+              </div>
+            </div>
+            <div class="pp-field-row">
+              <div class="pp-field">
+                <label class="pp-lbl">Area (sqft)</label>
+                <input class="pp-input" id="prop-area" type="number" placeholder="e.g. 1200"/>
+              </div>
+              <div class="pp-field">
+                <label class="pp-lbl">Floor</label>
+                <input class="pp-input" id="prop-floor" type="text" placeholder="e.g. 3rd of 10"/>
+              </div>
+            </div>
+            <div class="pp-field-row">
+              <div class="pp-field">
+                <label class="pp-lbl">Bathrooms</label>
+                <select class="pp-input" id="prop-bath">
+                  <option value="">Select…</option>
+                  <option>1</option><option>2</option><option>3</option><option>4+</option>
+                </select>
+              </div>
+              <div class="pp-field">
+                <label class="pp-lbl">Availability</label>
+                <select class="pp-input" id="prop-avail">
+                  <option value="">Select…</option>
+                  <option>Immediate</option>
+                  <option>Within 15 days</option>
+                  <option>Within 1 month</option>
+                  <option>After 1 month</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Description</div>
+          <div class="pp-card-body">
+            <div class="pp-field">
+              <label class="pp-lbl">Tell tenants about the property</label>
+              <textarea class="pp-input" id="prop-desc" placeholder="Describe the flat, society, surroundings, what makes it special…"></textarea>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom action bar -->
+              <div class="pp-bottom" id="pp-bottom">
+                <div class="pp-bottom-inner">
+                  <button class="pp-back-btn" id="back-btn" onclick="goBack()" style="display:none;">
+                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back
+                  </button>
+                  <button class="pp-next-btn" id="next-btn" onclick="goNext()">
+                    Continue
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                </div>
+              </div>
+      </div>
+
+      <!-- ═══ STEP 3: AMENITIES ═══ -->
+      <div class="pp-panel" id="step-3">
+        <div class="pp-heading">
+          <div class="pp-heading-tag">Step 3 of 5</div>
+          <h2>Amenities &amp; features</h2>
+          <p>Select everything available in the property or society.</p>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">In the Flat</div>
+          <div class="pp-card-body">
+            <div class="pp-amenities" id="flat-amenities">
+              <button class="pp-amenity" onclick="toggleAmenity(this)">AC</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">WiFi</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Washing Machine</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Refrigerator</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Microwave</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Geyser</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">TV</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Wardrobe</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Balcony</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Modular Kitchen</button>
+            </div>
+          </div>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Society / Building</div>
+          <div class="pp-card-body">
+            <div class="pp-amenities" id="society-amenities">
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Lift</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Parking</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Security</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Power Backup</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Gym</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Swimming Pool</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Clubhouse</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">CCTV</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Garden</button>
+              <button class="pp-amenity" onclick="toggleAmenity(this)">Kids Play Area</button>
+            </div>
+          </div>
+        </div>
+        <div class="pp-card" id="pg-extras" style="display:none;">
+          <div class="pp-card-head">PG Specifics</div>
+          <div class="pp-card-body">
+            <div class="pp-field-row">
+              <div class="pp-field">
+                <label class="pp-lbl">Meals included</label>
+                <select class="pp-input" id="pg-meals">
+                  <option value="">Select…</option>
+                  <option>Yes – all meals</option>
+                  <option>Yes – breakfast only</option>
+                  <option>No meals</option>
+                </select>
+              </div>
+              <div class="pp-field">
+                <label class="pp-lbl">Curfew</label>
+                <select class="pp-input" id="pg-curfew">
+                  <option value="">Select…</option>
+                  <option>No curfew</option>
+                  <option>10 PM</option>
+                  <option>11 PM</option>
+                  <option>12 AM</option>
+                </select>
+              </div>
+            </div>
+            <div class="pp-field">
+              <label class="pp-lbl">Preferred gender</label>
+              <select class="pp-input" id="pg-gender">
+                <option value="">Select…</option>
+                <option>Girls only</option>
+                <option>Boys only</option>
+                <option>Co-ed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <!-- Bottom action bar -->
+              <div class="pp-bottom" id="pp-bottom">
+                <div class="pp-bottom-inner">
+                  <button class="pp-back-btn" id="back-btn" onclick="goBack()" style="display:none;">
+                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back
+                  </button>
+                  <button class="pp-next-btn" id="next-btn" onclick="goNext()">
+                    Continue
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                </div>
+              </div>
+      </div>
+
+      <!-- ═══ STEP 4: PHOTOS ═══ -->
+      <div class="pp-panel" id="step-4">
+        <div class="pp-heading">
+          <div class="pp-heading-tag">Step 4 of 5</div>
+          <h2>Add photos</h2>
+          <p>Good photos get 3× more enquiries. Add at least 3.</p>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Property Photos</div>
+          <div class="pp-card-body">
+            <div class="pp-upload-zone" onclick="document.getElementById('photo-input').click()">
+              <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <div class="pp-upload-title">Click to upload photos</div>
+              <div class="pp-upload-sub">JPG, PNG up to 10MB each</div>
+              <input id="photo-input" type="file" accept="image/*" multiple style="display:none;" onchange="previewPhotos(this)"/>
+            </div>
+            <div class="pp-thumbs" id="photo-thumbs"></div>
+            <p style="font-size:0.72rem;color:var(--ink3);margin-top:8px;">
+              💡 Tip: Upload photos of living room, bedroom, kitchen, bathroom, and the building entrance for best results.
+            </p>
+          </div>
+        </div>
+        <!-- Bottom action bar -->
+        <div class="pp-bottom" id="pp-bottom">
+                <div class="pp-bottom-inner">
+                  <button class="pp-back-btn" id="back-btn" onclick="goBack()" style="display:none;">
+                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back
+                  </button>
+                  <button class="pp-next-btn" id="next-btn" onclick="goNext()">
+                    Continue
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                </div>
+        </div>
+      </div>
+
+      <!-- ═══ STEP 5: REVIEW ═══ -->
+      <div class="pp-panel" id="step-5">
+        <div class="pp-heading">
+          <div class="pp-heading-tag">Step 5 of 5</div>
+          <h2>Review &amp; publish</h2>
+          <p>Check your listing details before going live.</p>
+        </div>
+        <div class="pp-card">
+          <div class="pp-card-head">Listing Summary</div>
+          <div class="pp-card-body" id="review-body" style="gap:0;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+        <div class="pp-card" style="background:var(--forest-pale);border-color:rgba(28,107,69,0.18);">
+          <div class="pp-card-body" style="gap:8px;">
+            <div style="font-size:0.82rem;font-weight:700;color:var(--forest);display:flex;align-items:center;gap:6px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--forest)" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Free listing included
+            </div>
+            <div style="font-size:0.78rem;color:var(--forest);opacity:0.8;">You have 3 free listings per year. This will use 1 of your free slots.</div>
+          </div>
+        </div>
+        <!-- Bottom action bar -->
+        <div class="pp-bottom" id="pp-bottom">
+                <div class="pp-bottom-inner">
+                  <button class="pp-back-btn" id="back-btn" onclick="goBack()" style="display:none;">
+                    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                    Back
+                  </button>
+                  <button class="pp-next-btn" id="next-btn" onclick="goNext()">
+                    Continue
+                    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  </button>
+                </div>
+        </div>
+      </div>
+
+      <!-- ═══ SUCCESS ═══ -->
+      <div class="pp-success" id="pp-success">
+        <div class="pp-success-ring">
+          <svg class="ring" viewBox="0 0 88 88" width="88" height="88">
+            <circle cx="44" cy="44" r="40"/>
+          </svg>
+          <svg class="check" viewBox="0 0 88 88" width="88" height="88">
+            <polyline points="24,46 38,60 64,30" fill="none" stroke="var(--forest)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2 class="pp-success-title">Property Listed! 🎉</h2>
+        <p class="pp-success-sub">Your property is now live on HomeLink. Interested tenants can find and contact you directly.</p>
+        <div class="pp-success-btns" id="success-btns">
+          <button class="pp-suc-btn primary" onclick="location.href='explore.html'">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+            View in Explore
+          </button>
+          <button class="pp-suc-btn ghost" onclick="location.href='home.html'">
+            Go to Home
+          </button>
+        </div>
+      </div>
+
+    </div><!-- /pp-wrap -->
+  </div><!-- /pg -->
+</div><!-- /main -->
+
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+<script>
+/* ═══════════════════════════════
+   POST PROPERTY — JS
+═══════════════════════════════ */
+
+var currentStep = 1;
+var totalSteps  = 5;
+var formData    = { type: '', amenities: [] };
+
+// Restore user
+restoreUser();
+
+/* ── Listing type selection ── */
+function selType(t) {
+  ['rent','buy','pg'].forEach(k => document.getElementById('type-'+k).classList.remove('sel'));
+  document.getElementById('type-'+t).classList.add('sel');
+  formData.type = t;
+
+  // Show/hide PG extras on step 3
+  const pgCard = document.getElementById('pg-extras');
+  if (pgCard) pgCard.style.display = t === 'pg' ? '' : 'none';
+
+  // Update price label
+  const lbl = document.getElementById('price-lbl');
+  if (lbl) lbl.innerHTML = t === 'buy' ? 'Sale Price <span>*</span>' : t === 'pg' ? 'Monthly Rent <span>*</span>' : 'Monthly Rent <span>*</span>';
+}
+
+/* ── Amenity toggle ── */
+function toggleAmenity(btn) {
+  btn.classList.toggle('sel');
+  var name = btn.textContent.replace('✓ ','').trim();
+  if (btn.classList.contains('sel')) {
+    if (!formData.amenities.includes(name)) formData.amenities.push(name);
+  } else {
+    formData.amenities = formData.amenities.filter(a => a !== name);
+  }
+}
+
+/* ── Photo preview ── */
+function previewPhotos(input) {
+  var thumbs = document.getElementById('photo-thumbs');
+  thumbs.innerHTML = '';
+  if (input.files) {
+    Array.from(input.files).slice(0, 8).forEach(file => {
+      var reader = new FileReader();
+      reader.onload = e => {
+        var img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'pp-thumb';
+        thumbs.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+/* ── Navigation ── */
+function goNext() {
+  if (currentStep < totalSteps) {
+    setStep(currentStep + 1);
+  } else {
+    publishListing();
+  }
+}
+
+function goBack() {
+  if (currentStep > 1) setStep(currentStep - 1);
+  else location.href = 'home.html';
+}
+
+function setStep(n) {
+  if (n === totalSteps) buildReview();
+
+  // Hide current, show new
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  document.getElementById('step-' + n).classList.add('active');
+
+  // Update progress dots
+  for (var i = 1; i <= totalSteps; i++) {
+    var dot = document.getElementById('dot-' + i);
+    var lbl = document.getElementById('lbl-' + i);
+    dot.className = 'pp-dot' + (i < n ? ' done' : i === n ? ' active' : '');
+    if (lbl) lbl.className = 'pp-step-lbl' + (i === n ? ' active' : '');
+    var line = document.getElementById('line-' + i);
+    if (line) line.className = 'pp-step-line' + (i < n ? ' done' : '');
+  }
+
+  // Back button visibility - update all instances
+  document.querySelectorAll('#back-btn').forEach(btn => {
+    btn.style.display = n > 1 ? '' : 'none';
+  });
+
+  // Next button label - update all instances
+  document.querySelectorAll('#next-btn').forEach(btn => {
+    btn.innerHTML = n === totalSteps
+      ? 'Publish Listing <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>'
+      : 'Continue <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+  });
+
+  currentStep = n;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── Build review summary ── */
+function buildReview() {
+  var body = document.getElementById('review-body');
+  var rows = [
+    ['Type',        formData.type ? formData.type.charAt(0).toUpperCase()+formData.type.slice(1) : '—'],
+    ['Category',    document.getElementById('prop-type').value    || '—'],
+    ['Title',       document.getElementById('prop-title').value   || '—'],
+    ['City',        document.getElementById('prop-city').value    || '—'],
+    ['Locality',    document.getElementById('prop-locality').value|| '—'],
+    ['Price',       document.getElementById('prop-price').value ? '₹' + parseInt(document.getElementById('prop-price').value).toLocaleString('en-IN') + (formData.type !== 'buy' ? '/month' : '') : '—'],
+    ['Area',        document.getElementById('prop-area').value ? document.getElementById('prop-area').value + ' sqft' : '—'],
+    ['Furnishing',  document.getElementById('prop-furnished').value || '—'],
+    ['Availability',document.getElementById('prop-avail').value   || '—'],
+    ['Amenities',   formData.amenities.length > 0 ? formData.amenities.slice(0,5).join(', ') + (formData.amenities.length > 5 ? ' +' + (formData.amenities.length-5) + ' more' : '') : 'None selected'],
+  ];
+  body.innerHTML = rows.map(([lbl, val]) =>
+    `<div class="review-row"><span class="review-lbl">${lbl}</span><span class="review-val${lbl==='Price'?' green':''}">${val}</span></div>`
+  ).join('');
+}
+
+/* ── Publish ── */
+function publishListing() {
+  var nextBtn  = document.getElementById('next-btn');
+  var backBtn  = document.getElementById('back-btn');
+  nextBtn.disabled = true;
+  nextBtn.innerHTML = '<svg viewBox="0 0 24 24" width="17" height="17" style="animation:spin 0.7s linear infinite;flex-shrink:0"><circle cx="12" cy="12" r="9" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5"/><path d="M12 3a9 9 0 019 9" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg> Publishing…';
+
+  setTimeout(() => {
+    // Hide form panels and progress
+    for (var i = 1; i <= totalSteps; i++) {
+      var panel = document.getElementById('step-'+i);
+      if (panel) panel.classList.remove('active');
+    }
+    document.getElementById('pp-progress').style.display = 'none';
+    document.getElementById('pp-bottom').style.display   = 'none';
+
+    var success = document.getElementById('pp-success');
+    success.classList.add('show');
+    requestAnimationFrame(() => {
+      success.querySelector('svg.ring circle').classList.add('animating');
+      success.querySelector('svg.check').classList.add('animating');
+      success.querySelector('.pp-success-title').classList.add('in');
+      success.querySelector('.pp-success-sub').classList.add('in');
+      success.querySelector('.pp-success-btns').classList.add('in');
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 1600);
+}
+
+// spin keyframe
+var style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

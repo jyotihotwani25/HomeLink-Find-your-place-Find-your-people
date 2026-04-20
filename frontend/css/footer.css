@@ -1,0 +1,65 @@
+/* ============================================
+   HOMELINK — FOOTER CSS
+   Import after global.css on every page.
+   ============================================ */
+
+footer {
+  background: var(--ink);
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding: 60px 0 28px;
+}
+
+.foot-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 44px;
+  margin-bottom: 44px;
+}
+
+.foot-brand-name {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.2rem; font-weight: 700; color: #fff;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.foot-brand-desc {
+  font-size: 0.82rem; color: rgba(255,255,255,0.3);
+  line-height: 1.72; max-width: 240px;
+}
+
+.foot-col h5 {
+  font-size: 0.71rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); margin-bottom: 16px;
+}
+.foot-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.foot-col ul a { font-size: 0.82rem; color: rgba(255,255,255,0.38); transition: color 0.2s; }
+.foot-col ul a:hover { color: #fff; }
+
+.foot-bottom {
+  padding-top: 22px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+}
+.foot-copy { font-size: 0.75rem; color: rgba(255,255,255,0.22); }
+
+.fsocs { display: flex; gap: 8px; }
+.fsoc {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+  color: rgba(255,255,255,0.35);
+  transition: all 0.2s; text-decoration: none;
+}
+.fsoc:hover { background: #fff; color: var(--ink); border-color: #fff; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 1024px) {
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+@media(max-width: 480px) {
+  .foot-grid { grid-template-columns: 1fr; }
+  .foot-bottom { flex-direction: column; text-align: center; }
+}

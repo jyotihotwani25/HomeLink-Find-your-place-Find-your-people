@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeLink — Find Your Place, Find Your People</title>
+<!-- ── CSS IMPORTS ── -->
+<link rel="stylesheet" href="css/global.css"/>
+<link rel="stylesheet" href="css/navbar.css"/>
+<link rel="stylesheet" href="css/footer.css"/>
+<link rel="stylesheet" href="css/components.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── INDEX PAGE ROOT TOKENS ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --ink:#1A1208;--ink2:#4A4030;--ink3:#9A8E7E;
+  --bg:#FDFAF5;--bg2:#F5F0E6;--bg3:#EDE5D4;--white:#FFFFFF;
+  --forest:#1C6B45;--forest2:#22854F;--forest-pale:#E4F2EB;--forest-mid:#A8D5BA;
+  --amber:#E8A020;--amber-pale:#FDF3E0;--coral:#E05C3A;
+  --border:rgba(26,18,8,0.08);--shadow:0 2px 16px rgba(26,18,8,0.07);
+  --shadow-md:0 8px 40px rgba(26,18,8,0.10);--shadow-lg:0 20px 64px rgba(26,18,8,0.13);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:'Clash Display',sans-serif;line-height:1.05;letter-spacing:-0.03em;}
+a{text-decoration:none;color:inherit;}
+img{display:block;width:100%;height:100%;object-fit:cover;}
+button{cursor:pointer;border:none;font-family:inherit;}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;padding-top:68px;overflow:hidden;position:relative;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:72px 56px 72px 40px;position:relative;z-index:2;}
+.hero-glow{position:absolute;top:-100px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(28,107,69,0.1),transparent 70%);pointer-events:none;z-index:0;}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:var(--forest-pale);border:1px solid rgba(28,107,69,0.2);border-radius:100px;padding:7px 16px;font-size:0.72rem;font-weight:700;color:var(--forest);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:28px;width:fit-content;animation:up 0.6s 0.1s ease both;}
+.pill-pulse{width:6px;height:6px;border-radius:50%;background:var(--forest);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.hero-h1{font-size:clamp(3rem,5.2vw,5rem);font-weight:700;color:var(--ink);margin-bottom:20px;animation:up 0.6s 0.2s ease both;}
+.hero-h1 .g{color:var(--forest);}
+.hero-h1 .d{color:var(--ink3);font-size:80%;display:block;}
+.hero-p{font-size:1rem;color:var(--ink3);line-height:1.76;max-width:420px;margin-bottom:36px;font-weight:400;animation:up 0.6s 0.3s ease both;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px;animation:up 0.6s 0.4s ease both;}
+.hero-trust{display:flex;align-items:center;gap:14px;animation:up 0.6s 0.5s ease both;}
+.trust-avs{display:flex;}
+.trust-avs img{width:34px;height:34px;border-radius:50%;border:2.5px solid var(--bg);object-fit:cover;margin-left:-9px;}
+.trust-avs img:first-child{margin-left:0;}
+.trust-txt{font-size:0.8rem;color:var(--ink3);line-height:1.4;}
+.trust-txt strong{color:var(--ink);font-weight:600;}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HERO RIGHT MOSAIC ── */
+.hero-right{position:relative;overflow:hidden;}
+.hero-right::before{content:'';position:absolute;left:0;top:0;bottom:0;width:60px;z-index:3;background:linear-gradient(to right,var(--bg),transparent);}
+.mosaic{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;height:100%;gap:8px;padding:8px;}
+.mc{overflow:hidden;border-radius:18px;position:relative;}
+.mc img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;}
+.mc:hover img{transform:scale(1.05);}
+.mc.tall{grid-row:span 2;}
+.mc-label{position:absolute;bottom:12px;left:12px;background:rgba(253,250,245,0.92);backdrop-filter:blur(10px);border-radius:100px;padding:6px 12px;font-size:0.71rem;font-weight:700;color:var(--ink);border:1px solid var(--border);}
+.mc-label span{color:var(--forest);}
+.mc-overlay{position:absolute;inset:0;background:linear-gradient(160deg,rgba(0,0,0,0.08),transparent 60%);border-radius:18px;}
+
+/* ── FEATURES SECTION ── */
+.features{padding:96px 0;}
+
+/* ── LISTINGS SECTION ── */
+.listings{padding:80px 0 96px;}
+.listings-search{background:var(--white);border:1px solid var(--border);border-radius:18px;padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:36px;box-shadow:var(--shadow);}
+.ls-chips{display:flex;gap:5px;}
+.s-field{flex:1;min-width:200px;display:flex;align-items:center;gap:10px;background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;padding:11px 15px;transition:border-color 0.2s;}
+.s-field:focus-within{border-color:var(--forest);}
+.s-field svg{color:var(--ink3);flex-shrink:0;}
+.s-field input{flex:1;background:none;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.875rem;color:var(--ink);}
+.s-field input::placeholder{color:var(--ink3);}
+.l-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:28px;}
+.view-all{font-size:0.85rem;font-weight:600;color:var(--forest);display:flex;align-items:center;gap:5px;transition:gap 0.25s;}
+.view-all:hover{gap:10px;}
+.l-tabs{display:flex;gap:6px;margin-bottom:28px;}
+.lt{padding:8px 18px;border-radius:100px;font-size:0.8rem;font-weight:600;color:var(--ink2);background:var(--bg2);border:1.5px solid transparent;cursor:pointer;transition:all 0.22s;font-family:inherit;}
+.lt.on{background:var(--ink);color:#fff;}
+.lt:hover:not(.on){border-color:var(--border);color:var(--ink);}
+.lgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;}
+.lc{background:var(--white);border-radius:20px;border:1px solid var(--border);overflow:hidden;transition:all 0.35s cubic-bezier(0.23,1,0.32,1);}
+.lc:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:transparent;}
+.lc-img{position:relative;height:200px;overflow:hidden;}
+.lc-img img{transition:transform 0.5s ease;}
+.lc:hover .lc-img img{transform:scale(1.06);}
+.lb{position:absolute;top:12px;left:12px;padding:5px 11px;border-radius:100px;font-size:0.66rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;}
+.lb-r{background:var(--ink);color:#fff;}
+.lb-b{background:var(--forest);color:#fff;}
+.lb-p{background:var(--amber);color:var(--ink);}
+.lfav{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.88);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;font-size:0.85rem;cursor:pointer;border:none;transition:transform 0.22s;}
+.lfav:hover{transform:scale(1.15);}
+.lc-body{padding:16px 18px 20px;}
+.lc-price{font-family:'Clash Display',sans-serif;font-size:1.2rem;font-weight:700;color:var(--ink);letter-spacing:-0.03em;}
+.lc-price small{font-size:0.74rem;font-weight:400;color:var(--ink3);font-family:'Plus Jakarta Sans',sans-serif;}
+.lc-name{font-size:0.88rem;font-weight:600;color:var(--ink);margin:3px 0;}
+.lc-loc{font-size:0.76rem;color:var(--ink3);display:flex;align-items:center;gap:4px;margin-bottom:12px;}
+.lc-specs{display:flex;gap:12px;padding-top:12px;border-top:1px solid var(--bg2);}
+.lsp{font-size:0.73rem;color:var(--ink3);font-weight:500;}
+.sc{padding:8px 16px;border-radius:100px;font-size:0.79rem;font-weight:600;color:var(--ink2);background:var(--bg2);border:1.5px solid transparent;transition:all 0.22s;cursor:pointer;font-family:inherit;}
+.sc.on{background:var(--ink);color:#fff;}
+.sc:hover:not(.on){border-color:var(--border);color:var(--ink);}
+
+/* ── ROOMMATE SECTION ── */
+.rm{padding:96px 0;background:var(--bg2);}
+.rm-wrap{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.rm-visual{position:relative;}
+.rm-img{border-radius:28px;overflow:hidden;aspect-ratio:4/5;}
+.rm-chip{position:absolute;background:var(--white);border-radius:18px;box-shadow:var(--shadow-lg);padding:15px 18px;}
+.rmc-tl{top:24px;left:-20px;display:flex;align-items:center;gap:10px;min-width:210px;}
+.rmc-br{bottom:36px;right:-20px;text-align:center;padding:18px 22px;}
+.rmc-avs{display:flex;}
+.rmc-avs img{width:30px;height:30px;border-radius:50%;border:2px solid #fff;object-fit:cover;margin-left:-8px;}
+.rmc-avs img:first-child{margin-left:0;}
+.rct1{font-size:0.79rem;font-weight:700;color:var(--ink);}
+.rct2{font-size:0.7rem;color:var(--ink3);margin-top:1px;}
+.donut{width:64px;height:64px;border-radius:50%;background:conic-gradient(var(--forest) 0% 87%,var(--bg3) 87% 100%);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;position:relative;}
+.donut::before{content:'';position:absolute;width:48px;height:48px;background:#fff;border-radius:50%;}
+.donut-n{position:relative;z-index:1;font-family:'Clash Display',sans-serif;font-size:0.95rem;font-weight:700;color:var(--forest);}
+.donut-l{font-size:0.71rem;color:var(--ink3);font-weight:500;}
+.rm-points{display:flex;flex-direction:column;gap:12px;margin:24px 0 32px;}
+.rmp{display:flex;align-items:center;gap:10px;font-size:0.875rem;color:var(--ink2);}
+.rmp-i{width:26px;height:26px;border-radius:8px;background:var(--forest-pale);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;color:var(--forest);flex-shrink:0;}
+
+/* ── CTA ── */
+.cta{position:relative;overflow:hidden;min-height:460px;display:flex;align-items:center;}
+.cta-bg{position:absolute;inset:0;}
+.cta-bg img{width:100%;height:100%;object-fit:cover;}
+.cta-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(26,18,8,0.94) 0%,rgba(26,18,8,0.75) 55%,rgba(26,18,8,0.35) 100%);}
+.cta-inner{position:relative;z-index:2;max-width:1240px;margin:0 auto;padding:80px 40px;}
+.cta-h{font-size:clamp(2.2rem,4vw,3.8rem);font-weight:700;color:#fff;letter-spacing:-0.03em;margin-bottom:14px;max-width:600px;}
+.cta-h span{color:var(--forest-mid);}
+.cta-p{font-size:0.95rem;color:rgba(255,255,255,0.45);max-width:420px;line-height:1.72;margin-bottom:36px;}
+.cta-btns{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* ── RESPONSIVE (index-specific layouts) ── */
+@media(max-width:1024px){
+  .lgrid{grid-template-columns:repeat(2,1fr);}
+  .rm-wrap{grid-template-columns:1fr;gap:48px;}
+  .rm-visual{max-width:460px;margin:0 auto;}
+  .rmc-tl{left:0;}.rmc-br{right:0;}
+}
+@media(max-width:768px){
+  .lgrid{grid-template-columns:1fr;}
+  .l-head{flex-direction:column;align-items:flex-start;gap:8px;}
+  .features,.rm{padding-top:64px;padding-bottom:64px;}
+  .listings{padding-top:64px;padding-bottom:64px;}
+}
+@media(max-width:480px){
+  .lgrid{grid-template-columns:1fr;}
+}
+</style>
+<link rel="stylesheet" href="css/mobile.css"/>
+<link rel="stylesheet" href="css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- MOB MENU -->
+<div class="mob-menu" id="mob">
+  <a href="#features" onclick="cM()">Features</a>
+  <a href="#listings" onclick="cM()">Listings</a>
+  <a href="#roommates" onclick="cM()">Roommates</a>
+  <a href="pages/signup.html" onclick="cM()">Get Started</a>
+  <div class="mob-btns">
+    <a href="pages/signin.html" class="btn btn-outline btn-sm">Sign in</a>
+    <a href="pages/signup.html" class="btn btn-forest btn-sm">Get started →</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.25)" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="9" r="2.8" fill="#fff"/></svg>
+    </span>
+    HomeLink
+  </a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#listings">Listings</a></li>
+    <li><a href="#roommates">Roommates</a></li>
+  </ul>
+  <div class="nav-r">
+    <a href="pages/signin.html" class="btn-nav btn-nav-ghost">Sign in</a>
+    <a href="pages/signup.html" class="btn btn-forest btn-sm">Get started →</a>
+  </div>
+  <button class="burger" onclick="tM()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-glow"></div>
+    <div class="hero-pill"><span class="pill-pulse"></span>India's Unified Property Platform</div>
+    <h1 class="hero-h1">
+      Find your place.<br>
+      <span class="g">Find your people.</span>
+      <span class="d">Effortlessly.</span>
+    </h1>
+    <p class="hero-p">Buy, rent, find roommates, or book a PG — one transparent platform. No confusion. No hidden charges. Just your next home.</p>
+    <div class="hero-btns">
+      <a href="#listings" class="btn btn-forest" style="padding:15px 30px;font-size:0.92rem;">
+        Explore listings
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M7 1l6 6-6 6"/></svg>
+      </a>
+      <button class="btn btn-outline" style="padding:15px 26px;font-size:0.92rem;">List your property</button>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-avs">
+        <img src="https://i.pravatar.cc/100?img=12" alt=""/>
+        <img src="https://i.pravatar.cc/100?img=47" alt=""/>
+        <img src="https://i.pravatar.cc/100?img=33" alt=""/>
+        <img src="https://i.pravatar.cc/100?img=68" alt=""/>
+      </div>
+      <div class="trust-txt"><strong>4,800+ people</strong> found their home<br>on HomeLink this year</div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="mosaic">
+      <div class="mc tall">
+        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&h=900&fit=crop&q=85" alt="Luxury apartment"/>
+        <div class="mc-overlay"></div>
+        <div class="mc-label">3BHK · <span>₹45K/mo</span></div>
+      </div>
+      <div class="mc">
+        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=400&fit=crop&q=85" alt="Modern living room"/>
+        <div class="mc-overlay"></div>
+        
+      </div>
+      <div class="mc">
+        <img src="https://images.unsplash.com/photo-1560185007-cde436f6a4d0?w=600&h=400&fit=crop&q=85" alt="Cozy bedroom"/>
+        <div class="mc-overlay"></div>
+        <div class="mc-label"><span>Ready to move</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="mq">
+  <div class="mq-track">
+    <span class="mi">Buy Property</span><span class="mi">Rent Apartments</span><span class="mi">Find Roommates</span><span class="mi">PG &amp; Hostels</span><span class="mi">Broker Network</span><span class="mi">Digital Agreements</span><span class="mi">Relocation Services</span><span class="mi">Payment Tracking</span><span class="mi">Visit Scheduling</span>
+    <span class="mi">Buy Property</span><span class="mi">Rent Apartments</span><span class="mi">Find Roommates</span><span class="mi">PG &amp; Hostels</span><span class="mi">Broker Network</span><span class="mi">Digital Agreements</span><span class="mi">Relocation Services</span><span class="mi">Payment Tracking</span><span class="mi">Visit Scheduling</span>
+  </div>
+</div>
+
+<!-- ═══ LISTINGS (with search inside) ═══ -->
+<section class="listings" id="listings">
+  <div class="container">
+    <!-- Search bar embedded inside listings -->
+    <div class="listings-search" data-r>
+      <div class="ls-chips">
+        <button class="sc on" onclick="sCh(this)">Buy</button>
+        <button class="sc" onclick="sCh(this)">Rent</button>
+        <button class="sc" onclick="sCh(this)">PG</button>
+        <button class="sc" onclick="sCh(this)">Roommates</button>
+      </div>
+      <div class="s-input-wrap" style="display:flex;flex:1;gap:8px;align-items:center;min-width:0;">
+        <div class="s-field" style="flex:1;min-width:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search by city, area or property type..."/>
+        </div>
+        <button class="btn btn-forest" style="padding:12px 22px;flex-shrink:0;">
+          Search
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M7 1l6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="l-head">
+      <div>
+        <div class="sec-tag" data-r>Browse</div>
+        <h2 class="sec-h" data-r>Featured listings</h2>
+      </div>
+      <a href="pages/signup.html" class="view-all" data-r>View all <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M7 1l6 6-6 6"/></svg></a>
+    </div>
+    <div class="l-tabs" data-r>
+      <button class="lt on" onclick="sLt(this)">All</button>
+      <button class="lt" onclick="sLt(this)">Buy</button>
+      <button class="lt" onclick="sLt(this)">Rent</button>
+      <button class="lt" onclick="sLt(this)">PG / Hostel</button>
+    </div>
+    <div class="lgrid">
+      <div class="lc" data-r>
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&h=400&fit=crop&q=85" alt="2BHK apartment"/>
+          <span class="lb lb-r">Rent</span>
+          <button class="lfav" onclick="fv(this)">❤️</button>
+        </div>
+        <div class="lc-body">
+          <div class="lc-price">₹28,000 <small>/month</small></div>
+          <div class="lc-name">Modern 2BHK · Vastrapur</div>
+          <div class="lc-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>Vastrapur, Ahmedabad</div>
+          <div class="lc-specs"><span class="lsp">🛏 2 BHK</span><span class="lsp">📐 1,250 sqft</span><span class="lsp">✅ Furnished</span></div>
+        </div>
+      </div>
+      <div class="lc" data-r data-d="1">
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=700&h=400&fit=crop&q=85" alt="Premium villa"/>
+          <span class="lb lb-b">Buy</span>
+          <button class="lfav" onclick="fv(this)">❤️</button>
+        </div>
+        <div class="lc-body">
+          <div class="lc-price">₹85L <small>onwards</small></div>
+          <div class="lc-name">Premium 3BHK Villa</div>
+          <div class="lc-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>Bodakdev, Ahmedabad</div>
+          <div class="lc-specs"><span class="lsp">🛏 3 BHK</span><span class="lsp">📐 2,100 sqft</span><span class="lsp">🅿️ Parking</span></div>
+        </div>
+      </div>
+      <div class="lc" data-r data-d="2">
+        <div class="lc-img">
+          <img src="https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=700&h=400&fit=crop&q=85" alt="PG hostel"/>
+          <span class="lb lb-p">PG</span>
+          <button class="lfav" onclick="fv(this)">❤️</button>
+        </div>
+        <div class="lc-body">
+          <div class="lc-price">₹8,500 <small>/month</small></div>
+          <div class="lc-name">Girls PG · SG Highway</div>
+          <div class="lc-loc"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>Satellite, Ahmedabad</div>
+          <div class="lc-specs"><span class="lsp">🍽️ Meals incl.</span><span class="lsp">📶 WiFi</span><span class="lsp">🔒 Secure</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px;" data-r>
+      <a href="pages/signin.html" class="btn btn-outline" style="padding:13px 30px;">Browse all listings →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FEATURES (below listings) ═══ -->
+<section class="features" id="features">
+  <div class="container">
+    <div data-r><div class="sec-tag">Everything you need</div></div>
+    <h2 class="sec-h" data-r style="max-width:480px;margin-bottom:0;">One platform.<br>The full journey.</h2>
+    <div class="bento">
+      <div class="bc tall" data-r>
+        <div class="bc-img h320">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&h=400&fit=crop&q=85" alt="Smart property search"/>
+        </div>
+        <div class="bc-body">
+          <div class="bc-icon">🔍</div>
+          <div class="bc-t">Smart Search &amp; Filters</div>
+          <div class="bc-d">Filter by location, budget, type, size, and amenities. Find exactly what you need — instantly.</div>
+          <span class="bc-pill">Buy · Rent · PG</span>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="bc hl" data-r data-d="1">
+          <div class="bc-img h240">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&h=300&fit=crop&q=85" alt="Chat with owners"/>
+          </div>
+          <div class="bc-body">
+            <div class="bc-icon">💬</div>
+            <div class="bc-t">In-App Chat</div>
+            <div class="bc-d">Talk directly to owners, negotiate, close deals — all inside the app.</div>
+          </div>
+        </div>
+        <div class="bc" data-r data-d="2">
+          <div class="bc-body">
+            <div class="bc-icon">🗓️</div>
+            <div class="bc-t">Visit Scheduling</div>
+            <div class="bc-d">Book visits, get reminders, leave feedback — everything tracked in one place.</div>
+            <span class="bc-pill">Auto reminders</span>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="bc amber" data-r data-d="2">
+          <div class="bc-body">
+            <div class="bc-icon">📦</div>
+            <div class="bc-t">Relocation Services</div>
+            <div class="bc-d">Book packers, movers &amp; cleaning on your move-in day. One tap.</div>
+            <span class="bc-pill">Instant booking</span>
+          </div>
+        </div>
+        <div class="bc" data-r data-d="3">
+          <div class="bc-img h240">
+            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=300&fit=crop&q=85" alt="Payment tracking"/>
+          </div>
+          <div class="bc-body">
+            <div class="bc-icon">💰</div>
+            <div class="bc-t">Payment Tracking</div>
+            <div class="bc-d">Record deposits, track rent, generate digital agreements. Full transparency.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ROOMMATE ═══ -->
+<section class="rm" id="roommates">
+  <div class="container">
+    <div class="rm-wrap">
+      <div class="rm-visual" data-r>
+        <div class="rm-img">
+          <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=700&h=900&fit=crop&q=85&crop=faces" alt="Roommates"/>
+        </div>
+        <div class="rm-chip rmc-tl">
+          <div class="rmc-avs">
+            <img src="https://i.pravatar.cc/80?img=15" alt=""/>
+            <img src="https://i.pravatar.cc/80?img=25" alt=""/>
+            <img src="https://i.pravatar.cc/80?img=44" alt=""/>
+          </div>
+          <div><div class="rct1">240+ seeking roommates</div><div class="rct2">in Ahmedabad this month</div></div>
+        </div>
+        <div class="rm-chip rmc-br">
+          <div class="donut"><span class="donut-n">87%</span></div>
+          <div class="donut-l">Avg. compatibility</div>
+        </div>
+      </div>
+      <div data-r data-d="1">
+        <div class="sec-tag">Roommate Matching</div>
+        <h2 class="sec-h" style="max-width:380px;">Find someone you'll actually like living with.</h2>
+        <p style="font-size:0.92rem;color:var(--ink3);line-height:1.76;margin-top:12px;max-width:400px;">Smart matching based on lifestyle, habits, budget, and location — not just who's available right now.</p>
+        <div class="rm-points">
+          <div class="rmp"><span class="rmp-i">✓</span>Lifestyle &amp; habit-based compatibility</div>
+          <div class="rmp"><span class="rmp-i">✓</span>Filter by food, sleep schedule &amp; cleanliness</div>
+          <div class="rmp"><span class="rmp-i">✓</span>Message matches directly in-app</div>
+          <div class="rmp"><span class="rmp-i">✓</span>Premium plan unlocks full profiles</div>
+        </div>
+        <a href="#" class="btn btn-forest" style="padding:14px 28px;">Find roommates →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta" id="cta">
+  <div class="cta-bg">
+    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&h=600&fit=crop&q=85" alt="Beautiful home"/>
+  </div>
+  <div class="cta-inner">
+    <h2 class="cta-h" data-r>Your next home is<br><span>one search away.</span></h2>
+    <p class="cta-p" data-r data-d="1">Join thousands finding their perfect space on HomeLink. Free to sign up, always transparent.</p>
+    <div class="cta-btns" data-r data-d="2">
+      <a href="pages/signup.html" class="btn btn-white" style="padding:15px 30px;font-size:0.92rem;">🏠 Start for free</a>
+      <button class="btn btn-ghost" style="padding:15px 26px;font-size:0.92rem;">List your property</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand-name">
+          <span class="logo-mark"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.25)" stroke="#fff" stroke-width="1.8"/><circle cx="12" cy="9" r="2.8" fill="#fff"/></svg></span>
+          HomeLink
+        </div>
+        <p class="foot-brand-desc">India's unified real estate platform — connecting properties, people &amp; professionals seamlessly.</p>
+      </div>
+      <div class="foot-col"><h5>Platform</h5><ul><li><a href="#">Buy Property</a></li><li><a href="#">Rent Apartment</a></li><li><a href="#">PG &amp; Hostels</a></li><li><a href="#">Roommates</a></li></ul></div>
+      <div class="foot-col"><h5>Services</h5><ul><li><a href="#">Broker Network</a></li><li><a href="#">Relocation Help</a></li><li><a href="#">Digital Agreements</a></li><li><a href="#">Payment Tracking</a></li></ul></div>
+      <div class="foot-col"><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Contact</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <p class="foot-copy">© 2025 HomeLink. All rights reserved.</p>
+      <div class="fsocs">
+        <a href="#" class="fsoc">𝕏</a><a href="#" class="fsoc">in</a><a href="#" class="fsoc">ig</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data/properties.js"></script>
+<script src="js/main.js"></script>
+<script>
+/* index.html page-specific only */
+function fv(b){b.textContent=b.textContent==='❤️'?'🤍':'❤️';b.style.transform='scale(1.3)';setTimeout(()=>b.style.transform='scale(1)',200);}
+</script>
+<script src="js/chatbot-widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Find a Broker — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/brokers.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- SIDEBAR — exact from home.html -->
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni " href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="visits.html" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr" id="visit-bdg">1</span></a>
+    <a class="ni act" href="brokers.html" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+</span><span class="ni-lbl">Saved</span><span class="nbdg gr">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">User · Ahmedabad</div></div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+<div class="main" id="main">
+
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-greet">
+      <div class="top-greet-sub">Expert Help</div>
+      <h1 class="top-greet-h">Find a <span>Broker</span></h1>
+    </div>
+  </header>
+
+  <div class="pg" style="padding:0;">
+
+    <!-- HERO -->
+    <div class="bk-hero">
+      <div class="bk-hero-inner">
+        <div>
+          <div class="bk-hero-tag">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Ahmedabad · Verified Professionals
+          </div>
+          <div class="bk-hero-title">Your Expert<br/>Property Advisor</div>
+          <div class="bk-hero-sub">Curated, RERA-verified brokers across Ahmedabad. Request a consultation — no cold calls, no spam.</div>
+        </div>
+        <div class="bk-hero-nums">
+          <div class="bk-hero-num">
+            <div class="bk-hero-num-val" id="hero-count">8</div>
+            <div class="bk-hero-num-lbl">Verified Brokers</div>
+          </div>
+          <div class="bk-hero-num">
+            <div class="bk-hero-num-val">1,600+</div>
+            <div class="bk-hero-num-lbl">Deals Closed</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="bk-filters">
+      <span class="bk-filter-lbl">Filter</span>
+      <button class="bk-chip on" id="chip-all"        onclick="setChip('all',this)">All</button>
+      <button class="bk-chip"    id="chip-top"        onclick="setChip('top',this)">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Top Rated
+      </button>
+      <button class="bk-chip"    id="chip-rental"     onclick="setChip('rental',this)">Rental</button>
+      <button class="bk-chip"    id="chip-buying"     onclick="setChip('buying',this)">Buying</button>
+      <button class="bk-chip"    id="chip-negotiation" onclick="setChip('negotiation',this)">Negotiation</button>
+      <button class="bk-chip"    id="chip-docs"       onclick="setChip('docs',this)">Documentation</button>
+      <button class="bk-chip"    id="chip-budget"     onclick="setChip('budget',this)">Budget Friendly</button>
+    </div>
+
+    <!-- TOP VERIFIED section -->
+    <div class="bk-section" id="top-section">
+      <div class="bk-section-head">
+        <div>
+          <div class="bk-section-label">⭐ Hand-picked</div>
+          <div class="bk-section-title">Top Verified Brokers</div>
+        </div>
+        <div class="bk-section-count" id="top-count">2 brokers</div>
+      </div>
+      <div class="bk-grid top-grid" id="top-grid"></div>
+    </div>
+
+    <!-- ALL BROKERS section -->
+    <div class="bk-section" id="all-section" style="padding-top:20px;padding-bottom:80px;">
+      <div class="bk-section-head">
+        <div>
+          <div class="bk-section-label">All Available</div>
+          <div class="bk-section-title">More Brokers</div>
+        </div>
+        <div class="bk-section-count" id="all-count">6 brokers</div>
+      </div>
+      <div class="bk-grid" id="all-grid"></div>
+    </div>
+
+  </div>
+</div><!-- /main -->
+
+<!-- MOBILE NAV -->
+<nav class="mob-nav">
+  <div class="mob-nw">
+    <div class="mn-i" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </div>
+    <div class="mn-i" onclick="location.href='explore.html'">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+      Explore
+    </div>
+    <div class="mn-fab" onclick="postProperty()" style="width:50px;height:50px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 18px rgba(28,107,69,0.4);cursor:pointer;border:3px solid var(--bg);flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="mn-i on mn-premium" onclick="location.href='roommates.html'">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Roommates
+    </div>
+    <div class="mn-i" onclick="location.href='profile.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</nav>
+
+<!-- REQUEST SENT MODAL -->
+<div class="req-modal-overlay" id="req-modal">
+  <div class="req-modal">
+    <div class="req-modal-ring">✓</div>
+    <div class="req-modal-title">Request Sent!</div>
+    <div class="req-modal-sub" id="req-modal-msg">Your chat request has been sent. The broker will respond within their usual response time.</div>
+    <button class="req-modal-close" onclick="closeReqModal()">Got it</button>
+  </div>
+</div>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/data/brokers.js"></script>
+<script src="../js/main.js"></script>
+<script>
+var sentRequests = {};
+var activeChip = 'all';
+
+(function boot() {
+  restoreUser();
+  var u = typeof getCurrentUser==='function' ? getCurrentUser() : null;
+  if (u) {
+    document.getElementById('sb-av').src = u.avatar || '';
+    document.getElementById('sb-nm').textContent = u.name || 'User';
+    document.getElementById('sb-rl').textContent = (u.city||'HomeLink') + (u.occupation ? ' · '+u.occupation.split(',')[0] : '');
+  }
+  renderAll();
+})();
+
+/* ── Render both grids ── */
+function renderAll() {
+  var all = typeof getAllBrokersSorted==='function' ? getAllBrokersSorted() : [];
+  var filtered = applyChipFilter(all);
+
+  /* Split: top verified vs rest */
+  var top    = filtered.filter(function(b){ return b.isPremium && b.isVerified; });
+  var others = filtered.filter(function(b){ return !(b.isPremium && b.isVerified); });
+
+  /* Update counts */
+  document.getElementById('top-count').textContent = top.length + ' broker' + (top.length!==1?'s':'');
+  document.getElementById('all-count').textContent = others.length + ' broker' + (others.length!==1?'s':'');
+
+  /* Show/hide sections */
+  document.getElementById('top-section').style.display = top.length ? '' : 'none';
+  document.getElementById('all-section').style.display = others.length ? '' : 'none';
+
+  /* Render cards */
+  document.getElementById('top-grid').innerHTML = top.map(function(b){ return buildCard(b, false); }).join('');
+  document.getElementById('all-grid').innerHTML = others.length
+    ? others.map(function(b){ return buildCard(b, false); }).join('')
+    : '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--ink3);font-size:0.88rem;">No brokers match this filter.</div>';
+
+  /* Animate bars on load */
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      document.querySelectorAll('.bk-bar-fill[data-w]').forEach(function(el){
+        el.style.width = el.getAttribute('data-w') + '%';
+      });
+    });
+  });
+}
+
+function applyChipFilter(all) {
+  if (activeChip === 'all')         return all;
+  if (activeChip === 'top')         return all.filter(function(b){ return b.rating >= 4.7; });
+  if (activeChip === 'rental')      return all.filter(function(b){ return b.services.some(function(s){ return /rent/i.test(s); }); });
+  if (activeChip === 'buying')      return all.filter(function(b){ return b.services.some(function(s){ return /buy/i.test(s); }); });
+  if (activeChip === 'negotiation') return all.filter(function(b){ return b.services.some(function(s){ return /negot/i.test(s); }); });
+  if (activeChip === 'docs')        return all.filter(function(b){ return b.services.some(function(s){ return /doc|legal|agreement/i.test(s); }); });
+  if (activeChip === 'budget')      return all.filter(function(b){ return b.charges && /₹[1-3]/i.test(b.charges.label); });
+  return all;
+}
+
+function setChip(type, btn) {
+  activeChip = type;
+  document.querySelectorAll('.bk-chip').forEach(function(c){ c.classList.remove('on'); });
+  btn.classList.add('on');
+  renderAll();
+}
+
+/* ── Build card HTML ── */
+function buildCard(b, isTop) {
+  var stars = '★'.repeat(Math.round(b.rating)) + '☆'.repeat(5-Math.round(b.rating));
+  var areas = b.areas.slice(0,3).map(function(a){ return '<span class="bk-area-tag">'+h(a)+'</span>'; }).join('');
+  var moreAreas = b.areas.length > 3 ? '<span class="bk-area-more">+' + (b.areas.length-3) + '</span>' : '';
+  var isSent = sentRequests[b.id];
+  var availSlow = /day|6 hour/i.test(b.responseTime);
+
+  return '<div class="bk-card'+(isTop?' top':'')+(b.isTopBroker?' top-pick':'')+'" onclick="goProfile('+b.id+',event)">' +
+    (b.isTopBroker ? '<div class="bk-ribbon">Top Broker</div>' : '') +
+    '<div class="bk-card-head">' +
+      '<div class="bk-av-wrap">' +
+        '<img class="bk-av" src="'+h(b.avatar)+'" alt="'+h(b.name)+'" loading="lazy"/>' +
+        '<div class="bk-avail-dot'+(availSlow?' slow':'')+'" title="'+h(b.availability)+'"></div>' +
+      '</div>' +
+      '<div class="bk-card-info">' +
+        '<div class="bk-card-name">'+h(b.name)+'</div>' +
+        '<div class="bk-card-specialty">' +
+          '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>' +
+          h(b.specialty) +
+        '</div>' +
+        '<div class="bk-rating">' +
+          '<span class="bk-stars">'+stars+'</span>' +
+          '<span class="bk-rating-num">'+b.rating+'</span>' +
+          '<span class="bk-rating-sep">·</span>' +
+          '<span class="bk-exp">'+b.experience+' yrs</span>' +
+          '<span class="bk-rating-sep">·</span>' +
+          '<span class="bk-rating-count">'+b.reviewCount+' reviews</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="bk-card-divider"></div>' +
+    '<div class="bk-areas">' +
+      '<div class="bk-areas-icon"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg></div>' +
+      areas + moreAreas +
+    '</div>' +
+    '<div class="bk-meta">' +
+      '<div class="bk-charge-wrap">' + 
+        '<div class="bk-charge-val">'+h(b.charges.label)+'</div>' +
+        '<div class="bk-charge-lbl">'+h(b.charges.detail.split('·')[0].trim())+'</div>' +
+      '</div>' +
+      (b.isVerified ? '<div class="bk-verified-badge"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Verified</div>' : '') +
+    '</div>' +
+    '<div class="bk-card-btns">' +
+      '<button class="bk-btn bk-btn-view" onclick="goProfile('+b.id+',event)">' +
+        '<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' +
+        'View Profile' +
+      '</button>' +
+      '<button class="bk-btn bk-btn-req'+(isSent?' sent':'')+'" id="bkbtn-'+b.id+'" onclick="sendRequest('+b.id+',event)">' +
+        (isSent
+          ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent'
+          : '<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Request Chat') +
+      '</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function goProfile(id, e) {
+  if (e && e.target.closest('.bk-btn')) return;
+  location.href = 'broker-profile.html?id=' + id;
+}
+
+function sendRequest(id, e) {
+  e.stopPropagation();
+  sentRequests[id] = true;
+  /* Update button */
+  var btn = document.getElementById('bkbtn-'+id);
+  if (btn) {
+    btn.className = 'bk-btn bk-btn-req sent';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent';
+  }
+  /* Show modal */
+  var b = typeof getBrokerById==='function' ? getBrokerById(id) : {name:'Broker',responseTime:'soon'};
+  document.getElementById('req-modal-msg').textContent =
+    'Your request has been sent to ' + (b?b.name:'the broker') + '. They usually respond ' + (b?b.responseTime.toLowerCase():'within a few hours') + '.';
+  document.getElementById('req-modal').classList.add('open');
+}
+
+function closeReqModal() {
+  document.getElementById('req-modal').classList.remove('open');
+}
+document.getElementById('req-modal').addEventListener('click', function(e){ if(e.target===this) closeReqModal(); });
+
+function h(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

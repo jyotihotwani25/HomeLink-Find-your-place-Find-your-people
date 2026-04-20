@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Schedule a Visit — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/schedule-visit.css"/>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- ══ TOPBAR ══ -->
+<header class="sv-topbar">
+  <a class="sv-back" href="#" onclick="goBack(event)" aria-label="Go back">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </a>
+  <a href="../pages/home.html" class="sv-topbar-logo">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.25)"/>
+        <circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/>
+      </svg>
+    </span>
+    HomeLink
+  </a>
+  <span class="sv-step-label">Schedule Visit</span>
+</header>
+
+<!-- ══ MAIN WRAPPER ══ -->
+<div class="sv-wrap">
+
+  <!-- ROW 1: Heading left, Property card right -->
+  <div class="sv-top-row">
+
+    <div class="sv-heading">
+      <div class="sv-heading-tag">Book a visit</div>
+      <h1>When would you<br/>like to visit?</h1>
+      <p>Pick a date on the calendar and choose a time slot. The owner will confirm your request within a few hours.</p>
+    </div>
+
+    <div class="sv-property" id="sv-property">
+      <div class="sv-prop-img">
+        <img id="sv-img" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=300&h=200&fit=crop" alt="Property"/>
+        <span class="sv-prop-badge rent" id="sv-badge">Rent</span>
+      </div>
+      <div class="sv-prop-info">
+        <div class="sv-prop-price" id="sv-price">₹28,000<span>/month</span></div>
+        <div class="sv-prop-title" id="sv-title">2BHK Furnished Apartment</div>
+        <div class="sv-prop-loc">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+          <span id="sv-loc">Vastrapur, Ahmedabad</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sv-top-row -->
+
+  <!-- ROW 2: Calendar left, Slots right -->
+  <div class="sv-picker-row">
+
+    <!-- CALENDAR -->
+    <div>
+      <div class="sv-col-label">
+        <span class="sv-col-label-num" id="step1-num">1</span>
+        Choose a date
+      </div>
+      <div class="sv-calendar">
+        <div class="sv-cal-header">
+          <span class="sv-cal-month" id="cal-month"></span>
+          <div class="sv-cal-nav">
+            <button onclick="calNav(-1)" id="cal-prev" aria-label="Previous month">
+              <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button onclick="calNav(1)" aria-label="Next month">
+              <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="sv-cal-grid">
+          <div class="sv-cal-weekdays">
+            <div class="sv-cal-wday">Su</div><div class="sv-cal-wday">Mo</div>
+            <div class="sv-cal-wday">Tu</div><div class="sv-cal-wday">We</div>
+            <div class="sv-cal-wday">Th</div><div class="sv-cal-wday">Fr</div>
+            <div class="sv-cal-wday">Sa</div>
+          </div>
+          <div class="sv-cal-days" id="cal-days"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLOTS -->
+    <div class="sv-slots-col">
+      <div class="sv-col-label">
+        <span class="sv-col-label-num" id="step2-num">2</span>
+        Choose a time
+      </div>
+
+      <!-- Placeholder before date is picked -->
+      <div class="sv-slots-empty" id="slots-empty">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Pick a date first to see available time slots
+      </div>
+
+      <!-- Slots grid (3 cols) — shown after date pick -->
+      <div class="sv-slots-panel" id="slots-panel">
+        <div class="sv-slots-grid" id="sv-slots"></div>
+      </div>
+
+    </div>
+
+  </div><!-- /sv-picker-row -->
+
+  <!-- SUMMARY — appears after date + time both chosen -->
+  <div class="sv-summary" id="sv-summary">
+    <div class="sv-summary-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </div>
+    <div>
+      <div class="sv-summary-date" id="sv-summary-date"></div>
+      <div class="sv-summary-sub">Your visit request — pending owner confirmation</div>
+    </div>
+  </div>
+
+  <!-- NOTE -->
+  <div>
+    <div class="sv-note-label">Note <span>(optional)</span></div>
+    <textarea class="sv-note" id="sv-note"
+      placeholder="e.g. Coming with family, prefer morning, any specific questions for the owner…"
+      maxlength="300"></textarea>
+  </div>
+
+</div><!-- /sv-wrap -->
+
+<!-- ══ FIXED BOTTOM BAR ══ -->
+<div class="sv-bottom">
+  <div class="sv-hint">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Owner usually responds within 2–4 hours
+  </div>
+  <button class="sv-submit-btn" id="sv-submit" onclick="submitVisit()" disabled>
+    <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    Send Visit Request
+  </button>
+</div>
+
+<!-- ══ SUCCESS OVERLAY ══ -->
+<div class="sv-success" id="sv-success">
+  <div class="sv-success-ring">
+    <svg class="ring" viewBox="0 0 100 100" width="96" height="96">
+      <circle cx="50" cy="50" r="45"/>
+    </svg>
+    <svg class="check" viewBox="0 0 100 100" width="96" height="96">
+      <polyline points="28,52 44,68 72,36" fill="none" stroke="var(--forest)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <h2 class="sv-success-title">Request Sent!</h2>
+  <p class="sv-success-sub">Your visit request has been sent. You'll get a confirmation once the owner responds.</p>
+  <div class="sv-success-detail" id="sv-success-detail"></div>
+  <button class="sv-success-btn" onclick="window.location.href='home.html'">
+    Back to Home
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+  </button>
+</div>
+
+<script src="../js/data/properties.js"></script>
+<script>
+/* ── State ── */
+let P = null, calYear = 0, calMonth = 0;
+let selectedDate = null, selectedSlot = null;
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const ALL_SLOTS = [
+  { time:'9:00 AM',  label:'Morning',   unavail:false },
+  { time:'10:30 AM', label:'Morning',   unavail:false },
+  { time:'12:00 PM', label:'Noon',      unavail:true  },
+  { time:'2:00 PM',  label:'Afternoon', unavail:false },
+  { time:'3:30 PM',  label:'Afternoon', unavail:false },
+  { time:'5:00 PM',  label:'Evening',   unavail:true  },
+  { time:'6:00 PM',  label:'Evening',   unavail:false },
+  { time:'7:00 PM',  label:'Evening',   unavail:false },
+  { time:'8:00 PM',  label:'Evening',   unavail:false },
+];
+
+/* ── Init ── */
+(function() {
+  const id = parseInt(new URLSearchParams(location.search).get('id'));
+  const today = new Date();
+  calYear  = today.getFullYear();
+  calMonth = today.getMonth();
+  if (id && typeof getPropertyById === 'function') P = getPropertyById(id);
+  if (P) fillProperty();
+  renderCalendar();
+  renderSlots();
+})();
+
+function goBack(e) {
+  e.preventDefault();
+  if (document.referrer && document.referrer.includes(location.host)) history.back();
+  else {
+    const id = new URLSearchParams(location.search).get('id');
+    location.href = id ? `property.html?id=${id}` : 'explore.html';
+  }
+}
+
+function fillProperty() {
+  const g = id => document.getElementById(id);
+  g('sv-img').src           = P.thumbnail;
+  g('sv-img').alt           = P.title;
+  g('sv-title').textContent = P.title;
+  g('sv-loc').textContent   = `${P.locality}, ${P.city}`;
+  g('sv-price').innerHTML   = `${P.price}<span>${P.period || ''}</span>`;
+  const b = g('sv-badge');
+  b.textContent = P.category === 'pg' ? 'PG' : P.category === 'buy' ? 'Buy' : 'Rent';
+  b.className   = `sv-prop-badge ${P.category}`;
+  document.title = `Schedule Visit — ${P.title} · HomeLink`;
+}
+
+/* ── Calendar ── */
+function calNav(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0;  calYear++; }
+  if (calMonth < 0)  { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const today = new Date(); today.setHours(0,0,0,0);
+  const firstDay    = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  document.getElementById('cal-month').textContent = `${MONTHS[calMonth]} ${calYear}`;
+  const prev = document.getElementById('cal-prev');
+  prev.disabled = calYear === today.getFullYear() && calMonth === today.getMonth();
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += `<div class="sv-cal-day empty"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(calYear, calMonth, d); date.setHours(0,0,0,0);
+    const tooSoon = date.getTime() <= today.getTime();
+    const isSel   = selectedDate && date.getTime() === selectedDate.getTime();
+    const isToday = date.getTime() === today.getTime();
+    let cls = 'sv-cal-day';
+    if (tooSoon)      cls += ' past';
+    else if (isSel)   cls += ' selected';
+    else if (isToday) cls += ' today';
+    html += `<div class="${cls}"${!tooSoon ? ` onclick="pickDate(${calYear},${calMonth},${d})"` : ''}>${d}</div>`;
+  }
+  document.getElementById('cal-days').innerHTML = html;
+}
+
+function pickDate(y, m, d) {
+  selectedDate = new Date(y, m, d);
+  selectedSlot = null;
+  renderCalendar();
+
+  /* Swap empty state → slots */
+  document.getElementById('slots-empty').style.display = 'none';
+  document.getElementById('slots-panel').classList.add('show');
+  renderSlots();
+
+  /* Mark step 1 done */
+  const n = document.getElementById('step1-num');
+  n.textContent = '✓'; n.classList.add('done');
+
+  updateSummary(); updateBtn();
+}
+
+/* ── Slots ── */
+function renderSlots() {
+  document.getElementById('sv-slots').innerHTML = ALL_SLOTS.map((s, i) => `
+    <button class="sv-slot${s.unavail ? ' unavail' : ''}" ${s.unavail ? 'disabled' : `onclick="pickSlot(${i})"`}>
+      <div class="sv-slot-time">${s.time}</div>
+      <div class="sv-slot-label">${s.label}</div>
+    </button>`).join('');
+}
+
+function pickSlot(i) {
+  selectedSlot = ALL_SLOTS[i];
+  document.querySelectorAll('.sv-slot').forEach((el, idx) => el.classList.toggle('selected', idx === i));
+  /* Mark step 2 done */
+  const n = document.getElementById('step2-num');
+  n.textContent = '✓'; n.classList.add('done');
+  updateSummary(); updateBtn();
+}
+
+/* ── Summary + button ── */
+function updateSummary() {
+  const sum = document.getElementById('sv-summary');
+  if (selectedDate && selectedSlot) {
+    document.getElementById('sv-summary-date').textContent =
+      `${DAYS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTHS[selectedDate.getMonth()]} · ${selectedSlot.time}`;
+    sum.classList.add('show');
+  } else {
+    sum.classList.remove('show');
+  }
+}
+
+function updateBtn() {
+  document.getElementById('sv-submit').disabled = !(selectedDate && selectedSlot);
+}
+
+/* ── Submit ── */
+function submitVisit() {
+  if (!selectedDate || !selectedSlot) return;
+  const btn = document.getElementById('sv-submit');
+  btn.disabled = true;
+  btn.innerHTML = `<svg viewBox="0 0 24 24" width="17" height="17" style="animation:spin 0.7s linear infinite"><circle cx="12" cy="12" r="9" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2.5"/><path d="M12 3a9 9 0 019 9" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/></svg> Sending…`;
+  setTimeout(showSuccess, 1400);
+}
+
+/* ── Success ── */
+function showSuccess() {
+  const dateStr   = `${DAYS[selectedDate.getDay()]}, ${selectedDate.getDate()} ${MONTHS[selectedDate.getMonth()]} ${selectedDate.getFullYear()}`;
+  const propName  = P ? P.title      : 'the property';
+  const ownerName = P ? P.owner.name : 'the owner';
+  document.getElementById('sv-success-detail').innerHTML = `
+    <div class="sv-success-detail-row">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span><strong>${dateStr}</strong></span>
+    </div>
+    <div class="sv-success-detail-row">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span><strong>${selectedSlot.time}</strong> · ${selectedSlot.label}</span>
+    </div>
+    <div class="sv-success-detail-row">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><strong>${propName}</strong></span>
+    </div>
+    <div class="sv-success-detail-row">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span>Sent to <strong>${ownerName}</strong></span>
+    </div>`;
+  const ov = document.getElementById('sv-success');
+  ov.classList.add('show');
+  requestAnimationFrame(() => {
+    ov.querySelector('svg.ring circle').classList.add('animating');
+    ov.querySelector('svg.check').classList.add('animating');
+    ov.querySelector('.sv-success-title').classList.add('animating');
+    ov.querySelector('.sv-success-sub').classList.add('animating');
+    ov.querySelector('.sv-success-detail').classList.add('animating');
+    ov.querySelector('.sv-success-btn').classList.add('animating');
+  });
+  setTimeout(() => { location.href = 'home.html'; }, 4000);
+}
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

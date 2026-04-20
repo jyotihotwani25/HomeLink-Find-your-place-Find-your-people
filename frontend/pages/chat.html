@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Chat — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/chat.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<style>
+/* ── Chat page: override dashboard body overflow so chat scrolls internally ── */
+body { overflow: hidden; }
+.main { overflow: hidden; }
+.pg   { padding: 0; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+</style>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════
+     SIDEBAR — identical to home.html
+════════════════════════════════════════ -->
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni" href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="#" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr">1</span></a>
+    <a class="ni" href="#" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="#" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><span class="ni-lbl">Saved</span><span class="nbdg gr">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">User · Ahmedabad</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sb-overlay" onclick="toggleSb()"></div>
+
+<!-- ════════════════════════════════════════
+     MAIN
+════════════════════════════════════════ -->
+<div class="main" id="main">
+
+  <!-- Topbar — no notif/chat icons in chat page -->
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-l">
+      <div class="top-l-sub">HomeLink</div>
+      <h1 class="top-l-h">Messages</h1>
+    </div>
+  </header>
+
+  <!-- ══ CHAT PAGE CONTENT ══ -->
+  <div class="pg">
+  <div class="chat-page">
+
+    <!-- ① Chat header bar: back | owner info | property pill -->
+    <div class="chat-prop-bar">
+
+      <!-- Back button -->
+      <a class="chat-prop-back" href="javascript:history.back()" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </a>
+
+      <!-- Owner avatar + name + status (primary identity) -->
+      <img class="chat-owner-av" src="https://i.pravatar.cc/80?img=11" alt="" id="hdr-owner-av"/>
+      <div class="chat-owner-info">
+        <div class="chat-owner-name" id="hdr-owner-name">Rohan Mehta</div>
+        <div class="chat-owner-status">
+          <span class="chat-online-dot"></span>
+          <span id="hdr-owner-role">Owner · Online</span>
+        </div>
+      </div>
+
+      <!-- Property pill — right side, compact, text only + photo if space -->
+      <a class="chat-prop-pill" id="hdr-prop-pill" href="property.html?id=1">
+        <img class="chat-prop-pill-img" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=200&h=150&fit=crop" alt="" id="hdr-prop-img"/>
+        <div class="chat-prop-pill-text">
+          <div class="chat-prop-pill-title" id="hdr-title">2BHK Furnished Apartment</div>
+          <div class="chat-prop-pill-price" id="hdr-price">₹28,000/mo</div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ② Messages -->
+    <div class="chat-messages" id="chat-messages">
+
+      <div class="chat-date-divider"><span>Today, 19 Mar 2026</span></div>
+
+      <!-- Received -->
+      <div class="msg-row them">
+        <img class="msg-av" src="https://i.pravatar.cc/80?img=11" alt=""/>
+        <div>
+          <div class="msg-bubble">Hi! I saw your enquiry for the apartment. Happy to answer any questions you have.</div>
+          <span class="msg-time">10:14 AM</span>
+        </div>
+      </div>
+
+      <!-- Sent -->
+      <div class="msg-row me">
+        <div class="msg-av-gap"></div>
+        <div>
+          <div class="msg-bubble">Hello! Yes, I'm interested. Is the flat still available for immediate move-in?</div>
+          <span class="msg-time">10:16 AM
+            <span class="msg-ticks">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Received -->
+      <div class="msg-row them">
+        <img class="msg-av" src="https://i.pravatar.cc/80?img=11" alt=""/>
+        <div>
+          <div class="msg-bubble">Yes, it's available immediately! The society has 24×7 security, gym, and the metro is just 800m away.</div>
+          <span class="msg-time">10:18 AM</span>
+        </div>
+      </div>
+
+      <!-- Sent -->
+      <div class="msg-row me">
+        <div class="msg-av-gap"></div>
+        <div>
+          <div class="msg-bubble">That sounds great. Can we schedule a visit this weekend?</div>
+          <span class="msg-time">10:21 AM
+            <span class="msg-ticks">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Visit scheduled card (received) -->
+      <div class="msg-row them">
+        <img class="msg-av" src="https://i.pravatar.cc/80?img=11" alt=""/>
+        <div class="msg-visit-card">
+          <div class="mvc-tag">Visit Scheduled</div>
+          <div class="mvc-date">Saturday, 21 Mar 2026</div>
+          <div class="mvc-time">10:30 AM · Morning slot</div>
+          <div class="mvc-status">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Pending your confirmation
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-date-divider"><span>Earlier</span></div>
+
+      <!-- Received offer -->
+      <div class="msg-row them">
+        <img class="msg-av" src="https://i.pravatar.cc/80?img=11" alt=""/>
+        <div>
+          <div class="msg-bubble">After thinking it over, I can reduce the rent a little. Let me know if you want to make an offer.</div>
+          <span class="msg-time">Yesterday</span>
+        </div>
+      </div>
+
+      <!-- Offer card sent by user -->
+      <div class="msg-row me" id="sent-offer-row" style="display:none;">
+        <div class="msg-av-gap"></div>
+        <div>
+          <div class="msg-offer-card" id="sent-offer-card">
+            <div class="moc-tag" style="color:var(--amber);">Your Offer</div>
+            <div class="moc-amount" id="sent-offer-amount">₹26,000</div>
+            <div class="moc-label" id="sent-offer-label">per month</div>
+            <div class="moc-waiting">
+              <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              Waiting for owner's response…
+            </div>
+          </div>
+          <span class="msg-time" style="text-align:right;display:block;margin-top:4px;">Just now
+            <span class="msg-ticks">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Offer received (owner counter-offers) — shown after user sends offer -->
+      <div class="msg-row them" id="received-offer-row" style="display:none;">
+        <img class="msg-av" src="https://i.pravatar.cc/80?img=11" alt=""/>
+        <div class="msg-offer-card" id="received-offer-card">
+          <div class="moc-tag">Offer from Owner</div>
+          <div class="moc-amount">₹27,000</div>
+          <div class="moc-label">per month · counter offer</div>
+          <div class="msg-offer-actions" id="offer-actions">
+            <button class="moa-accept"  onclick="acceptOffer()">Accept</button>
+            <button class="moa-decline" onclick="declineOffer()">Decline</button>
+          </div>
+        </div>
+        <span class="msg-time" style="margin-left:8px;">Just now</span>
+      </div>
+
+    </div><!-- /chat-messages -->
+
+    <!-- ③ Quick actions -->
+    <div class="chat-quick-bar">
+      <button class="chat-qa" onclick="openScheduleVisit()">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Schedule Visit
+      </button>
+      <button class="chat-qa qa-offer" onclick="openOfferModal()">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        Make an Offer
+      </button>
+      <button class="chat-qa" onclick="sendQuick('Is the property still available?')">
+        Is it available?
+      </button>
+      <button class="chat-qa" onclick="sendQuick('Can I visit this weekend?')">
+        Visit this weekend?
+      </button>
+      <button class="chat-qa" onclick="sendQuick('What is the deposit amount?')">
+        Deposit details?
+      </button>
+    </div>
+
+    <!-- ④ Input -->
+    <div class="chat-input-bar">
+      <div class="chat-input-wrap">
+        <button class="chat-attach-btn" title="Attach file" onclick="alert('Attachment coming soon')">
+          <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+        </button>
+        <textarea
+          class="chat-input"
+          id="chat-input"
+          rows="1"
+          placeholder="Type a message…"
+          onkeydown="handleKey(event)"
+          oninput="autoGrow(this); toggleSendBtn()"
+        ></textarea>
+      </div>
+      <button class="chat-send-btn" id="send-btn" onclick="sendMessage()" disabled aria-label="Send message">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+
+  </div><!-- /chat-page -->
+  </div><!-- /pg -->
+
+</div><!-- /main -->
+
+<!-- Mobile bottom nav -->
+<nav class="mob-nav">
+  <div class="mob-nw">
+    <div class="mn-i" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </div>
+    <div class="mn-i" onclick="location.href='explore.html'">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+      Explore
+    </div>
+    <div class="mn-fab" onclick="postProperty()" style="width:50px;height:50px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 18px rgba(28,107,69,0.4);cursor:pointer;border:3px solid var(--bg);flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="mn-i mn-premium">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Roommates
+    </div>
+    <div class="mn-i" onclick="location.href='home.html';location.href='profile.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     OFFER MODAL
+════════════════════════════════════════ -->
+<div class="offer-overlay" id="offer-overlay">
+  <div class="offer-sheet" id="offer-sheet">
+    <div class="offer-handle"></div>
+    <div class="offer-head">
+      <div class="offer-head-title">Make an Offer</div>
+      <button class="offer-head-close" onclick="closeOfferModal()">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="offer-body">
+      <!-- Property reference -->
+      <div class="offer-ref">
+        <div class="offer-ref-img">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=200&h=150&fit=crop" alt="" id="offer-prop-img"/>
+        </div>
+        <div>
+          <div class="offer-ref-price" id="offer-listed-price">Listed at ₹28,000/month</div>
+          <div class="offer-ref-title" id="offer-prop-title">2BHK Furnished Apartment</div>
+        </div>
+      </div>
+
+      <div class="offer-label">Your offer amount</div>
+      <div class="offer-input-wrap">
+        <span class="offer-rupee">₹</span>
+        <input type="number" class="offer-input" id="offer-amount-input"
+          placeholder="00,000" min="1000"
+          oninput="updateOfferSugs(this.value)"/>
+      </div>
+
+      <div class="offer-suggestions" id="offer-sug-wrap">
+        <!-- populated by JS based on listed price -->
+      </div>
+
+      <button class="offer-submit" onclick="sendOffer()">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        Send Offer
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+<script>
+/* ══════════════════════════════════════════════
+   CHAT PAGE — page-specific JS
+   main.js provides: toggleSb, toggleNotif,
+   toggleFav, buildPropertyCard, restoreUser etc.
+══════════════════════════════════════════════ */
+
+/* ── Load property from URL ── */
+(function init() {
+  const id = parseInt(new URLSearchParams(location.search).get('id'));
+  if (id && typeof getPropertyById === 'function') {
+    const P = getPropertyById(id);
+    if (P) populateHeader(P);
+  }
+  autoScrollBottom();
+})();
+
+function populateHeader(P) {
+  /* Owner info */
+  if (P.owner) {
+    document.getElementById('hdr-owner-av').src            = P.owner.avatar;
+    document.getElementById('hdr-owner-name').textContent  = P.owner.name;
+    document.getElementById('hdr-owner-role').textContent  = `${P.owner.type} · Online`;
+  }
+
+  /* Property pill (right side) */
+  document.getElementById('hdr-prop-img').src            = P.thumbnail;
+  document.getElementById('hdr-title').textContent       = P.title;
+  document.getElementById('hdr-price').textContent       = P.price + (P.period || '');
+  document.getElementById('hdr-prop-pill').href          = `property.html?id=${P.id}`;
+
+  /* Offer modal reference */
+  document.getElementById('offer-prop-img').src          = P.thumbnail;
+  document.getElementById('offer-prop-title').textContent = P.title;
+  document.getElementById('offer-listed-price').textContent = `Listed at ${P.price}${P.period || ''}`;
+
+  /* Offer suggestions — listedPriceNum already declared at top */
+  listedPriceNum = P.priceNum || 28000;
+  buildOfferSuggestions(listedPriceNum);
+  document.title = `Chat · ${P.title} — HomeLink`;
+}
+
+/* ── Auto-scroll to bottom ── */
+function autoScrollBottom() {
+  const el = document.getElementById('chat-messages');
+  if (el) el.scrollTop = el.scrollHeight;
+}
+
+/* ── Textarea auto-grow ── */
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+/* ── Send button enable/disable ── */
+function toggleSendBtn() {
+  const val = document.getElementById('chat-input').value.trim();
+  document.getElementById('send-btn').disabled = !val;
+}
+
+/* ── Handle Enter key ── */
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+/* ── Send a text message ── */
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text  = input.value.trim();
+  if (!text) return;
+  appendMessage('me', text);
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+  autoScrollBottom();
+
+  /* Simulate reply after 1.5s */
+  setTimeout(() => {
+    const replies = [
+      'Sure, let me check and get back to you.',
+      'Yes, that works for me!',
+      'I\'ll confirm shortly.',
+      'Thanks for reaching out. Happy to help.',
+      'Can we discuss this further?',
+    ];
+    const reply = replies[Math.floor(Math.random() * replies.length)];
+    appendMessage('them', reply);
+    autoScrollBottom();
+  }, 3000);
+}
+
+/* ── Send a quick message ── */
+function sendQuick(text) {
+  const input = document.getElementById('chat-input');
+  input.value = text;
+  toggleSendBtn();
+  sendMessage();
+}
+
+/* ── Append message to DOM ── */
+function appendMessage(side, text, isHTML) {
+  const msgs = document.getElementById('chat-messages');
+  const now  = new Date();
+  const time = now.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:true });
+  const ownerAv = document.getElementById('hdr-owner-av').src;
+
+  const ticks = side === 'me' ? `<span class="msg-ticks"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>` : '';
+
+  const html = `
+    <div class="msg-row ${side}">
+      ${side === 'them' ? `<img class="msg-av" src="${ownerAv}" alt=""/>` : '<div class="msg-av-gap"></div>'}
+      <div>
+        <div class="msg-bubble">${isHTML ? text : escapeHTML(text)}</div>
+        <span class="msg-time">${time} ${ticks}</span>
+      </div>
+    </div>`;
+
+  msgs.insertAdjacentHTML('beforeend', html);
+}
+
+function escapeHTML(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── Schedule visit quick action ── */
+function openScheduleVisit() {
+  const id = new URLSearchParams(location.search).get('id');
+  location.href = id ? `schedule-visit.html?id=${id}` : 'schedule-visit.html';
+}
+
+/* ══════════════════════════════════════════════
+   OFFER FLOW
+══════════════════════════════════════════════ */
+var listedPriceNum = 28000; /* fallback — var so it hoists before init() */
+
+function buildOfferSuggestions(priceNum) {
+  if (priceNum) listedPriceNum = priceNum;
+  const pct  = [0.95, 0.90, 0.85];
+  const wrap = document.getElementById('offer-sug-wrap');
+  wrap.innerHTML = pct.map(p => {
+    const amt = Math.round(listedPriceNum * p / 100) * 100;
+    const pctLabel = Math.round((1 - p) * 100);
+    return `<button class="offer-sug" onclick="setOfferAmt(${amt})">₹${amt.toLocaleString('en-IN')} <span style="color:var(--ink3);font-weight:400;">(−${pctLabel}%)</span></button>`;
+  }).join('');
+}
+
+function setOfferAmt(amt) {
+  document.getElementById('offer-amount-input').value = amt;
+}
+
+function updateOfferSugs() { /* live typing — no-op for now */ }
+
+function openOfferModal() {
+  buildOfferSuggestions(listedPriceNum);
+  document.getElementById('offer-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('offer-amount-input').focus(), 200);
+}
+
+function closeOfferModal(e) {
+  document.getElementById('offer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+/* Click on backdrop (not sheet) closes modal */
+document.getElementById('offer-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeOfferModal();
+});
+
+function sendOffer() {
+  const raw = document.getElementById('offer-amount-input').value;
+  const amt = parseInt(raw);
+  if (!amt || amt < 1000) {
+    document.getElementById('offer-amount-input').focus();
+    return;
+  }
+
+  /* Close modal */
+  document.getElementById('offer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+
+  /* Show sent offer card */
+  const sentRow = document.getElementById('sent-offer-row');
+  document.getElementById('sent-offer-amount').textContent = `₹${amt.toLocaleString('en-IN')}`;
+  document.getElementById('sent-offer-label').textContent = 'per month';
+  sentRow.removeAttribute('style'); sentRow.style.display = 'flex';
+  autoScrollBottom();
+
+  /* Simulate owner counter-offer after 2s */
+  setTimeout(() => {
+    document.getElementById('received-offer-row').style.display = 'flex';
+    autoScrollBottom();
+  }, 2000);
+
+  /* Clear input */
+  document.getElementById('offer-amount-input').value = '';
+}
+
+/* ── Accept / Decline offer ── */
+function acceptOffer() {
+  const actions = document.getElementById('offer-actions');
+  if (!actions) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'moc-accepted';
+  wrap.innerHTML = `
+    <div class="moc-accepted-label">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--forest)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Offer accepted — ₹27,000/month
+    </div>
+    <button class="moc-proceed-btn" onclick="proceedToDeal()">
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      Proceed to Deal
+    </button>`;
+  actions.replaceWith(wrap);
+  autoScrollBottom();
+}
+
+function declineOffer() {
+  const card = document.getElementById('received-offer-card');
+  card.style.opacity = '0.45';
+  document.getElementById('offer-actions').innerHTML =
+    `<div style="font-size:0.72rem;color:var(--coral);font-weight:600;">Offer declined</div>`;
+}
+
+function proceedToDeal() {
+  var _id=new URLSearchParams(location.search).get('id'); location.href=(_id?'deal.html?id='+_id:'deal.html');
+}
+
+/* Scroll to bottom on load */
+window.addEventListener('load', autoScrollBottom);
+</script>
+
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

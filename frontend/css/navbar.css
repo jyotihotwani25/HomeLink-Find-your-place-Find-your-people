@@ -1,0 +1,79 @@
+/* ============================================
+   HOMELINK — NAVBAR CSS
+   Import after global.css on every page.
+   ============================================ */
+
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+  padding: 0 40px; height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(253, 250, 245, 0.784);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease;
+}
+
+/* Logo */
+.logo {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 700; font-size: 1.35rem;
+  display: flex; align-items: center; gap: 8px;
+  color: var(--ink);
+}
+.logo-mark {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--forest);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-mark svg { width: 18px; height: 18px; }
+
+/* Nav links */
+.nav-links { display: flex; gap: 34px; list-style: none;}
+.nav-links a {
+  font-size: 1rem; font-weight: 500;
+  color: var(--ink2); transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--ink); }
+
+/* Nav right */
+.nav-r { display: flex; gap: 10px; align-items: center; }
+.btn-nav {
+  padding: 9px 20px; border-radius: 100px;
+  font-size: 0.81rem; font-weight: 600;
+  transition: all 0.25s; cursor: pointer; font-family: inherit;
+}
+.btn-nav-ghost {
+  background: transparent; color: var(--ink);
+  border: 1.5px solid var(--border);
+}
+.btn-nav-ghost:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* Hamburger */
+.burger { display: none; flex-direction: column; gap: 5px; padding: 8px; background: none; }
+.burger span { display: block; width: 22px; height: 2px; border-radius: 2px; background: var(--ink); transition: all 0.3s; }
+
+/* Mobile menu */
+.mob-menu {
+  display: none; position: fixed; inset: 0; z-index: 998;
+  background: var(--bg); padding: 88px 36px 40px;
+  flex-direction: column;
+}
+.mob-menu.open { display: flex; }
+.mob-menu a {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 2rem; font-weight: 600; color: var(--ink);
+  padding: 14px 0; border-bottom: 1px solid var(--border);
+}
+.mob-btns { display: flex; gap: 12px; margin-top: 36px; flex-wrap: wrap; }
+
+/* Page content offset (so content doesn't hide under fixed nav) */
+.page-body { padding-top: 68px; }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links, .nav-r { display: none; }
+  .burger { display: flex; }
+}

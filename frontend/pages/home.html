@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeLink — Home</title>
+
+<!-- Shared: variables, reset, fonts, utilities -->
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/components.css"/>
+<link rel="stylesheet" href="../css/footer.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/search-hero.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+
+<style>
+/* ── HOME PAGE — SPECIFIC LAYOUT ── */
+/* Broker cards grid */
+.bk-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.bkc{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:18px 14px;text-align:center;transition:transform 0.28s var(--ease),box-shadow 0.28s;cursor:pointer;}
+.bkc:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.bkc-av{width:50px;height:50px;border-radius:50%;object-fit:cover;margin:0 auto 9px;display:block;border:2.5px solid var(--forest-pale);}
+.bkc-name{font-size:0.77rem;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.bkc-spec{font-size:0.63rem;color:var(--ink3);margin-bottom:7px;}
+.bkc-stars{display:flex;align-items:center;justify-content:center;gap:2px;margin-bottom:10px;}
+.bkc-stars svg{width:11px;height:11px;}
+.star-f{fill:var(--amber);stroke:none;}
+.star-e{fill:none;stroke:var(--bg3);stroke-width:2;}
+.bkc-score{font-size:0.64rem;font-weight:700;color:var(--ink2);margin-left:3px;}
+.bkc-btn{width:100%;padding:7px;border-radius:9px;background:var(--forest-pale);color:var(--forest);font-size:0.68rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.18s;border:none;}
+.bkc-btn:hover{background:var(--forest);color:#fff;}
+
+/* Property grid */
+
+/* Visit cards */
+.visits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:10px;}
+.vc{background:var(--white);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:transform 0.28s var(--ease),box-shadow 0.28s;cursor:pointer;}
+.vc:hover{transform:translateY(-4px);box-shadow:var(--shadow-md);}
+.vc-img{height:140px;overflow:hidden;position:relative;}
+.vc-img img{width:100%;height:100%;object-fit:cover;transition:transform 0.45s;}
+.vc:hover .vc-img img{transform:scale(1.05);}
+.vc-status{position:absolute;top:10px;left:10px;display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.92);backdrop-filter:blur(8px);border-radius:100px;padding:4px 10px;font-size:0.64rem;font-weight:700;color:var(--forest);}
+.vc-status svg{width:10px;height:10px;stroke:var(--forest);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.vc-body{padding:13px 15px 15px;}
+.vc-name{font-size:0.84rem;font-weight:700;color:var(--ink);margin-bottom:3px;}
+.vc-loc{font-size:0.7rem;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:4px;}
+.vc-loc svg{width:10px;height:10px;stroke:var(--ink3);stroke-width:2;fill:none;flex-shrink:0;}
+.vc-time{display:flex;align-items:center;gap:6px;background:var(--forest-pale);border-radius:10px;padding:8px 12px;margin-bottom:10px;}
+.vc-time svg{width:14px;height:14px;stroke:var(--forest);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+.vc-time-d{flex:1;}
+.vc-time-main{font-size:0.78rem;font-weight:700;color:var(--forest);}
+.vc-time-sub{font-size:0.64rem;color:var(--forest2);opacity:0.7;}
+.vc-actions{display:flex;gap:6px;}
+.vab{flex:1;padding:7px;border-radius:9px;font-size:0.7rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.18s;display:flex;align-items:center;justify-content:center;gap:5px;}
+.vab svg{width:11px;height:11px;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.vab-p{background:var(--forest);color:#fff;border:none;}
+.vab-p svg{stroke:#fff;}
+.vab-p:hover{background:var(--forest2);}
+.vab-g{background:transparent;color:var(--ink2);border:1.5px solid var(--border);}
+.vab-g:hover{border-color:var(--ink);color:var(--ink);}
+.no-visits{background:var(--white);border:1.5px dashed var(--border);border-radius:18px;padding:36px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;grid-column:1/-1;}
+.no-visits:hover{border-color:var(--forest-mid);background:var(--forest-pale);}
+.no-visits svg{width:36px;height:36px;stroke:var(--forest-mid);stroke-width:1.5;fill:none;margin:0 auto 12px;}
+.no-visits-t{font-size:0.88rem;font-weight:700;color:var(--ink2);margin-bottom:5px;}
+.no-visits-s{font-size:0.75rem;color:var(--ink3);}
+
+/* Premium section */
+.prem-sec{background:linear-gradient(130deg,#1a1208 0%,#26190a 45%,#1a3527 100%);border-radius:24px;padding:40px;position:relative;overflow:hidden;border:1px solid rgba(232,160,32,0.15);}
+.pg1{position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,32,0.14),transparent 70%);pointer-events:none;}
+.pg2{position:absolute;bottom:-40px;left:20%;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(28,107,69,0.16),transparent 70%);pointer-events:none;}
+.pg3{position:absolute;top:40%;right:380px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.03),transparent 70%);pointer-events:none;}
+.prem-inner{position:relative;z-index:1;display:flex;gap:40px;align-items:center;}
+.prem-l{flex:1;}
+.prem-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(232,160,32,0.14);border:1px solid rgba(232,160,32,0.28);border-radius:100px;padding:5px 13px;font-size:0.62rem;font-weight:700;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;}
+.prem-tag svg{width:10px;height:10px;stroke:var(--amber);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.prem-h{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:700;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin-bottom:10px;}
+.prem-h span{color:var(--amber);}
+.prem-p{font-size:0.78rem;color:rgba(255,255,255,0.42);line-height:1.7;max-width:380px;margin-bottom:18px;}
+.prem-feats{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:22px;}
+.pf{display:flex;align-items:center;gap:6px;font-size:0.72rem;color:rgba(255,255,255,0.6);font-weight:500;}
+.pf svg{width:12px;height:12px;stroke:var(--forest-mid);stroke-width:2.2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.prem-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.pb-amber{padding:11px 24px;border-radius:100px;background:var(--amber);color:var(--ink);font-family:'Clash Display',sans-serif;font-size:0.84rem;font-weight:700;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all 0.22s;}
+.pb-amber svg{width:12px;height:12px;stroke:var(--ink);stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+.pb-amber:hover{background:#f0b030;transform:translateY(-1px);}
+.pb-ghost{padding:11px 20px;border-radius:100px;background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.62);font-size:0.8rem;font-weight:600;border:1.5px solid rgba(255,255,255,0.12);cursor:pointer;font-family:inherit;transition:all 0.22s;}
+.pb-ghost:hover{background:rgba(255,255,255,0.13);color:#fff;}
+.prem-r{flex-shrink:0;}
+.pm-cards{display:flex;flex-direction:column;gap:8px;}
+.pm-c{background:rgba(255,255,255,0.07);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:10px;min-width:200px;}
+.pm-c-av{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid rgba(232,160,32,0.35);}
+.pm-c-n{font-size:0.74rem;font-weight:700;color:#fff;}
+.pm-c-pct{font-size:0.64rem;font-weight:700;color:var(--amber);margin-top:1px;}
+.pm-lock{display:flex;align-items:center;justify-content:center;gap:5px;background:rgba(0,0,0,0.3);border-radius:100px;padding:6px 14px;font-size:0.65rem;color:rgba(255,255,255,0.32);font-weight:600;}
+.pm-lock svg{width:10px;height:10px;stroke:rgba(255,255,255,0.32);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;}
+
+/* Footer (inline version for home dashboard) */
+footer{background:var(--ink);padding:56px 0 28px;margin-top:56px;}
+.ft-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;max-width:1240px;margin:0 auto;padding:0 28px;margin-bottom:40px;}
+.ft-brand-n{font-family:'Clash Display',sans-serif;font-size:1.15rem;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.ft-brand-d{font-size:0.8rem;color:rgba(255,255,255,0.3);line-height:1.7;max-width:230px;}
+.ft-col h5{font-size:0.63rem;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:14px;}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:9px;}
+.ft-col ul a{font-size:0.79rem;color:rgba(255,255,255,0.35);transition:color 0.18s;}
+.ft-col ul a:hover{color:#fff;}
+.ft-btm{max-width:1240px;margin:0 auto;padding:20px 28px 0;border-top:1px solid rgba(255,255,255,0.06);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;}
+.ft-copy{font-size:0.72rem;color:rgba(255,255,255,0.2);}
+.ft-socs{display:flex;gap:7px;}
+.ft-soc{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3);font-size:0.65rem;font-weight:700;transition:all 0.18s;}
+.ft-soc:hover{background:#fff;color:var(--ink);border-color:#fff;}
+
+/* Home responsive */
+@media(max-width:1200px){.bk-grid{grid-template-columns:repeat(4,1fr);}}
+@media(max-width:1024px){.visits-grid{grid-template-columns:repeat(2,1fr);}.bk-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:860px){.bk-grid{grid-template-columns:repeat(3,1fr);}.ft-grid{grid-template-columns:1fr 1fr;gap:28px;}}
+@media(max-width:768px){
+  .visits-grid{grid-template-columns:1fr;}
+  .bk-grid{grid-template-columns:repeat(2,1fr);}
+  .prem-r{display:none;}
+  .prem-sec{padding:28px 22px;}
+  .prem-inner{flex-direction:column;gap:22px;}
+  .ft-grid{grid-template-columns:1fr 1fr;gap:20px;}
+}
+@media(max-width:480px){.bk-grid{grid-template-columns:repeat(2,1fr);}}</style>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni act" href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="visits.html" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr" id="visit-bdg">1</span></a>
+    <a class="ni" href="brokers.html" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+</span><span class="ni-lbl">Saved</span><span class="nbdg gr">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">User · Ahmedabad</div></div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+
+<div class="main" id="main">
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-greet">
+      <div class="top-greet-sub" id="gt">Good morning</div>
+      <h1 class="top-greet-h">Welcome back, <span id="gn">Aarav</span></h1>
+    </div>
+    <div class="top-r">
+      <div class="nw">
+        <div class="t-ic" onclick="toggleNotif()" title="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="dot g" id="notif-dot"></span>
+        </div>
+        <div class="ndrop" id="ndrop">
+          <div class="ndrop-hd"><span class="ndrop-hd-t">Notifications</span><span class="ndrop-clr" onclick="markAllRead()">Mark all read</span></div>
+          <div id="notif-list">
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 g"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="nt"><strong>Visit confirmed</strong> — Modern 2BHK, Vastrapur · Tomorrow 11 AM</div><div class="nts">2 hours ago</div></div></div>
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 a"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div><div class="nt"><strong>Broker Rahul</strong> replied to your Bodakdev enquiry</div><div class="nts">5 hours ago</div></div></div>
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 i"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div><div><div class="nt">2 new <strong>2BHK listings</strong> near Vastrapur match your filter</div><div class="nts">Yesterday</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="t-ic" title="Messages" onclick="openChat()"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="dot r" id="chat-dot"></span></div>
+      <button class="t-post" onclick="postProperty()"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Post Property</span></button>
+    </div>
+  </header>
+
+  <div class="pg">
+
+    <!-- SEARCH HERO -->
+    <div class="search-hero" data-r>
+      <div class="sh-hero-label">Find your next home</div>
+      <div class="sh-hero-title">Ahmedabad's best properties, curated for you</div>
+      <div class="sh-hero-bar">
+        <div class="sh-chips">
+          <button class="sh-chip on" onclick="shChip(this)">All</button>
+          <button class="sh-chip" onclick="shChip(this)">Buy</button>
+          <button class="sh-chip" onclick="shChip(this)">Rent</button>
+          <button class="sh-chip" onclick="shChip(this)">PG</button>
+        </div>
+        <div class="sh-input-wrap">
+          <div class="sh-input">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input id="sh-q" type="text" placeholder="Try Vastrapur, Bodakdev, SG Highway…" onkeydown="if(event.key==='Enter')doSearch()"/>
+          </div>
+          <button class="sh-btn" onclick="doSearch()">Search <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECOMMENDED LISTINGS -->
+    <div class="sect" data-r>
+      <div class="sh">
+        <div class="sh-l"><div class="sec-tag">Personalised for you</div><div class="sh-t">Recommended Properties</div></div>
+        <a class="sh-link" href="explore.html">View all listings <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <!-- .lt and .on come from components.css -->
+      <div class="ltabs" data-r data-d="1">
+        <button class="lt on" onclick="filterTab(this,'all')">All</button>
+        <button class="lt" onclick="filterTab(this,'rent')">Rent</button>
+        <button class="lt" onclick="filterTab(this,'buy')">Buy</button>
+        <button class="lt" onclick="filterTab(this,'pg')">PG / Hostel</button>
+      </div>
+      <div class="pgrid" id="pgrid" data-r data-d="2"></div>
+      <div class="load-more"><button class="lm-btn" onclick="location.href='explore.html'">View all properties <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button></div>
+    </div>
+
+    <!-- SCHEDULED VISITS -->
+    <div class="sect" data-r>
+      <div class="sh">
+        <div class="sh-l"><div class="sec-tag">Your schedule</div><div class="sh-t">Upcoming Visits</div></div>
+        <a class="sh-link" href="#">Schedule a visit <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="visits-grid" id="visits-grid" data-r data-d="1"></div>
+    </div>
+
+    <!-- BROKERS -->
+    <div class="sect" data-r>
+      <div class="sh">
+        <div class="sh-l"><div class="sec-tag">Verified professionals</div><div class="sh-t">Top Brokers in Ahmedabad</div></div>
+        <a class="sh-link" href="brokers.html">Browse all brokers <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+      <div class="bk-grid" data-r data-d="1">
+        <div class="bkc"><img class="bkc-av" src="https://i.pravatar.cc/80?img=56" alt=""/><div class="bkc-name">Rahul Desai</div><div class="bkc-spec">West Ahmedabad</div><div class="bkc-stars"><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="bkc-score">4.9</span></div><button class="bkc-btn">Connect</button></div>
+        <div class="bkc"><img class="bkc-av" src="https://i.pravatar.cc/80?img=60" alt=""/><div class="bkc-name">Sneha Patel</div><div class="bkc-spec">SG Highway</div><div class="bkc-stars"><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="bkc-score">4.8</span></div><button class="bkc-btn">Connect</button></div>
+        <div class="bkc"><img class="bkc-av" src="https://i.pravatar.cc/80?img=51" alt=""/><div class="bkc-name">Amit Shah</div><div class="bkc-spec">Navrangpura</div><div class="bkc-stars"><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-e" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="bkc-score">4.6</span></div><button class="bkc-btn">Connect</button></div>
+        <div class="bkc"><img class="bkc-av" src="https://i.pravatar.cc/80?img=35" alt=""/><div class="bkc-name">Kavya Mehta</div><div class="bkc-spec">Prahlad Nagar</div><div class="bkc-stars"><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="bkc-score">4.9</span></div><button class="bkc-btn">Connect</button></div>
+        <div class="bkc"><img class="bkc-av" src="https://i.pravatar.cc/80?img=48" alt=""/><div class="bkc-name">Dev Joshi</div><div class="bkc-spec">Bopal · South</div><div class="bkc-stars"><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-f" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg viewBox="0 0 24 24" class="star-e" width="11" height="11"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span class="bkc-score">4.5</span></div><button class="bkc-btn">Connect</button></div>
+      </div>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="sect prem-sec" data-r>
+      <div class="pg1"></div><div class="pg2"></div><div class="pg3"></div>
+      <div class="prem-inner">
+        <div class="prem-l">
+          <div class="prem-tag"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Premium Feature</div>
+          <h2 class="prem-h">Find someone you'll actually<br><span>love living with.</span></h2>
+          <p class="prem-p">Our AI matches you on lifestyle, habits, sleep schedule and budget — not just location. Exclusively available to Premium members.</p>
+          <div class="prem-feats">
+            <div class="pf"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>AI compatibility scoring</div>
+            <div class="pf"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Verified profiles only</div>
+            <div class="pf"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Lifestyle &amp; habit filters</div>
+            <div class="pf"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Direct in-app messaging</div>
+          </div>
+          <div class="prem-btns">
+            <button class="pb-amber">Unlock Premium <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+            <button class="pb-ghost">How it works</button>
+          </div>
+        </div>
+        <div class="prem-r">
+          <div class="pm-cards">
+            <div class="pm-c"><img class="pm-c-av" src="https://i.pravatar.cc/80?img=25" alt=""/><div><div class="pm-c-n">Priya M.</div><div class="pm-c-pct">94% compatible</div></div></div>
+            <div class="pm-c" style="opacity:0.5;filter:blur(2px);pointer-events:none;"><img class="pm-c-av" src="https://i.pravatar.cc/80?img=44" alt=""/><div><div class="pm-c-n">Rohan K.</div><div class="pm-c-pct">88% compatible</div></div></div>
+            <div class="pm-c" style="opacity:0.35;filter:blur(3px);pointer-events:none;"><img class="pm-c-av" src="https://i.pravatar.cc/80?img=32" alt=""/><div><div class="pm-c-n">Ananya S.</div><div class="pm-c-pct">82% compatible</div></div></div>
+            <div class="pm-lock"><svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>Unlock to see 18 more</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /pg -->
+
+  <footer>
+    <div class="ft-grid">
+      <div>
+        <div class="ft-brand-n"><div class="logo-m" style="width:28px;height:28px;border-radius:8px;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg></div>HomeLink</div>
+        <div class="ft-brand-d">One platform for property discovery, roommates, PGs, brokers and relocation — all in Ahmedabad.</div>
+      </div>
+      <div class="ft-col"><h5>Explore</h5><ul><li><a href="#">Buy Property</a></li><li><a href="#">Rent a Home</a></li><li><a href="#">PG &amp; Hostels</a></li><li><a href="#">New Projects</a></li></ul></div>
+      <div class="ft-col"><h5>Services</h5><ul><li><a href="#">Find a Broker</a></li><li><a href="#">Post Property</a></li><li><a href="#">Rental Agreement</a></li><li><a href="#">Relocation Help</a></li></ul></div>
+      <div class="ft-col"><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Careers</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li></ul></div>
+    </div>
+    <div class="ft-btm">
+      <span class="ft-copy">&copy; 2025 HomeLink Technologies. All rights reserved.</span>
+      <div class="ft-socs"><a class="ft-soc" href="#">in</a><a class="ft-soc" href="#">tw</a><a class="ft-soc" href="#">ig</a></div>
+    </div>
+  </footer>
+</div>
+
+<nav class="mob-nav">
+  <div class="mob-nw">
+    <div class="mn-i on" onclick="document.querySelectorAll('.mn-i').forEach(i=>i.classList.remove('on'));this.classList.add('on')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </div>
+    <div class="mn-i" onclick="document.querySelectorAll('.mn-i').forEach(i=>i.classList.remove('on'));this.classList.add('on');location.href='explore.html'">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+      Explore
+    </div>
+    <div class="mn-fab" onclick="postProperty()" style="width:50px;height:50px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 18px rgba(28,107,69,0.4);cursor:pointer;border:3px solid var(--bg);flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="mn-i mn-premium" onclick="document.querySelectorAll('.mn-i').forEach(i=>i.classList.remove('on'));this.classList.add('on')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Roommates
+    </div>
+    <div class="mn-i" onclick="location.href='profile.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</nav>
+
+<!-- ╔══════════════════════════════════════════╗
+     ║  SCRIPT LOAD ORDER — do not change      ║
+     ║  1. properties.js  — data               ║
+     ║  2. users.js       — user data          ║
+     ║  3. main.js        — shared utilities   ║
+     ║  4. inline         — home-page only     ║
+     ╚══════════════════════════════════════════╝ -->
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════
+   HOME.HTML — PAGE-SPECIFIC SCRIPT
+   Only logic unique to the home dashboard.
+   Everything shared lives in main.js:
+     toggleFav, toggleSidebar, toggleNotif,
+     markAllRead, openChat, postProperty,
+     buildPropertyCard, animateCards,
+     setGreeting, restoreUser, initMobileNav,
+     scroll reveal, SVG helpers.
+══════════════════════════════════════════════ */
+
+/* ── VISITS DATA (static demo, no DB yet) ── */
+const visits = [
+  {
+    n:   'Modern 2BHK · Vastrapur',
+    l:   'Vastrapur, Ahmedabad',
+    day: 'Tomorrow',
+    time:'11:00 AM',
+    img: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=400&h=280&fit=crop&q=80'
+  }
+];
+
+/* ── RENDER LISTINGS ────────────────────────
+   Reads from properties[] (properties.js).
+   Shows max 6 — featured first, then newest.
+   Card HTML delegated to buildPropertyCard()
+   from main.js.
+──────────────────────────────────────────── */
+function renderListings(cat) {
+  const g = document.getElementById('pgrid');
+
+  let list = (cat === 'all')
+    ? [...properties]
+    : properties.filter(p => p.category === cat);
+
+  list = list
+    .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0) || a.postedDaysAgo - b.postedDaysAgo)
+    .slice(0, 6);
+
+  if (!list.length) {
+    g.innerHTML = `<p style="color:var(--ink3);font-size:0.82rem;padding:20px 0;grid-column:1/-1;">No listings found.</p>`;
+    return;
+  }
+
+  g.innerHTML = list.map(p => buildPropertyCard(p)).join('');
+  animateCards(g);
+}
+
+/* ── RENDER VISITS ──────────────────────────*/
+function renderVisits() {
+  const g = document.getElementById('visits-grid');
+  if (!visits.length) {
+    g.innerHTML = `
+      <div class="no-visits">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div class="no-visits-t">No visits scheduled yet</div>
+        <div class="no-visits-s">Schedule a property visit to see it here</div>
+      </div>`;
+    return;
+  }
+  g.innerHTML = visits.map(v => `
+    <div class="vc">
+      <div class="vc-img">
+        <img src="${v.img}" alt="${v.n}" loading="lazy"/>
+        <div class="vc-status">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Confirmed
+        </div>
+      </div>
+      <div class="vc-body">
+        <div class="vc-name">${v.n}</div>
+        <div class="vc-loc">${SVG.loc}${v.l}</div>
+        <div class="vc-time">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <div class="vc-time-d">
+            <div class="vc-time-main">${v.day} · ${v.time}</div>
+            <div class="vc-time-sub">Property visit</div>
+          </div>
+        </div>
+        <div class="vc-actions">
+          <button class="vab vab-p">
+            <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Directions
+          </button>
+          <button class="vab vab-g">Reschedule</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ── TAB FILTER (listing section) ──────────*/
+function filterTab(el, cat) {
+  document.querySelectorAll('.lt').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  renderListings(cat);
+}
+
+/* ── SEARCH HERO CHIPS ──────────────────────*/
+function shChip(el) {
+  document.querySelectorAll('.sh-chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  const map = { 'All': 'all', 'Buy': 'buy', 'Rent': 'rent', 'PG': 'pg' };
+  renderListings(map[el.textContent.trim()] || 'all');
+}
+
+/* ── SEARCH — redirect to explore ──────────*/
+function doSearch() {
+  const q = document.getElementById('sh-q').value.trim();
+  window.location.href = q
+    ? `explore.html?q=${encodeURIComponent(q)}`
+    : 'explore.html';
+}
+
+/* ── SIDEBAR TOGGLE (home uses toggleSidebar
+   from main.js — alias for the HTML onclick) */
+
+/* ── INIT ───────────────────────────────────*/
+renderListings('all');
+renderVisits();
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeLink — Create Account</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Plus Jakarta Sans',sans-serif;-webkit-font-smoothing:antialiased;background:var(--bg);}
+
+/* ── SPLIT 1 : 1.8 ── */
+.page{display:grid;grid-template-columns:1fr 1.5fr;height:100vh;}
+
+/* ══════════ LEFT ══════════ */
+.left{position:relative;overflow:hidden;}
+.left img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);animation:zoom 10s ease forwards;}
+@keyframes zoom{from{transform:scale(1.04)}to{transform:scale(1)}}
+.left::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(8,6,2,0.62) 0%,rgba(8,6,2,0.22) 50%,rgba(28,107,69,0.38) 100%);
+}
+.left-logo{
+  position:absolute;top:28px;left:26px;z-index:5;
+  display:flex;align-items:center;gap:9px;text-decoration:none;
+}
+.lmark{width:30px;height:30px;border-radius:9px;background:var(--forest);display:flex;align-items:center;justify-content:center;}
+.lname{font-family:'Clash Display',sans-serif;font-size:1.05rem;font-weight:700;color:#fff;}
+.left-bottom{position:absolute;bottom:28px;left:26px;right:26px;z-index:5;}
+.left-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,0.1);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.18);border-radius:100px;
+  padding:5px 12px;font-size:0.65rem;font-weight:700;
+  color:rgba(255,255,255,0.8);letter-spacing:0.07em;
+  text-transform:uppercase;margin-bottom:10px;width:fit-content;
+}
+.tag-dot{width:4px;height:4px;border-radius:50%;background:var(--forest-mid);animation:pulse 2s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.left-h{font-family:'Clash Display',sans-serif;font-size:1.35rem;font-weight:700;color:#fff;line-height:1.2;letter-spacing:-0.02em;}
+.left-h span{color:var(--forest-mid);}
+
+/* ══════════ RIGHT ══════════ */
+.right{
+  height:100vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:0 72px;
+  position:relative;
+  background:var(--bg);
+}
+.right-top{
+  position:absolute;top:26px;right:32px;
+  font-size:0.8rem;color:var(--ink3);
+}
+.right-top a{font-weight:700;color:var(--forest);text-decoration:none;}
+.right-top a:hover{opacity:0.7;}
+
+/* ── FORM ── */
+.form-wrap{width:100%;max-width:420px;}
+
+.form-title{
+  font-family:'Clash Display',sans-serif;
+  font-size:2rem;font-weight:700;color:var(--ink);
+  letter-spacing:-0.035em;margin-bottom:3px;
+  animation:up 0.5s 0.05s ease both;
+}
+.form-sub{
+  font-size:0.85rem;color:var(--ink3);
+  margin-bottom:24px;
+  animation:up 0.5s 0.08s ease both;
+}
+
+/* ── ROLE ── */
+.role-row{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:22px;
+  animation:up 0.5s 0.1s ease both;
+}
+.role-btn{
+  padding:12px 8px 10px;
+  border:1.5px solid var(--border);
+  border-radius:12px;background:var(--white);
+  cursor:pointer;font-family:inherit;
+  display:flex;flex-direction:column;align-items:flex-start;gap:5px;
+  transition:all 0.2s;position:relative;overflow:hidden;
+}
+.role-btn::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;
+  background:var(--forest);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.22s ease;
+}
+.role-btn:hover{border-color:rgba(28,107,69,0.3);background:var(--forest-pale);}
+.role-btn:hover::after,.role-btn.active::after{transform:scaleX(1);}
+.role-btn.active{border-color:var(--forest);background:var(--forest-pale);}
+.rb-ico{font-size:1.1rem;}
+.rb-name{font-size:0.78rem;font-weight:700;color:var(--ink);text-align: left;}
+.rb-desc{font-size:0.64rem;color:var(--ink2);line-height:1.3;text-align: left;}
+.role-btn.active .rb-name{color:var(--forest);}
+
+/* ── DIVIDER ── */
+.divider{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+  animation:up 0.5s 0.12s ease both;
+}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.divider span{font-size:0.68rem;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+
+/* ── ALERT ── */
+.alert{
+  padding:10px 13px;border-radius:10px;font-size:0.79rem;font-weight:500;
+  display:none;align-items:center;gap:8px;margin-bottom:14px;
+}
+.alert.error{display:flex;background:#fff0ed;color:#b83232;border:1px solid rgba(224,92,58,0.2);}
+.alert.success{display:flex;background:var(--forest-pale);color:var(--forest);border:1px solid rgba(28,107,69,0.18);}
+
+/* ── FIELDS ── */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.field{
+  margin-bottom:12px;
+  animation:up 0.5s ease both;
+}
+.field:nth-child(1){animation-delay:0.13s;}
+.field:nth-child(2){animation-delay:0.15s;}
+.field:nth-child(3){animation-delay:0.17s;}
+.field:nth-child(4){animation-delay:0.19s;}
+.field:nth-child(5){animation-delay:0.21s;}
+
+.field-lbl{
+  display:block;font-size:0.78rem;font-weight:700;
+  color:var(--ink2);margin-bottom:6px;
+}
+.field-wrap{position:relative;}
+.field-ico{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  color:var(--ink3);display:flex;pointer-events:none;
+}
+.fi{
+  width:100%;padding:12px 14px 12px 38px;
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:0.9rem;color:var(--ink);outline:none;transition:all 0.2s;
+}
+.fi.bare{padding-left:13px;}
+.fi:focus{border-color:var(--forest);box-shadow:0 0 0 3px rgba(28,107,69,0.08);}
+.fi::placeholder{color:var(--ink3);}
+.fi.err{border-color:#e05c3a;background:#fff8f6;}
+.field-eye{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--ink3);display:flex;padding:3px;transition:color 0.2s;
+}
+.field-eye:hover{color:var(--ink);}
+
+/* ── STRENGTH ── */
+.strength{margin-top:6px;display:none;}
+.sbars{display:flex;gap:4px;margin-bottom:3px;}
+.sb{height:2.5px;flex:1;border-radius:3px;background:var(--border);transition:background 0.3s;}
+.sb.weak{background:#e05c3a;}
+.sb.fair{background:var(--amber);}
+.sb.good{background:var(--forest-mid);}
+.sb.strong{background:var(--forest);}
+.stxt{font-size:0.67rem;color:var(--ink3);}
+
+/* ── TERMS ── */
+.terms{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 14px;
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:11px;margin-bottom:18px;
+  animation:up 0.5s 0.22s ease both;
+}
+.terms-chk{width:15px;height:15px;min-width:15px;accent-color:var(--forest);cursor:pointer;margin-top:2px;}
+.terms-txt{font-size:0.76rem;color:var(--ink2);line-height:1.55;}
+.terms-txt a{color:var(--forest);font-weight:600;text-decoration:none;}
+
+/* ── SUBMIT ── */
+.submit-row{
+  display:flex;align-items:center;gap:16px;
+  animation:up 0.5s 0.24s ease both;
+}
+.btn-submit{
+  padding:13px 30px;
+  background:var(--forest);color:#fff;
+  border:none;border-radius:100px;
+  font-family:'Clash Display',sans-serif;
+  font-size:0.95rem;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:7px;
+  box-shadow:0 4px 18px rgba(28,107,69,0.25);
+  transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+}
+.btn-submit:hover{background:var(--forest2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(28,107,69,0.35);}
+.btn-submit:active{transform:translateY(0);}
+.btn-submit:disabled{background:var(--ink3);box-shadow:none;cursor:not-allowed;transform:none;}
+.signin-note{font-size:0.82rem;color:var(--ink);line-height:1.55;}
+.signin-note a{color:var(--forest);font-weight:700;text-decoration:none;}
+
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:900px){
+  .page{grid-template-columns:1fr;}
+  .left{display:none;}
+  .right{padding:0 28px;height:100vh;}
+  .right-top{top:18px;right:20px;}
+}
+</style>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+<div class="page">
+
+  <!-- LEFT -->
+  <div class="left">
+    <img src="https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=900&h=1400&fit=crop&q=90" alt=""/>
+    <a href="../index.html" class="left-logo">
+      <span class="lmark">
+        <svg viewBox="0 0 24 24" width="15" height="15">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.25)" stroke="#fff" stroke-width="1.8"/>
+          <circle cx="12" cy="9" r="2.8" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="lname">HomeLink</span>
+    </a>
+    <div class="left-bottom">
+      <div class="left-tag"><span class="tag-dot"></span>Join HomeLink</div>
+      <div class="left-h">One account.<br><span>Every service.</span><br>Zero hassle.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    
+    <div class="form-wrap">
+
+      <h1 class="form-title">Create account</h1>
+      <p class="form-sub">Join thousands finding their perfect home.</p>
+
+      <!-- Role -->
+      <div class="role-row">
+        <button class="role-btn active" onclick="setRole(this,'user')" type="button">
+          <span class="rb-ico">👤</span>
+          <span class="rb-name">User</span>
+          <span class="rb-desc">Buy, rent, find roommates or find a PG</span>
+        </button>
+        <button class="role-btn" onclick="setRole(this,'broker')" type="button">
+          <span class="rb-ico">🤝</span>
+          <span class="rb-name">Broker</span>
+          <span class="rb-desc">Connect buyers & renters</span>
+        </button>
+        <button class="role-btn" onclick="setRole(this,'owner')" type="button">
+          <span class="rb-ico">🏢</span>
+          <span class="rb-name">Builder/PG or Hostel Owner</span>
+          <span class="rb-desc">List your property</span>
+        </button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Alert -->
+      <div class="alert" id="alertBox">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="alertTxt"></span>
+      </div>
+
+      <!-- Name -->
+      <div class="fgrid">
+        <div class="field">
+          <label class="field-lbl" for="firstInp">First name</label>
+          <div class="field-wrap">
+            <input class="fi bare" id="firstInp" type="text" placeholder="Enter your first name" autocomplete="given-name"/>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-lbl" for="lastInp">Last name</label>
+          <div class="field-wrap">
+            <input class="fi bare" id="lastInp" type="text" placeholder="Enter your last name" autocomplete="family-name"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label class="field-lbl" for="emailInp">Email address</label>
+        <div class="field-wrap">
+          <span class="field-ico">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <input class="fi" id="emailInp" type="email" placeholder="you@email.com" autocomplete="email"/>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="field">
+        <label class="field-lbl" for="phoneInp">Phone number</label>
+        <div class="field-wrap">
+          <span class="field-ico">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </span>
+          <input class="fi" id="phoneInp" type="tel" placeholder="9876543210"/>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label class="field-lbl" for="passInp">Password</label>
+        <div class="field-wrap">
+          <span class="field-ico">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </span>
+          <input class="fi" id="passInp" type="password" placeholder="Create a password" oninput="checkStrength(this.value)" autocomplete="new-password"/>
+          <button class="field-eye" onclick="togglePass()" type="button">
+            <svg id="eyeIco" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="strength" id="strengthWrap">
+          <div class="sbars">
+            <div class="sb" id="sb1"></div><div class="sb" id="sb2"></div>
+            <div class="sb" id="sb3"></div><div class="sb" id="sb4"></div>
+          </div>
+          <div class="stxt" id="stxt"></div>
+        </div>
+      </div>
+
+      <!-- Terms -->
+      <div class="terms">
+        <input class="terms-chk" type="checkbox" id="termsChk"/>
+        <label class="terms-txt" for="termsChk">
+          I agree to HomeLink's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </label>
+      </div>
+
+      <!-- Submit -->
+      <div class="submit-row">
+        <button class="btn-submit" onclick="handleSignUp()" type="button" id="submitBtn">
+          Create account
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M7 1l6 6-6 6"/></svg>
+        </button>
+        <div class="signin-note">Already have an account?&nbsp;&nbsp;<a href="signin.html">Sign in</a></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="../js/data/users.js"></script>
+<script>
+let selectedRole = 'user';
+
+function setRole(el, role) {
+  document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  selectedRole = role;
+}
+
+// ================= PASSWORD TOGGLE =================
+let passVisible = false;
+function togglePass() {
+  passVisible = !passVisible;
+  document.getElementById('passInp').type = passVisible ? 'text' : 'password';
+  document.getElementById('eyeIco').innerHTML = passVisible
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+// ================= PASSWORD STRENGTH =================
+function checkStrength(val) {
+  const wrap = document.getElementById('strengthWrap');
+  const txt  = document.getElementById('stxt');
+  const bars = ['sb1','sb2','sb3','sb4'].map(id => document.getElementById(id));
+
+  if (!val) { wrap.style.display='none'; return; }
+
+  wrap.style.display = 'block';
+  bars.forEach(b => b.className = 'sb');
+
+  let s = 0;
+  if (val.length >= 6) s++;
+  if (val.length >= 10) s++;
+  if (/[A-Z]/.test(val) && /[0-9]/.test(val)) s++;
+  if (/[^A-Za-z0-9]/.test(val)) s++;
+
+  const cls = ['weak','fair','good','strong'];
+  const lbl = ['Weak','Fair','Good','Strong 💪'];
+
+  for (let i = 0; i < s; i++) bars[i].classList.add(cls[s-1]);
+  txt.textContent = lbl[s-1] || '';
+}
+
+// ================= ALERT =================
+function showAlert(msg, type) {
+  const box = document.getElementById('alertBox');
+  box.className = 'alert ' + type;
+  document.getElementById('alertTxt').textContent = msg;
+}
+
+// ================= SIGNUP =================
+function handleSignUp() {
+  ['firstInp','lastInp','emailInp','phoneInp','passInp']
+    .forEach(id => document.getElementById(id).classList.remove('err'));
+
+  document.getElementById('alertBox').className = 'alert';
+
+  const first = document.getElementById('firstInp').value.trim();
+  const last  = document.getElementById('lastInp').value.trim();
+  const email = document.getElementById('emailInp').value.trim().toLowerCase();
+  const phone = document.getElementById('phoneInp').value.trim();
+  const pass  = document.getElementById('passInp').value;
+  const terms = document.getElementById('termsChk').checked;
+
+  let ok = true;
+  const err = id => { document.getElementById(id).classList.add('err'); ok = false; };
+
+  if (!first) err('firstInp');
+  if (!last) err('lastInp');
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) err('emailInp');
+  if (!phone || !/^\d{10}$/.test(phone)) err('phoneInp');
+  if (!pass || pass.length < 6) err('passInp');
+
+  if (!ok) {
+    showAlert('Please fix the highlighted fields.', 'error');
+    return;
+  }
+
+  if (!terms) {
+    showAlert('Please agree to the Terms of Service.', 'error');
+    return;
+  }
+
+  const local = JSON.parse(localStorage.getItem('hl_users')) || [];
+  const all = [...staticUsers, ...local];
+
+  // ✅ FIXED EMAIL CHECK
+  if (all.find(u => (u.private?.email || u.email) === email)) {
+    err('emailInp');
+    showAlert('This email is already registered.', 'error');
+    return;
+  }
+
+  const newUser = {
+    id: Date.now(),
+    name: `${first} ${last}`,
+    email,
+    phone,
+    password: pass,
+    role: selectedRole,
+    avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70)+1}`,
+    saved: [],
+    joined: new Date().toLocaleDateString('en-IN',{month:'short',year:'numeric'})
+  };
+
+  local.push(newUser);
+  localStorage.setItem('hl_users', JSON.stringify(local));
+
+  // 🔐 SAVE LOGIN (IMPORTANT CHANGE)
+  localStorage.setItem('hl_user', JSON.stringify(newUser));
+
+  showAlert(`Welcome, ${first}! Taking you home… 🚀`, 'success');
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = 'Setting things up…';
+
+  setTimeout(() => {
+    window.location.href = 'home.html';
+  }, 1200);
+}
+
+// ================= ENTER KEY =================
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleSignUp();
+});
+
+// ================= AUTO REDIRECT IF LOGGED IN =================
+if (localStorage.getItem('hl_user')) {
+  window.location.href = 'home.html';
+}
+</script>
+<script src="../js/main.js"></script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

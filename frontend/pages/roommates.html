@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Roommate Matching — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/roommates.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<aside class="sb prem-sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m" style="background:var(--amber);">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.22)"/><circle cx="12" cy="9" r="2.5" fill="#fff"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" style="display:none; margin-left:auto;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" style="background-color:  #2a210f;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="5" stroke-linecap="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni" href="home.html"          data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html"       data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="visits.html"          data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span></a>
+    <a class="ni" href="brokers.html"                  data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni act" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><span class="ni-lbl">Saved</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;">
+      <img class="u-av" id="sb-av" src="https://i.pravatar.cc/80?img=12" alt=""/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">Premium Member</div></div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+
+
+<div class="main" id="main">
+
+  <header class="top prem-top">
+    <button class="mob-hamburger" onclick="toggleSb()" style="background-color: #2a210f;" >
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-greet">
+      <div class="top-greet-sub">✦ Premium</div>
+      <h1 class="top-greet-h">Roommate Matching</h1>
+    </div>
+    <div class="top-r">
+      <a href="profile.html" class="t-ic" style="text-decoration:none;" title="My Profile">
+        <img id="top-av" src="https://i.pravatar.cc/80?img=12" style="width:22px;height:22px;border-radius:50%;object-fit:cover;" alt=""/>
+      </a>
+    </div>
+  </header>
+
+  <div class="pg" style="padding:0;" id="page-root">
+
+    <!-- ── NON-PREMIUM GATE (shown if not premium) ── -->
+    <div id="gate" style="display:none;">
+      <div style="height:48px;"></div>
+      <div class="rm-gate">
+        <div class="rm-gate-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        </div>
+        <div class="rm-gate-title">Premium Members Only</div>
+        <div class="rm-gate-sub">Roommate Matching is exclusive to HomeLink Premium. Find compatible flatmates based on real lifestyle data — not just location and budget.</div>
+        <button class="rm-gate-btn" onclick="simulateUpgrade()">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Upgrade to Premium
+        </button>
+      </div>
+    </div>
+
+    <!-- ── MAIN CONTENT (shown if premium) ── -->
+    <div id="rm-content">
+
+      <!-- Hero -->
+      <div class="rm-hero">
+        <div class="rm-hero-inner">
+          <div>
+            <div class="rm-hero-tag">
+              <svg viewBox="0 0 24 24" style="width:9px;height:9px;fill:var(--amber);stroke:none;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              Premium Feature
+            </div>
+            <div class="rm-hero-title">Find Your<br/>Ideal Roommate</div>
+            <div class="rm-hero-sub">Matched on lifestyle, habits & personality — not just location.</div>
+          </div>
+          <div class="rm-hero-stat">
+            <div class="rm-hero-stat-num" id="active-count">—</div>
+            <div class="rm-hero-stat-lbl">Active Profiles</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="rm-filters">
+        <span class="rm-filter-lbl">Filter</span>
+        <button class="rm-chip on" id="chip-all"  onclick="setChip('all',this)">All</button>
+        <button class="rm-chip"    id="chip-best" onclick="setChip('best',this)">
+          <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          Best Match
+        </button>
+        <select class="rm-select" id="sel-gender" onchange="applyFilters()">
+          <option value="">Any Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+        <select class="rm-select" id="sel-work" onchange="applyFilters()">
+          <option value="">Any Occupation</option>
+          <option value="Working">Working</option>
+          <option value="Student">Student</option>
+        </select>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="rm-section">
+        <div class="rm-section-hd">
+          <div class="rm-section-title">People Looking for Roommates</div>
+          <div class="rm-section-count" id="rm-count">—</div>
+        </div>
+        <div class="rm-grid" id="rm-grid"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div><!-- /main -->
+
+<!-- Mobile nav -->
+<nav class="mob-nav prem-nav">
+  <div class="mob-nw">
+    <div class="mn-i" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </div>
+    <div class="mn-i" onclick="location.href='explore.html'">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+      Explore
+    </div>
+    <div class="mn-fab" onclick="postProperty()">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="mn-i on mn-premium" onclick="location.href='roommates.html'">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Roommates
+    </div>
+    <div class="mn-i" onclick="location.href='profile.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</nav>
+
+<!-- COMPATIBILITY MODAL -->
+<div class="cm-overlay" id="cm-overlay">
+  <div class="cm-sheet">
+    <div class="cm-handle"></div>
+    <div class="cm-head" id="cm-head"></div>
+    <div class="cm-score-hero" id="cm-score-hero"></div>
+    <div class="cm-body" id="cm-body"></div>
+  </div>
+</div>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+<script>
+/* ══════════════════════════════════════════
+   ROOMMATES.HTML — JS
+══════════════════════════════════════════ */
+var ME = null;
+var sent = {};     /* { userId: true } */
+var activeChip = 'all';
+
+(function boot() {
+  ME = (typeof getCurrentUser === 'function' && getCurrentUser())
+     || (typeof getUserById   === 'function' && getUserById(1))
+     || null;
+
+  restoreUser();
+  if (ME) {
+    document.getElementById('sb-av').src = ME.avatar || '';
+    document.getElementById('top-av').src = ME.avatar || '';
+    var prem = ME.isPremium !== false; /* default true for prototype */
+    if (!prem) {
+      document.getElementById('gate').style.display      = '';
+      document.getElementById('rm-content').style.display = 'none';
+    } else {
+      renderGrid(getPool());
+    }
+  } else {
+    renderGrid(getPool());
+  }
+})();
+
+/* ── Data pool: roommate-enabled users excluding self ── */
+function getPool() {
+  if (typeof getAllUsers !== 'function') return [];
+  return getAllUsers().filter(function(u) {
+    if (!u.roommate || !u.roommate.enabled) return false;
+    if (ME && u.id === ME.id) return false;
+    return true;
+  });
+}
+
+/* ── Compatibility score 0–99 ── */
+function score(a, b) {
+  if (!a || !b || !a.roommate || !b.roommate) return 50;
+  var pts = 0, max = 0;
+  var L1 = a.roommate.lifestyle||{}, L2 = b.roommate.lifestyle||{};
+  var W1 = a.roommate.work||{},      W2 = b.roommate.work||{};
+  var P1 = a.roommate.personality||{},P2 = b.roommate.personality||{};
+  var LF = a.roommate.lookingFor||{};
+  function eq(x,y,w){ max+=w; pts+=(x&&y)?(x===y?w:w*0.1):w*0.5; }
+  function be(x,y,w){ max+=w; pts+=(x===y?w:0); }
+  eq(L1.sleep,L2.sleep,12); eq(L1.cleanliness,L2.cleanliness,14); eq(L1.food,L2.food,10);
+  be(L1.smoking,L2.smoking,10); be(L1.drinking,L2.drinking,8);
+  eq(W1.type,W2.type,8); eq(W1.schedule,W2.schedule,7); be(W1.wfh,W2.wfh,5);
+  eq(P1.social,P2.social,8); eq(P1.guests,P2.guests,7); eq(P1.noise,P2.noise,9);
+  max+=15; if(!LF.gender||LF.gender==='Any'){pts+=15;}else if(LF.gender===b.gender){pts+=15;}
+  return Math.min(99, Math.max(20, max>0?Math.round((pts/max)*100):50));
+}
+function cls(s){ return s>=70?'hi':s>=50?'md':'lo'; }
+
+/* ── Render grid ── */
+function renderGrid(pool) {
+  document.getElementById('active-count').textContent = pool.length;
+
+  var scored = pool.map(function(u){ return {u:u, s:score(ME,u)}; })
+               .sort(function(a,b){ return b.s-a.s; });
+
+  var gender = document.getElementById('sel-gender').value;
+  var work   = document.getElementById('sel-work').value;
+
+  var filtered = scored.filter(function(x){
+    if (activeChip==='best' && x.s<70) return false;
+    if (gender && x.u.gender !== gender) return false;
+    if (work && x.u.roommate && x.u.roommate.work && x.u.roommate.work.type !== work) return false;
+    return true;
+  });
+
+  document.getElementById('rm-count').textContent = filtered.length + ' profile' + (filtered.length!==1?'s':'');
+
+  var grid = document.getElementById('rm-grid');
+  grid.innerHTML = '';
+
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="rm-empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg><div class="rm-empty-t">No profiles match</div><div style="font-size:0.76rem;margin-top:4px;">Try adjusting your filters</div></div>';
+    return;
+  }
+
+  filtered.forEach(function(x, i) {
+    var u = x.u, s = x.s, c = cls(s);
+    var isTop = s >= 70;
+    var areas = (u.roommate&&u.roommate.lookingFor&&u.roommate.lookingFor.areas)||[];
+    var tags  = buildTags(u, s);
+    var isSent = sent[u.id];
+
+    var card = document.createElement('div');
+    card.className = 'rm-card' + (isTop?' top-pick':'');
+    card.setAttribute('data-id', u.id);
+    card.setAttribute('data-s', s);
+    card.setAttribute('data-g', u.gender||'');
+    card.setAttribute('data-w', (u.roommate&&u.roommate.work&&u.roommate.work.type)||'');
+
+    card.innerHTML =
+      (isTop ? '<div class="rm-ribbon">Best Match</div>' : '') +
+      '<div class="rm-card-top">' +
+        '<div class="rm-av-wrap">' +
+          '<img class="rm-av" src="' + h(u.avatar||('https://i.pravatar.cc/150?img='+u.id)) + '" alt="' + h(u.name) + '" loading="lazy"/>' +
+          '<div class="rm-score-badge ' + c + '">' + s + '</div>' +
+        '</div>' +
+        '<div class="rm-card-info">' +
+          '<div class="rm-card-name">' + h(u.name) + (u.age?', '+u.age:'') + '</div>' +
+          '<div class="rm-card-meta">' + h(u.occupation||'—') + '</div>' +
+          '<div class="rm-card-area"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>' + h(areas[0]||u.city||'—') + '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="rm-tags">' + tags + '</div>' +
+      '<div class="rm-compat-row">' +
+        '<div class="rm-compat-info">' +
+          '<div class="rm-compat-label">Compatibility Score</div>' +
+          '<div class="rm-bar-track"><div class="rm-bar-fill ' + c + '" style="width:0%" data-w="' + s + '"></div></div>' +
+        '</div>' +
+        '<div class="rm-compat-pct ' + c + '">' + s + '%</div>' +
+      '</div>' +
+      '<div class="rm-card-btns">' +
+        '<button class="rm-btn rm-btn-view" onclick="openCompat(' + u.id + ',event)">' +
+          '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+          'Compatibility' +
+        '</button>' +
+        '<button class="rm-btn rm-btn-req' + (isSent?' sent':'') + '" id="rb-' + u.id + '" onclick="sendReq(' + u.id + ',event)">' +
+          (isSent
+            ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent'
+            : '<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send Request') +
+        '</button>' +
+      '</div>';
+
+    card.addEventListener('click', function(e){
+      if (e.target.closest('.rm-btn')) return;
+      location.href = 'roommate-profile.html?id=' + u.id;
+    });
+    grid.appendChild(card);
+  });
+
+  /* Animate bars after paint */
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      document.querySelectorAll('.rm-bar-fill[data-w]').forEach(function(el){
+        el.style.width = el.getAttribute('data-w') + '%';
+      });
+    });
+  });
+}
+
+function buildTags(u, s) {
+  var tags = '';
+  var ls = (u.roommate&&u.roommate.lifestyle)||{};
+  var wk = (u.roommate&&u.roommate.work)||{};
+  (u.traits||[]).slice(0,2).forEach(function(t){ tags += '<span class="rm-tag">'+h(t)+'</span>'; });
+  if (ls.sleep) tags += '<span class="rm-tag amber">'+h(ls.sleep)+'</span>';
+  if (wk.wfh)  tags += '<span class="rm-tag green">WFH</span>';
+  return tags;
+}
+
+/* ── Filters ── */
+function setChip(type, btn) {
+  activeChip = type;
+  document.querySelectorAll('.rm-chip').forEach(function(c){ c.classList.remove('on'); });
+  btn.classList.add('on');
+  renderGrid(getPool());
+}
+function applyFilters() { renderGrid(getPool()); }
+
+/* ── Send request ── */
+function sendReq(uid, e) {
+  if (e) e.stopPropagation();
+  sent[uid] = true;
+  var btn = document.getElementById('rb-'+uid);
+  if (btn) {
+    btn.className = 'rm-btn rm-btn-req sent';
+    btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent';
+  }
+  /* Also update compat modal send button if open */
+  var cb = document.getElementById('cm-send');
+  if (cb && cb.dataset.uid == uid) {
+    cb.className = 'cm-send-btn sent';
+    cb.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent!';
+  }
+  var name = (typeof getUserById==='function'&&getUserById(uid))||{name:'User'};
+  toast('Request sent to ' + name.name.split(' ')[0] + ' ✓');
+}
+
+/* ── Compatibility modal ── */
+function openCompat(uid, e) {
+  if (e) e.stopPropagation();
+  var them = typeof getUserById==='function' ? getUserById(uid) : null;
+  if (!them) return;
+
+  var s = score(ME, them), c = cls(s);
+  var offset = 263 - (263 * s / 100);
+  var isSent = sent[uid];
+
+  /* Header */
+  document.getElementById('cm-head').innerHTML =
+    '<img class="cm-head-av" src="'+h(them.avatar||'')+'" alt=""/>' +
+    '<div><div class="cm-head-name">'+h(them.name)+'</div><div class="cm-head-role">'+h(them.occupation||'')+(them.city?' · '+them.city:'')+'</div></div>' +
+    '<div class="cm-head-close" onclick="closeCompat()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>';
+
+  /* Score ring */
+  document.getElementById('cm-score-hero').innerHTML =
+    '<div class="cm-ring-wrap">' +
+      '<svg class="cm-ring-svg" viewBox="0 0 100 100" width="100" height="100">' +
+        '<circle class="cm-ring-track" cx="50" cy="50" r="42"/>' +
+        '<circle class="cm-ring-fill '+c+'" cx="50" cy="50" r="42" id="cm-ring" style="stroke-dashoffset:'+offset+'"/>' +
+      '</svg>' +
+      '<div class="cm-ring-inner">' +
+        '<span class="cm-ring-pct '+c+'">'+s+'%</span>' +
+        '<span class="cm-ring-lbl">Match</span>' +
+      '</div>' +
+    '</div>' +
+    '<div class="cm-verdict '+c+'">' + (s>=70?'✅ Recommended':s>=50?'⚠️ Partial Match':'⚠️ Low Match') + '</div>';
+
+  /* Breakdown rows */
+  var me = ME||{};
+  var ML=(me.roommate&&me.roommate.lifestyle)||{}, TL=(them.roommate&&them.roommate.lifestyle)||{};
+  var MW=(me.roommate&&me.roommate.work)||{},     TW=(them.roommate&&them.roommate.work)||{};
+  var MP=(me.roommate&&me.roommate.personality)||{}, TP=(them.roommate&&them.roommate.personality)||{};
+
+  function row(lbl, mv, tv) {
+    var match = (!mv||!tv)?'p':(mv===tv?'y':'n');
+    var icon  = match==='y'?'✓':match==='n'?'✗':'—';
+    return '<div class="cm-row"><span class="cm-row-key">'+lbl+'</span>' +
+      '<span class="cm-row-right">' +
+        '<span class="cm-val-me">'+(mv||'—')+'</span>' +
+        '<span class="cm-divider">·</span>' +
+        '<span class="cm-val-them">'+(tv||'—')+'</span>' +
+        '<span class="cm-dot '+match+'">'+icon+'</span>' +
+      '</span></div>';
+  }
+  function brow(lbl, mv, tv) {
+    var smv=mv?'Yes':'No', stv=tv?'Yes':'No';
+    var match=mv===tv?'y':'n';
+    return '<div class="cm-row"><span class="cm-row-key">'+lbl+'</span>' +
+      '<span class="cm-row-right">' +
+        '<span class="cm-val-me">'+smv+'</span>' +
+        '<span class="cm-divider">·</span>' +
+        '<span class="cm-val-them">'+stv+'</span>' +
+        '<span class="cm-dot '+match+'">'+(match==='y'?'✓':'✗')+'</span>' +
+      '</span></div>';
+  }
+
+  document.getElementById('cm-body').innerHTML =
+    '<div class="cm-section-lbl">Lifestyle</div>' +
+    row('Sleep', ML.sleep, TL.sleep) + row('Cleanliness', ML.cleanliness, TL.cleanliness) +
+    row('Food', ML.food, TL.food) + brow('Smoking', ML.smoking, TL.smoking) + brow('Drinking', ML.drinking, TL.drinking) +
+    '<div class="cm-section-lbl">Work & Schedule</div>' +
+    row('Work Type', MW.type, TW.type) + row('Schedule', MW.schedule, TW.schedule) + brow('WFH', MW.wfh, TW.wfh) +
+    '<div class="cm-section-lbl">Personality</div>' +
+    row('Social', MP.social, TP.social) + row('Guests', MP.guests, TP.guests) + row('Noise', MP.noise, TP.noise) +
+    '<button class="cm-send-btn'+(isSent?' sent':'')+'" id="cm-send" data-uid="'+uid+'" onclick="sendReq('+uid+',event)">' +
+      (isSent
+        ? '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent!'
+        : '<svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Send Chat Request') +
+    '</button>' +
+    '<a class="cm-view-profile" href="roommate-profile.html?id='+uid+'">View Full Profile →</a>';
+
+  document.getElementById('cm-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  /* Animate ring */
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    var ring = document.getElementById('cm-ring');
+    if (ring) ring.style.strokeDashoffset = String(offset);
+  }); });
+}
+
+function closeCompat() {
+  document.getElementById('cm-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('cm-overlay').addEventListener('click', function(e){ if(e.target===this) closeCompat(); });
+
+function simulateUpgrade() {
+  if (ME && typeof setCurrentUser==='function') { ME.isPremium=true; setCurrentUser(ME); }
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('rm-content').style.display = '';
+  renderGrid(getPool());
+  toast('Welcome to Premium ✦');
+}
+
+function h(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg) {
+  var t=document.createElement('div'); t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:76px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:0.77rem;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.2s;white-space:nowrap;pointer-events:none;';
+  document.body.appendChild(t);
+  requestAnimationFrame(function(){ t.style.opacity='1'; });
+  setTimeout(function(){ t.style.opacity='0'; setTimeout(function(){ t.remove(); },300); },2500);
+}
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,181 @@
+/* ============================================
+   HOMELINK — COMPONENTS CSS
+   Shared UI: property cards, search bar,
+   listing tabs, marquee, bento cards.
+   Import after global.css on every page.
+   ============================================ */
+
+/* ── MARQUEE ── */
+.mq { padding: 15px 0; overflow: hidden; background: var(--forest); }
+.mq-track { display: flex; animation: mq 22s linear infinite; width: max-content; }
+.mi {
+  display: flex; align-items: center; gap: 8px; padding: 0 22px;
+  font-size: 0.76rem; font-weight: 700;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap;
+}
+.mi::before { content: '✦'; color: rgba(255,255,255,0.3); }
+@keyframes mq { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── SEARCH BAR (embedded in listings) ── */
+.listings-search {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 36px;
+  box-shadow: var(--shadow);
+}
+.ls-chips { display: flex; gap: 5px; }
+.sc {
+  padding: 8px 16px; border-radius: 100px;
+  font-size: 0.79rem; font-weight: 600;
+  color: var(--ink2); background: var(--bg2);
+  border: 1.5px solid transparent;
+  transition: all 0.22s; cursor: pointer; font-family: inherit;
+}
+.sc.on { background: var(--ink); color: #fff; }
+.sc:hover:not(.on) { border-color: var(--border); color: var(--ink); }
+.s-field {
+  flex: 1; min-width: 200px;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 12px; padding: 11px 15px;
+  transition: border-color 0.2s;
+}
+.s-field:focus-within { border-color: var(--forest); }
+.s-field svg { color: var(--ink3); flex-shrink: 0; }
+.s-field input {
+  flex: 1; background: none; border: none; outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem; color: var(--ink);
+}
+.s-field input::placeholder { color: var(--ink3); }
+
+/* ── LISTING TABS ── */
+.l-tabs { display: flex; gap: 6px; margin-bottom: 28px; }
+.lt {
+  padding: 8px 18px; border-radius: 100px;
+  font-size: 0.8rem; font-weight: 600;
+  color: var(--ink2); background: var(--bg2);
+  border: 1.5px solid transparent;
+  cursor: pointer; transition: all 0.22s; font-family: inherit;
+}
+.lt.on { background: var(--ink); color: #fff; }
+.lt:hover:not(.on) { border-color: var(--border); color: var(--ink); }
+
+/* ── LISTINGS GRID ── */
+.lgrid { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+
+/* ── PROPERTY CARD ── */
+.lc {
+  background: var(--white); border-radius: 20px;
+  border: 1px solid var(--border); overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+}
+.lc:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); border-color: transparent; }
+
+.lc-img { position: relative; height: 200px; overflow: hidden; }
+.lc-img img { transition: transform 0.5s ease; }
+.lc:hover .lc-img img { transform: scale(1.06); }
+
+.lb { position: absolute; top: 12px; left: 12px; }
+.lb-r { background: var(--ink);    color: #fff; }
+.lb-b { background: var(--forest); color: #fff; }
+.lb-p { background: var(--amber);  color: var(--ink); }
+
+.lfav {
+  position: absolute; top: 10px; right: 10px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(255,255,255,0.88); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; cursor: pointer; border: none;
+  transition: transform 0.22s;
+}
+.lfav:hover { transform: scale(1.15); }
+
+.lc-body { padding: 16px 18px 20px; }
+.lc-price {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.03em;
+}
+.lc-price small {
+  font-size: 0.74rem; font-weight: 400;
+  color: var(--ink3); font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.lc-name { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin: 3px 0; }
+.lc-loc  {
+  font-size: 0.76rem; color: var(--ink3);
+  display: flex; align-items: center; gap: 4px; margin-bottom: 12px;
+}
+.lc-specs { display: flex; gap: 12px; padding-top: 12px; border-top: 1px solid var(--bg2); flex-wrap: wrap; }
+.lsp { font-size: 0.73rem; color: var(--ink3); font-weight: 500; }
+
+/* ── VIEW ALL LINK ── */
+.view-all {
+  font-size: 0.85rem; font-weight: 600; color: var(--forest);
+  display: flex; align-items: center; gap: 5px;
+  transition: gap 0.25s;
+}
+.view-all:hover { gap: 10px; }
+
+/* ── LISTINGS SECTION HEADER ── */
+.l-head {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  margin-bottom: 28px;
+}
+
+/* ── BENTO FEATURE CARDS ── */
+.bento {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr 1fr;
+  gap: 14px; margin-top: 52px;
+}
+.bc {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 24px; overflow: hidden;
+  transition: all 0.35s cubic-bezier(0.23,1,0.32,1);
+}
+.bc:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: rgba(28,107,69,0.15); }
+.bc.tall { grid-row: span 1.9; }
+.bc-img { overflow: hidden; }
+.bc-img.h240 { height: 240px; }
+.bc-img.h320 { height: 320px; }
+.bc-img img { transition: transform 0.5s ease; }
+.bc:hover .bc-img img { transform: scale(1.05); }
+.bc-body { padding: 22px 24px 26px; }
+.bc-icon { font-size: 1.4rem; margin-bottom: 12px; }
+.bc-t {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.1rem; font-weight: 600;
+  color: var(--ink); margin-bottom: 7px; letter-spacing: -0.02em;
+}
+.bc-d { font-size: 0.82rem; color: var(--ink3); line-height: 1.65; }
+.bc-pill {
+  display: inline-block; margin-top: 12px;
+  padding: 5px 12px; border-radius: 100px;
+  background: var(--forest-pale);
+  font-size: 0.71rem; font-weight: 700; color: var(--forest);
+}
+/* Bento variants */
+.bc.hl { background: var(--forest); border-color: var(--forest); }
+.bc.hl .bc-t { color: #fff; }
+.bc.hl .bc-d { color: rgba(255,255,255,0.6); }
+.bc.hl .bc-pill { background: rgba(255,255,255,0.15); color: #fff; }
+.bc.amber { background: var(--amber-pale); border-color: rgba(232,160,32,0.2); }
+.bc.amber .bc-pill { background: rgba(232,160,32,0.2); color: var(--amber); }
+
+/* ── RESPONSIVE ── */
+@media(max-width: 1024px) {
+  .lgrid  { grid-template-columns: repeat(2,1fr); }
+  .bento  { grid-template-columns: 1fr 1fr; }
+  .bc.tall { grid-row: span 1; }
+}
+@media(max-width: 768px) {
+  .lgrid  { grid-template-columns: 1fr; }
+  .bento  { grid-template-columns: 1fr; }
+  .l-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .ls-chips { display: none; }
+}

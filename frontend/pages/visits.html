@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeLink — My Visits</title>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/components.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/footer.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<style>
+
+/* ═══════════════════════════════════
+   VISITS PAGE — SPECIFIC STYLES
+═══════════════════════════════════ */
+
+/* ── FILTER TABS ── */
+.v-tabs {
+  display: flex; gap: 6px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.v-tab {
+  padding: 8px 18px; border-radius: 100px;
+  font-size: 0.78rem; font-weight: 600;
+  color: var(--ink2); background: var(--white);
+  border: 1.5px solid var(--border);
+  cursor: pointer; transition: all 0.18s; font-family: inherit;
+}
+.v-tab:hover { border-color: var(--forest); color: var(--forest); }
+.v-tab.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* ── SUMMARY STRIP ── */
+.v-summary {
+  display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;
+}
+.v-sum-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 12px; flex: 1; min-width: 130px;
+}
+.v-sum-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.v-sum-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.v-sum-icon.green { background: var(--forest-pale); color: var(--forest); }
+.v-sum-icon.amber { background: var(--amber-pale); color: var(--amber); }
+.v-sum-icon.ink   { background: var(--bg2); color: var(--ink2); }
+.v-sum-n { font-family: 'Clash Display', sans-serif; font-size: 1.3rem; font-weight: 700; color: var(--ink); line-height: 1; }
+.v-sum-l { font-size: 0.65rem; color: var(--ink3); font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+/* ── SECTION HEADER ── */
+.v-sec-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 14px;
+}
+.v-sec-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.1rem; font-weight: 700; color: var(--ink);
+  letter-spacing: -0.02em;
+}
+.v-sec-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.59rem; font-weight: 800; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--forest);
+  margin-bottom: 4px;
+}
+.v-sec-tag::before { content: ''; width: 12px; height: 2px; background: var(--forest); border-radius: 2px; }
+.v-sec-count { font-size: 0.72rem; color: var(--ink3); font-weight: 500; }
+
+/* ── VISIT CARD ── */
+.v-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.vc {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.25s var(--ease), box-shadow 0.25s, border-color 0.25s;
+  display: flex; flex-direction: column;
+}
+.vc:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(28,107,69,0.18); }
+
+.vc-img {
+  height: 148px; position: relative; overflow: hidden; flex-shrink: 0;
+}
+.vc-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.45s var(--ease);
+}
+.vc:hover .vc-img img { transform: scale(1.05); }
+
+.vc-status {
+  position: absolute; top: 10px; left: 10px;
+  display: inline-flex; align-items: center; gap: 5px;
+  backdrop-filter: blur(10px);
+  border-radius: 100px; padding: 4px 11px;
+  font-size: 0.63rem; font-weight: 700;
+}
+.vc-status.confirmed { background: rgba(28,107,69,0.92); color: #fff; }
+.vc-status.pending   { background: rgba(232,160,32,0.92); color: var(--ink); }
+.vc-status.completed { background: rgba(253,250,245,0.92); color: var(--ink2); }
+.vc-status.cancelled { background: rgba(224,92,58,0.92); color: #fff; }
+.vc-status svg { width: 9px; height: 9px; stroke: currentColor; stroke-width: 2.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+.vc-body { padding: 14px 16px 16px; flex: 1; display: flex; flex-direction: column; }
+
+.vc-name { font-size: 0.88rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vc-loc  {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 0.7rem; color: var(--ink3); margin-bottom: 12px;
+}
+.vc-loc svg { width: 10px; height: 10px; stroke: var(--ink3); fill: none; stroke-width: 2; flex-shrink: 0; stroke-linecap: round; stroke-linejoin: round; }
+
+.vc-time {
+  display: flex; align-items: center; gap: 9px;
+  background: var(--forest-pale);
+  border-radius: 10px; padding: 9px 12px;
+  margin-bottom: 12px;
+}
+.vc-time svg { width: 14px; height: 14px; stroke: var(--forest); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.vc-time-main { font-size: 0.8rem; font-weight: 700; color: var(--forest); }
+.vc-time-sub  { font-size: 0.63rem; color: var(--forest); opacity: 0.7; margin-top: 1px; }
+
+/* Pending: amber tint */
+.vc-time.pending-t { background: var(--amber-pale); }
+.vc-time.pending-t svg { stroke: var(--amber); }
+.vc-time.pending-t .vc-time-main { color: #7A4800; }
+.vc-time.pending-t .vc-time-sub  { color: #7A4800; }
+
+/* Completed: muted */
+.vc-time.done-t { background: var(--bg2); }
+.vc-time.done-t svg { stroke: var(--ink3); }
+.vc-time.done-t .vc-time-main { color: var(--ink2); }
+.vc-time.done-t .vc-time-sub  { color: var(--ink3); }
+
+/* Actions */
+.vc-actions { display: flex; gap: 7px; margin-top: auto; }
+.vab {
+  flex: 1; padding: 8px 10px; border-radius: 10px;
+  font-size: 0.72rem; font-weight: 700; cursor: pointer;
+  font-family: inherit; transition: all 0.16s;
+  display: flex; align-items: center; justify-content: center; gap: 5px; border: none;
+}
+.vab svg { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; flex-shrink: 0; }
+.vab-primary { background: var(--forest); color: #fff; }
+.vab-primary svg { stroke: #fff; }
+.vab-primary:hover { background: var(--forest2); }
+.vab-ghost { background: transparent; color: var(--ink2); border: 1.5px solid var(--border); }
+.vab-ghost:hover { border-color: var(--ink); color: var(--ink); }
+.vab-danger { background: transparent; color: var(--coral); border: 1.5px solid rgba(224,92,58,0.25); }
+.vab-danger:hover { background: var(--coral-pale); border-color: var(--coral); }
+
+/* ── COMPLETED VISIT CARD (no actions, shows feedback) ── */
+.vc-feedback {
+  margin-top: auto;
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 10px; border-radius: 9px;
+  background: var(--bg2); font-size: 0.7rem; color: var(--ink3); font-weight: 500;
+}
+.vc-stars { color: var(--amber); letter-spacing: -1px; font-size: 0.72rem; }
+.vc-feedback-btn {
+  margin-left: auto; font-size: 0.68rem; font-weight: 700; color: var(--forest);
+  background: none; border: none; cursor: pointer; font-family: inherit; padding: 0;
+}
+.vc-feedback-btn:hover { text-decoration: underline; }
+
+/* ── EMPTY STATE ── */
+.v-empty {
+  padding: 64px 24px; text-align: center;
+  background: var(--white); border: 1.5px dashed var(--border);
+  border-radius: 20px; cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+.v-empty:hover { border-color: var(--forest-mid); background: var(--forest-pale); }
+.v-empty svg { width: 48px; height: 48px; stroke: var(--forest-mid); stroke-width: 1.3; fill: none; margin: 0 auto 14px; display: block; }
+.v-empty-t { font-size: 0.95rem; font-weight: 700; color: var(--ink2); margin-bottom: 5px; }
+.v-empty-s { font-size: 0.78rem; color: var(--ink3); margin-bottom: 18px; }
+.v-empty-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 22px; background: var(--forest); color: #fff;
+  border: none; border-radius: 100px; cursor: pointer;
+  font-family: inherit; font-size: 0.78rem; font-weight: 700;
+  transition: background 0.16s;
+}
+.v-empty-btn:hover { background: var(--forest2); }
+
+/* ── CANCEL CONFIRM MODAL ── */
+.cancel-overlay {
+  display: none; position: fixed; inset: 0; z-index: 700;
+  background: rgba(26,18,8,0.5); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center; padding: 24px;
+}
+.cancel-overlay.open { display: flex; }
+.cancel-modal {
+  background: var(--white); border-radius: 22px;
+  width: 100%; max-width: 380px; padding: 28px 24px 24px;
+  text-align: center;
+  animation: popIn 0.24s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn { from { opacity:0; transform:scale(0.92); } to { opacity:1; transform:scale(1); } }
+.cm-icon { font-size: 2rem; margin-bottom: 12px; }
+.cm-title { font-family: 'Clash Display', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 7px; }
+.cm-sub { font-size: 0.82rem; color: var(--ink3); line-height: 1.6; margin-bottom: 20px; }
+.cm-btns { display: flex; gap: 9px; }
+.cm-back { flex: 1; padding: 11px; border-radius: 12px; border: 1.5px solid var(--border); background: none; color: var(--ink2); font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.16s; }
+.cm-back:hover { border-color: var(--ink); color: var(--ink); }
+.cm-confirm { flex: 1; padding: 11px; border-radius: 12px; background: var(--coral); color: #fff; border: none; font-size: 0.82rem; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.16s; }
+.cm-confirm:hover { background: #c94f2e; }
+
+/* ── FOOTER ── */
+footer { background: var(--ink); padding: 56px 0 28px; margin-top: 56px; }
+.ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; max-width: 1240px; margin: 0 auto; padding: 0 28px; margin-bottom: 40px; }
+.ft-brand-n { font-family: 'Clash Display', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.ft-brand-d { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.7; max-width: 230px; }
+.ft-col h5 { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 14px; }
+.ft-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.ft-col ul a { font-size: 0.79rem; color: rgba(255,255,255,0.35); transition: color 0.18s; }
+.ft-col ul a:hover { color: #fff; }
+.ft-btm { max-width: 1240px; margin: 0 auto; padding: 20px 28px 0; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.ft-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+.ft-socs { display: flex; gap: 7px; }
+.ft-soc { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.65rem; font-weight: 700; transition: all 0.18s; text-decoration: none; }
+.ft-soc:hover { background: #fff; color: var(--ink); border-color: #fff; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .v-summary { gap: 8px; }
+  .v-sum-card { padding: 11px 14px; min-width: 0; }
+  .v-sum-n { font-size: 1.1rem; }
+  .ft-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+@media (max-width: 480px) {
+  .v-grid { grid-template-columns: 1fr; }
+  .v-tabs { gap: 5px; }
+  .v-tab  { padding: 7px 13px; font-size: 0.74rem; }
+  .v-summary { grid-template-columns: repeat(3,1fr); display: grid; }
+  .ft-grid { grid-template-columns: 1fr; }
+  .ft-btm { flex-direction: column; text-align: center; }
+}
+</style>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni" href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni act" href="visits.html" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr" id="visit-bdg">2</span></a>
+    <a class="ni" href="brokers.html" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></span><span class="ni-lbl">Saved</span><span class="nbdg gr">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf">
+        <div class="u-nm" id="sb-nm">Aarav Shah</div>
+        <div class="u-rl" id="sb-rl">User · Ahmedabad</div>
+      </div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="main" id="main">
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-l">
+      <div class="top-l-sub">Your schedule</div>
+      <h1 class="top-l-h">My <span>Visits</span></h1>
+    </div>
+    <div class="top-r">
+      <div class="nw">
+        <div class="t-ic" onclick="toggleNotif()" title="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="dot g" id="notif-dot"></span>
+        </div>
+        <div class="ndrop" id="ndrop">
+          <div class="ndrop-hd"><span class="ndrop-hd-t">Notifications</span><span class="ndrop-clr" onclick="markAllRead()">Mark all read</span></div>
+          <div id="notif-list">
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 g"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="nt"><strong>Visit confirmed</strong> — Modern 2BHK, Vastrapur · Tomorrow 11 AM</div><div class="nts">2 hours ago</div></div></div>
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 a"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div><div class="nt"><strong>Broker Rahul</strong> replied to your Bodakdev enquiry</div><div class="nts">5 hours ago</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="t-ic" title="Messages" onclick="openChat()">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="dot r" id="chat-dot"></span>
+      </div>
+      <button class="t-post" onclick="location.href='explore.html'">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span>Find Properties</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="pg">
+
+    <!-- SUMMARY STRIP -->
+    <div class="v-summary" data-r>
+      <div class="v-sum-card">
+        <div class="v-sum-icon green"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div><div class="v-sum-n" id="cnt-confirmed">0</div><div class="v-sum-l">Confirmed</div></div>
+      </div>
+      <div class="v-sum-card">
+        <div class="v-sum-icon amber"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div>
+        <div><div class="v-sum-n" id="cnt-pending">0</div><div class="v-sum-l">Pending</div></div>
+      </div>
+      <div class="v-sum-card">
+        <div class="v-sum-icon ink"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div><div class="v-sum-n" id="cnt-completed">0</div><div class="v-sum-l">Completed</div></div>
+      </div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="v-tabs" data-r>
+      <button class="v-tab on" onclick="filterVisits('all',this)">All Visits</button>
+      <button class="v-tab" onclick="filterVisits('upcoming',this)">Upcoming</button>
+      <button class="v-tab" onclick="filterVisits('completed',this)">Completed</button>
+      <button class="v-tab" onclick="filterVisits('cancelled',this)">Cancelled</button>
+    </div>
+
+    <!-- UPCOMING SECTION -->
+    <div id="sect-upcoming">
+      <div class="v-sec-head" data-r>
+        <div>
+          <div class="v-sec-tag">Scheduled</div>
+          <div class="v-sec-title">Upcoming Visits</div>
+        </div>
+        <span class="v-sec-count" id="count-upcoming"></span>
+      </div>
+      <div class="v-grid" id="grid-upcoming" data-r data-d="1"></div>
+    </div>
+
+    <!-- COMPLETED SECTION -->
+    <div id="sect-completed">
+      <div class="v-sec-head" data-r>
+        <div>
+          <div class="v-sec-tag">History</div>
+          <div class="v-sec-title">Past Visits</div>
+        </div>
+        <span class="v-sec-count" id="count-completed"></span>
+      </div>
+      <div class="v-grid" id="grid-completed" data-r data-d="1"></div>
+    </div>
+
+  </div><!-- /pg -->
+
+  <footer>
+    <div class="ft-grid">
+      <div>
+        <div class="ft-brand-n"><div class="logo-m" style="width:28px;height:28px;border-radius:8px;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg></div>HomeLink</div>
+        <div class="ft-brand-d">One platform for property discovery, roommates, PGs, brokers and relocation — all in Ahmedabad.</div>
+      </div>
+      <div class="ft-col"><h5>Explore</h5><ul><li><a href="#">Buy Property</a></li><li><a href="#">Rent a Home</a></li><li><a href="#">PG &amp; Hostels</a></li></ul></div>
+      <div class="ft-col"><h5>Services</h5><ul><li><a href="brokers.html">Find a Broker</a></li><li><a href="post-property.html">Post Property</a></li><li><a href="#">Rental Agreement</a></li></ul></div>
+      <div class="ft-col"><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Contact</a></li></ul></div>
+    </div>
+    <div class="ft-btm">
+      <span class="ft-copy">&copy; 2025 HomeLink Technologies. All rights reserved.</span>
+      <div class="ft-socs"><a class="ft-soc" href="#">in</a><a class="ft-soc" href="#">tw</a><a class="ft-soc" href="#">ig</a></div>
+    </div>
+  </footer>
+</div><!-- /main -->
+
+<!-- CANCEL MODAL -->
+<div class="cancel-overlay" id="cancel-modal">
+  <div class="cancel-modal">
+    <div class="cm-icon">🗓️</div>
+    <div class="cm-title">Cancel this visit?</div>
+    <div class="cm-sub" id="cm-sub-text">This will remove your scheduled visit. The owner will be notified.</div>
+    <div class="cm-btns">
+      <button class="cm-back" onclick="closeCancelModal()">Keep visit</button>
+      <button class="cm-confirm" onclick="confirmCancel()">Yes, cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav">
+  <div class="mob-nw">
+    <div class="mn-i" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </div>
+    <div class="mn-i" onclick="location.href='explore.html'">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+      Explore
+    </div>
+    <div class="mn-fab" onclick="location.href='post-property.html'" style="width:50px;height:50px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 18px rgba(28,107,69,0.4);cursor:pointer;border:3px solid var(--bg);flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="mn-i on" onclick="location.href='visits.html'">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg>
+      Visits
+    </div>
+    <div class="mn-i" onclick="location.href='profile.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</nav>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+<script>
+/* ══════════════════════════════
+   VISITS DATA  (static demo)
+══════════════════════════════ */
+var visits = [
+  {
+    id: 1, propId: 1, status: 'confirmed',
+    name: '2BHK Furnished Apartment',
+    locality: 'Vastrapur, Ahmedabad',
+    img: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=600&h=400&fit=crop&q=80',
+    date: 'Tomorrow', time: '11:00 AM', dateLabel: '29 Mar 2026',
+    type: 'upcoming'
+  },
+  {
+    id: 2, propId: 3, status: 'pending',
+    name: '3BHK Furnished High-Rise Flat',
+    locality: 'Bodakdev, Ahmedabad',
+    img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&h=400&fit=crop&q=80',
+    date: '2 Apr 2026', time: '3:30 PM', dateLabel: '2 Apr 2026',
+    type: 'upcoming'
+  },
+  {
+    id: 3, propId: 8, status: 'completed',
+    name: '2BHK Premium Flat — Fully Furnished',
+    locality: 'Ambawadi, Ahmedabad',
+    img: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&h=400&fit=crop&q=80',
+    date: '20 Mar 2026', time: '10:00 AM', dateLabel: '20 Mar 2026',
+    rating: 5, type: 'completed'
+  },
+  {
+    id: 4, propId: 6, status: 'completed',
+    name: '3BHK Corner Flat — Semi-Furnished',
+    locality: 'Prahlad Nagar, Ahmedabad',
+    img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=600&h=400&fit=crop&q=80',
+    date: '15 Mar 2026', time: '5:00 PM', dateLabel: '15 Mar 2026',
+    rating: 4, type: 'completed'
+  },
+  {
+    id: 5, propId: 2, status: 'cancelled',
+    name: '1BHK Semi-Furnished Flat',
+    locality: 'Navrangpura, Ahmedabad',
+    img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&h=400&fit=crop&q=80',
+    date: '10 Mar 2026', time: '12:00 PM', dateLabel: '10 Mar 2026',
+    type: 'cancelled'
+  }
+];
+
+var cancelTarget = null;
+var activeFilter = 'all';
+
+/* ── SVG helpers ── */
+var LOC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>';
+var CAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+function h(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── Build status badge ── */
+function statusBadge(v) {
+  if (v.status === 'confirmed') return '<div class="vc-status confirmed"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Confirmed</div>';
+  if (v.status === 'pending')   return '<div class="vc-status pending"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>Awaiting Confirmation</div>';
+  if (v.status === 'completed') return '<div class="vc-status completed"><svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/></svg>Completed</div>';
+  if (v.status === 'cancelled') return '<div class="vc-status cancelled"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Cancelled</div>';
+  return '';
+}
+
+/* ── Build time block ── */
+function timeBlock(v) {
+  var cls = '';
+  if (v.status === 'pending')   cls = ' pending-t';
+  if (v.status === 'completed' || v.status === 'cancelled') cls = ' done-t';
+  return '<div class="vc-time' + cls + '">' + CAL_SVG +
+    '<div><div class="vc-time-main">' + h(v.date) + ' · ' + h(v.time) + '</div>' +
+    '<div class="vc-time-sub">Property visit</div></div></div>';
+}
+
+/* ── Build actions ── */
+function actionsHTML(v) {
+  if (v.status === 'completed') {
+    var stars = v.rating ? '★'.repeat(v.rating) + '☆'.repeat(5 - v.rating) : '';
+    return '<div class="vc-feedback">' +
+      (stars ? '<span class="vc-stars">' + stars + '</span><span>Your rating</span>' : '<span>Leave a review</span>') +
+      '<button class="vc-feedback-btn" onclick="event.stopPropagation();">' + (v.rating ? 'Edit review' : 'Rate visit') + '</button>' +
+      '</div>';
+  }
+  if (v.status === 'cancelled') {
+    return '<div class="vc-actions">' +
+      '<button class="vab vab-primary" onclick="event.stopPropagation();location.href=\'property.html?id=' + v.propId + '\'"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>View Property</button>' +
+      '</div>';
+  }
+  return '<div class="vc-actions">' +
+    '<button class="vab vab-primary" onclick="event.stopPropagation();alert(\'Opening directions…\')"><svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Directions</button>' +
+    '<button class="vab vab-ghost" onclick="event.stopPropagation();location.href=\'schedule-visit.html?id=' + v.propId + '\'"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Reschedule</button>' +
+    '<button class="vab vab-danger" onclick="event.stopPropagation();openCancelModal(' + v.id + ',\'' + h(v.name) + '\')"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>' +
+    '</div>';
+}
+
+/* ── Build single card ── */
+function buildCard(v) {
+  return '<div class="vc" onclick="location.href=\'property.html?id=' + v.propId + '\'">' +
+    '<div class="vc-img"><img src="' + h(v.img) + '" alt="' + h(v.name) + '" loading="lazy"/>' + statusBadge(v) + '</div>' +
+    '<div class="vc-body">' +
+      '<div class="vc-name">' + h(v.name) + '</div>' +
+      '<div class="vc-loc">' + LOC_SVG + h(v.locality) + '</div>' +
+      timeBlock(v) +
+      actionsHTML(v) +
+    '</div>' +
+  '</div>';
+}
+
+/* ── Empty state ── */
+function emptyHTML(msg, sub) {
+  return '<div class="v-empty" onclick="location.href=\'explore.html\'">' +
+    '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>' +
+    '<div class="v-empty-t">' + msg + '</div>' +
+    '<div class="v-empty-s">' + sub + '</div>' +
+    '<button class="v-empty-btn"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Browse properties</button>' +
+    '</div>';
+}
+
+/* ── Filter & render ── */
+function filterVisits(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.v-tab').forEach(function(t){ t.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  render();
+}
+
+function render() {
+  var f = activeFilter;
+  var upcoming  = visits.filter(function(v){ return v.type === 'upcoming'; });
+  var completed = visits.filter(function(v){ return v.type === 'completed'; });
+  var cancelled = visits.filter(function(v){ return v.type === 'cancelled'; });
+
+  var showUpcoming  = (f === 'all' || f === 'upcoming');
+  var showCompleted = (f === 'all' || f === 'completed');
+  var showCancelled = (f === 'cancelled');
+
+  /* Counts in summary */
+  var confirmed = visits.filter(function(v){ return v.status === 'confirmed'; }).length;
+  var pending   = visits.filter(function(v){ return v.status === 'pending'; }).length;
+  var done      = visits.filter(function(v){ return v.status === 'completed'; }).length;
+  document.getElementById('cnt-confirmed').textContent = confirmed;
+  document.getElementById('cnt-pending').textContent   = pending;
+  document.getElementById('cnt-completed').textContent = done;
+
+  /* Upcoming section */
+  var upcomingEl  = document.getElementById('sect-upcoming');
+  var upcomingGrid= document.getElementById('grid-upcoming');
+  var upcomingCnt = document.getElementById('count-upcoming');
+  var upList = showUpcoming ? upcoming : [];
+  upcomingEl.style.display = (f === 'completed') ? 'none' : '';
+  if (f === 'cancelled') { upcomingEl.style.display = 'none'; }
+  upcomingCnt.textContent = upList.length + ' visit' + (upList.length !== 1 ? 's' : '');
+  upcomingGrid.innerHTML  = upList.length ? upList.map(buildCard).join('') : emptyHTML('No upcoming visits', 'Schedule a property visit to see it here');
+
+  /* Completed / Cancelled section */
+  var completedEl   = document.getElementById('sect-completed');
+  var completedGrid = document.getElementById('grid-completed');
+  var completedCnt  = document.getElementById('count-completed');
+  var compList = showCancelled ? cancelled : (showCompleted ? completed : []);
+  completedEl.style.display = (f === 'upcoming') ? 'none' : '';
+  completedEl.querySelector('.v-sec-tag').textContent = (f === 'cancelled') ? 'Cancelled' : 'History';
+  completedEl.querySelector('.v-sec-title').textContent = (f === 'cancelled') ? 'Cancelled Visits' : 'Past Visits';
+  completedCnt.textContent = compList.length + ' visit' + (compList.length !== 1 ? 's' : '');
+  completedGrid.innerHTML  = compList.length ? compList.map(buildCard).join('') : emptyHTML('Nothing here yet', 'Your visit history will appear here');
+}
+
+/* ── Cancel modal ── */
+function openCancelModal(id, name) {
+  cancelTarget = id;
+  document.getElementById('cm-sub-text').textContent = 'Cancel your visit to "' + name + '"? The owner will be notified.';
+  document.getElementById('cancel-modal').classList.add('open');
+}
+function closeCancelModal() {
+  document.getElementById('cancel-modal').classList.remove('open');
+  cancelTarget = null;
+}
+function confirmCancel() {
+  if (!cancelTarget) return;
+  var v = visits.find(function(x){ return x.id === cancelTarget; });
+  if (v) { v.status = 'cancelled'; v.type = 'cancelled'; }
+  closeCancelModal();
+  render();
+  if (window.showToast) showToast('Visit cancelled');
+}
+
+function openChat() { document.getElementById('chat-dot').classList.add('gone'); }
+
+render();
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

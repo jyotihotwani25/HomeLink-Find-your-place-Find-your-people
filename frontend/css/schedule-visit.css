@@ -1,0 +1,483 @@
+/* ============================================================
+   HOMELINK — schedule-visit.css
+   Desktop: wide two-zone layout, uses full viewport width.
+   Mobile: clean single column, full width, no sticky sides.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--bg); min-height: 100vh; }
+
+/* ══════════════════════════════════
+   TOPBAR
+══════════════════════════════════ */
+.sv-topbar {
+  position: sticky; top: 0; z-index: 100;
+  height: 56px;
+  background: rgba(253,250,245,0.97);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 28px; gap: 14px;
+}
+.sv-back {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.sv-back:hover { background: var(--bg3); transform: translateX(-2px); }
+.sv-back svg   { width: 15px; height: 15px; stroke: var(--ink2); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.sv-topbar-logo {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.05rem; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 7px;
+  text-decoration: none; flex: 1;
+}
+.sv-topbar-logo .logo-mark {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: var(--forest);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sv-topbar-logo .logo-mark svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+.sv-step-label { font-size: 0.72rem; font-weight: 600; color: var(--ink3); }
+
+/* ══════════════════════════════════
+   OUTER WRAPPER
+   Uses max-width 1100px so it breathes
+   on large screens but doesn't look
+   empty on medium ones.
+══════════════════════════════════ */
+.sv-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 32px 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ══════════════════════════════════
+   TOP ROW: heading + property card
+   side by side on desktop
+══════════════════════════════════ */
+.sv-top-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Heading */
+.sv-heading-tag {
+  font-size: 0.61rem; font-weight: 700;
+  letter-spacing: 0.11em; text-transform: uppercase;
+  color: var(--forest); margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.sv-heading-tag::before {
+  content: ''; width: 14px; height: 2px;
+  background: var(--forest); border-radius: 2px;
+}
+.sv-heading h1 {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.7rem; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.03em; line-height: 1.12;
+  margin-bottom: 8px;
+}
+.sv-heading p { font-size: 0.85rem; color: var(--ink3); line-height: 1.65; max-width: 340px; }
+
+/* Property card */
+.sv-property {
+  width: 100%;
+  row-gap: 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  transition: box-shadow 0.2s;
+}
+.sv-property:hover { box-shadow: var(--shadow-md); }
+.sv-prop-img {
+  width: 40%; flex-shrink: 0;
+  overflow: hidden; position: relative;
+}
+.sv-prop-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sv-prop-badge {
+  position: absolute; top: 9px; left: 9px;
+  padding: 3px 9px; border-radius: 100px;
+  font-size: 0.56rem; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.sv-prop-badge.rent { background: var(--ink);    color: #fff; }
+.sv-prop-badge.buy  { background: var(--forest); color: #fff; }
+.sv-prop-badge.pg   { background: var(--amber);  color: var(--ink); }
+.sv-prop-info {
+  padding: 16px 18px;
+  display: flex; flex-direction: column; justify-content: center;
+  min-width: 0; flex: 1;
+}
+.sv-prop-price {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.15rem; font-weight: 700;
+  color: var(--ink); letter-spacing: -0.02em; margin-bottom: 4px;
+}
+.sv-prop-price span { font-size: 0.72rem; font-weight: 400; color: var(--ink3); font-family: 'Plus Jakarta Sans', sans-serif; }
+.sv-prop-title { font-size: 0.88rem; font-weight: 600; color: var(--ink); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sv-prop-loc { display: flex; align-items: center; gap: 4px; font-size: 0.74rem; color: var(--ink3); }
+.sv-prop-loc svg { width: 10px; height: 10px; stroke: var(--ink3); fill: none; stroke-width: 2; flex-shrink: 0; }
+
+/* ══════════════════════════════════
+   BOTTOM ROW: calendar + slots
+   Calendar takes 55% of width,
+   slots panel takes remaining 45%.
+   Slots hidden until date is picked.
+══════════════════════════════════ */
+.sv-picker-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* Step label above each column */
+.sv-col-label {
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink3); margin-bottom: 12px;
+  display: flex; align-items: center; gap: 7px;
+}
+.sv-col-label-num {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--forest); color: #fff;
+  font-size: 0.6rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: background 0.2s;
+}
+.sv-col-label-num.done { background: var(--forest-pale); color: var(--forest); }
+
+/* ── Calendar ── */
+.sv-calendar {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.sv-cal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.sv-cal-month {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em;
+}
+.sv-cal-nav { display: flex; gap: 4px; }
+.sv-cal-nav button {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.15s;
+}
+.sv-cal-nav button:hover    { background: var(--bg3); }
+.sv-cal-nav button:disabled { opacity: 0.35; cursor: not-allowed; }
+.sv-cal-nav button svg { width: 13px; height: 13px; stroke: var(--ink2); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.sv-cal-grid { padding: 14px 16px 18px; }
+.sv-cal-weekdays {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+.sv-cal-wday {
+  text-align: center; font-size: 0.6rem; font-weight: 700;
+  color: var(--ink3); padding: 4px 0;
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+.sv-cal-days {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.sv-cal-day {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; font-weight: 500; color: var(--ink2);
+  border-radius: 9px; cursor: pointer;
+  transition: background 0.14s, color 0.14s;
+  border: 1.5px solid transparent;
+  position: relative;
+}
+.sv-cal-day:hover:not(.past):not(.empty) { background: var(--forest-pale); color: var(--forest); }
+.sv-cal-day.empty   { cursor: default; }
+.sv-cal-day.past    { color: var(--bg3); cursor: not-allowed; }
+.sv-cal-day.today   { font-weight: 700; color: var(--forest); }
+.sv-cal-day.today::after {
+  content: ''; position: absolute; bottom: 2px;
+  width: 3px; height: 3px; border-radius: 50%; background: var(--forest);
+}
+.sv-cal-day.selected {
+  background: var(--forest); color: #fff;
+  border-color: var(--forest); font-weight: 700;
+  box-shadow: 0 3px 10px rgba(28,107,69,0.3);
+}
+.sv-cal-day.selected::after { display: none; }
+
+/* ── Slots column ── */
+.sv-slots-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Empty state before date is picked */
+.sv-slots-empty {
+  background: var(--white);
+  border: 1.5px dashed var(--border);
+  border-radius: 18px;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--ink3);
+  font-size: 0.82rem; line-height: 1.6;
+}
+.sv-slots-empty svg {
+  width: 36px; height: 36px;
+  stroke: var(--bg3); fill: none; stroke-width: 1.5;
+  display: block; margin: 0 auto 12px;
+}
+
+/* Slot grid — 3 columns */
+.sv-slots-panel {
+  display: none;
+  flex-direction: column;
+  gap: 0;
+  animation: slide-in 0.22s ease forwards;
+}
+.sv-slots-panel.show { display: flex; }
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.sv-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.sv-slot {
+  padding: 12px 8px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  text-align: center; cursor: pointer;
+  transition: all 0.15s; font-family: inherit;
+}
+.sv-slot:hover:not(.unavail) { border-color: var(--forest-mid); background: var(--forest-pale); }
+.sv-slot.selected {
+  border-color: var(--forest); background: var(--forest-pale);
+  box-shadow: 0 0 0 3px rgba(28,107,69,0.1);
+}
+.sv-slot.unavail { opacity: 0.35; cursor: not-allowed; background: var(--bg2); }
+.sv-slot-time  { font-size: 0.82rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.sv-slot.selected .sv-slot-time { color: var(--forest); }
+.sv-slot-label { font-size: 0.62rem; color: var(--ink3); }
+
+/* ══════════════════════════════════
+   SUMMARY — after both picked
+══════════════════════════════════ */
+.sv-summary {
+  background: var(--forest-pale);
+  border: 1px solid rgba(28,107,69,0.2);
+  border-radius: 14px;
+  padding: 14px 18px;
+  display: none; align-items: center; gap: 12px;
+  animation: slide-in 0.22s ease forwards;
+}
+.sv-summary.show { display: flex; }
+.sv-summary-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--forest);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sv-summary-icon svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; }
+.sv-summary-date { font-size: 0.9rem; font-weight: 700; color: var(--forest); }
+.sv-summary-sub  { font-size: 0.7rem; color: var(--forest2); margin-top: 2px; opacity: 0.85; }
+
+/* ══════════════════════════════════
+   NOTE
+══════════════════════════════════ */
+.sv-note-label {
+  font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--ink3); margin-bottom: 10px;
+}
+.sv-note-label span { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink3); font-size: 0.68rem; margin-left: 4px; }
+.sv-note {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 13px;
+  padding: 13px 16px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.875rem; color: var(--ink);
+  resize: none; outline: none;
+  line-height: 1.65; transition: border-color 0.2s;
+  min-height: 80px;
+}
+.sv-note:focus        { border-color: var(--forest); }
+.sv-note::placeholder { color: var(--ink3); }
+
+/* ══════════════════════════════════
+   FIXED BOTTOM BAR
+══════════════════════════════════ */
+.sv-bottom {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(253,250,245,0.98);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  padding: 12px 28px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; align-items: center; gap: 7px;
+}
+.sv-hint {
+  font-size: 0.7rem; color: var(--ink3);
+  display: flex; align-items: center; gap: 5px;
+}
+.sv-hint svg { width: 11px; height: 11px; stroke: var(--ink3); fill: none; stroke-width: 2; }
+.sv-submit-btn {
+  width: 100%; max-width: 520px;
+  padding: 15px;
+  background: var(--forest); color: #fff;
+  border: none; border-radius: 13px; cursor: pointer;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 0.92rem; font-weight: 700; letter-spacing: -0.01em;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 4px 20px rgba(28,107,69,0.26);
+}
+.sv-submit-btn:hover:not(:disabled) {
+  background: var(--forest2); transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(28,107,69,0.34);
+}
+.sv-submit-btn:disabled {
+  background: var(--bg3); color: var(--ink3);
+  box-shadow: none; cursor: not-allowed; transform: none;
+}
+.sv-submit-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ══════════════════════════════════
+   SUCCESS OVERLAY
+══════════════════════════════════ */
+.sv-success {
+  display: none;
+  position: fixed; inset: 0; z-index: 500;
+  background: var(--bg);
+  flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 24px; text-align: center;
+}
+.sv-success.show { display: flex; }
+.sv-success-ring {
+  position: relative; width: 96px; height: 96px; margin-bottom: 26px;
+}
+.sv-success-ring::before {
+  content: ''; position: absolute; inset: 6px;
+  background: var(--forest-pale); border-radius: 50%;
+}
+.sv-success-ring svg.ring  { position: absolute; inset: 0; transform: rotate(-90deg); }
+.sv-success-ring svg.ring circle {
+  fill: none; stroke: var(--forest); stroke-width: 3;
+  stroke-dasharray: 283; stroke-dashoffset: 283; stroke-linecap: round;
+}
+.sv-success-ring svg.ring circle.animating { animation: ring-draw 0.7s 0.1s cubic-bezier(0.4,0,0.2,1) forwards; }
+@keyframes ring-draw { to { stroke-dashoffset: 0; } }
+.sv-success-ring svg.check { position: absolute; inset: 0; opacity: 0; }
+.sv-success-ring svg.check.animating { animation: check-pop 0.35s 0.72s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes check-pop { from { opacity:0; transform:scale(0.5); } to { opacity:1; transform:scale(1); } }
+.sv-success-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.7rem; font-weight: 700; color: var(--ink); letter-spacing: -0.03em;
+  margin-bottom: 10px; opacity: 0; transform: translateY(12px);
+}
+.sv-success-title.animating { animation: fade-up 0.4s 0.9s ease forwards; }
+.sv-success-sub {
+  font-size: 0.88rem; color: var(--ink3); line-height: 1.65; max-width: 300px;
+  opacity: 0; transform: translateY(8px);
+}
+.sv-success-sub.animating { animation: fade-up 0.4s 1.05s ease forwards; }
+@keyframes fade-up { to { opacity:1; transform:translateY(0); } }
+.sv-success-detail {
+  margin-top: 22px;
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; padding: 14px 20px;
+  text-align: left; width: 100%; max-width: 340px; opacity: 0;
+}
+.sv-success-detail.animating { animation: fade-up 0.4s 1.2s ease forwards; }
+.sv-success-detail-row {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.82rem; color: var(--ink2);
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+}
+.sv-success-detail-row:last-child { border-bottom: none; }
+.sv-success-detail-row svg { width: 14px; height: 14px; stroke: var(--forest); fill: none; stroke-width: 2; flex-shrink: 0; }
+.sv-success-detail-row strong { color: var(--ink); font-weight: 600; }
+.sv-success-btn {
+  margin-top: 26px; padding: 13px 34px;
+  background: var(--forest); color: #fff;
+  border: none; border-radius: 100px; cursor: pointer;
+  font-family: 'Clash Display', sans-serif;
+  font-size: 0.9rem; font-weight: 700;
+  display: inline-flex; align-items: center; gap: 8px;
+  opacity: 0; transition: background 0.18s, transform 0.18s;
+  box-shadow: 0 4px 20px rgba(28,107,69,0.28);
+}
+.sv-success-btn.animating { animation: fade-up 0.4s 1.35s ease forwards; }
+.sv-success-btn:hover { background: var(--forest2); transform: translateY(-2px); }
+.sv-success-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ══════════════════════════════════
+   TABLET  ≤ 900px
+   Heading+property stack, rest stays 2-col
+══════════════════════════════════ */
+@media (max-width: 900px) {
+  .sv-wrap { padding: 24px 24px 110px; }
+  .sv-top-row { grid-template-columns: 1fr; }
+  .sv-heading h1 { font-size: 1.45rem; }
+  .sv-heading p  { max-width: 100%; }
+}
+
+/* ══════════════════════════════════
+   MOBILE  ≤ 640px
+   Everything single column, full width
+══════════════════════════════════ */
+@media (max-width: 640px) {
+  .sv-topbar  { padding: 0 16px; }
+  .sv-wrap    { padding: 20px 16px 110px; gap: 18px; }
+
+  /* Property card — shorter image */
+  .sv-prop-img { width: 100px; }
+  .sv-prop-info { padding: 12px 14px; }
+  .sv-prop-price { font-size: 1rem; }
+
+  /* Both grids go single column */
+  .sv-top-row    { grid-template-columns: 1fr; }
+  .sv-picker-row { grid-template-columns: 1fr; gap: 18px; }
+
+  /* Calendar cells a bit smaller */
+  .sv-cal-day   { font-size: 0.78rem; border-radius: 7px; }
+  .sv-cal-grid  { padding: 10px 10px 14px; }
+
+  /* Slots: 3 columns still but full width */
+  .sv-slots-grid { grid-template-columns: repeat(3, 1fr); gap: 7px; }
+  .sv-slot       { padding: 10px 6px; }
+  .sv-slot-time  { font-size: 0.78rem; }
+
+  /* Bottom bar */
+  .sv-bottom { padding: 10px 16px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .sv-submit-btn { max-width: 100%; font-size: 0.88rem; }
+}
+
+@media (max-width: 380px) {
+  .sv-slots-grid { grid-template-columns: repeat(2, 1fr); }
+  .sv-slot-label { display: none; }
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }

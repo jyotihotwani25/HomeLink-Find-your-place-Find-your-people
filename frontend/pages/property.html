@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeLink — Property Detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/property.css"/>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<div class="prop-page" id="prop-page">
+
+  <!-- ── TOPBAR ── -->
+  <header class="prop-topbar">
+    <a class="prop-back" id="back-btn" href="#" onclick="goBack(event)" aria-label="Go back">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <a href="../pages/home.html" class="prop-topbar-logo">
+      <span class="logo-mark">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.25)"/>
+          <circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/>
+        </svg>
+      </span>
+      HomeLink
+    </a>
+    <div class="prop-topbar-actions">
+      <button class="prop-action-btn" id="save-btn" onclick="toggleSave()" aria-label="Save property" title="Save">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      </button>
+      <button class="prop-action-btn" onclick="shareProperty()" aria-label="Share property" title="Share">
+        <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── CONTENT (rendered by JS) ── -->
+  <div id="prop-content">
+    <!-- Loading state -->
+    <div id="prop-loading" style="display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:16px;">
+      <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--forest);border-radius:50%;animation:spin 0.8s linear infinite;"></div>
+      <p style="font-size:0.85rem;color:var(--ink3);">Loading property…</p>
+    </div>
+  </div>
+
+  <!-- ── STICKY ACTION BAR (rendered by JS) ── -->
+  <div class="prop-sticky-bar" id="prop-sticky" style="display:none;">
+    <div class="prop-sticky-inner">
+      <button class="prop-act-btn prop-act-chat" onclick="location.href='chat.html?id='+new URLSearchParams(location.search).get('id')">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span>Chat</span>
+      </button>
+      <button class="prop-act-btn prop-act-visit" onclick="location.href='schedule-visit.html?id='+new URLSearchParams(location.search).get('id')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <span>Visit</span>
+      </button>
+      <button class="prop-act-btn prop-act-deal" onclick="location.href='deal.html?id='+new URLSearchParams(location.search).get('id')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 11l3 3L22 4"/>
+          <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+        <span>Deal</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── LIGHTBOX ── -->
+  <div class="prop-lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <button class="prop-lb-close" onclick="closeLightbox()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img class="prop-lb-img" id="lb-img" src="" alt=""/>
+    <div class="prop-lb-nav">
+      <button class="prop-lb-prev" onclick="lbNav(-1);event.stopPropagation()">
+        <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span class="prop-lb-counter" id="lb-counter"></span>
+      <button class="prop-lb-next" onclick="lbNav(1);event.stopPropagation()">
+        <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<!-- spin keyframe -->
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+<script>
+/* ══════════════════════════════════════════
+   PROPERTY PAGE — page-specific JS only
+   All shared helpers (toggleFav, SVG, etc)
+   are in main.js.
+══════════════════════════════════════════ */
+
+/* ── State ── */
+let P = null;          /* current property object */
+let activeImg = 0;     /* gallery index */
+let lbIndex   = 0;     /* lightbox index */
+let isSaved   = false;
+let descExpanded = false;
+
+/* ── Navigation ── */
+function goBack(e) {
+  e.preventDefault();
+  if (document.referrer && document.referrer.includes(window.location.host)) {
+    history.back();
+  } else {
+    window.location.href = 'explore.html';
+  }
+}
+
+/* ── Save / Share ── */
+function toggleSave() {
+  isSaved = !isSaved;
+  const btn = document.getElementById('save-btn');
+  btn.classList.toggle('saved', isSaved);
+  btn.title = isSaved ? 'Saved' : 'Save property';
+}
+function shareProperty() {
+  if (navigator.share) {
+    navigator.share({ title: P.title, text: `Check out ${P.title} on HomeLink`, url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      showToast('Link copied to clipboard');
+    });
+  }
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 18px;border-radius:100px;font-size:0.78rem;font-weight:600;z-index:9999;opacity:0;transition:opacity 0.2s;pointer-events:none;white-space:nowrap;';
+  document.body.appendChild(t);
+  requestAnimationFrame(() => { t.style.opacity = '1'; });
+  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 2200);
+}
+
+/* ── Amenity icon map ── */
+const AMENITY_ICONS = {
+  'Parking':        '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="9" y1="13" x2="9" y2="17"/><path d="M9 13h3a2 2 0 000-4H9"/></svg>',
+  'WiFi':           '<svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>',
+  'AC':             '<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="8" rx="2"/><path d="M8 14v4M12 14v4M16 14v4M2 10h20"/></svg>',
+  'Lift':           '<svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 12l3-3 3 3M9 15h6"/></svg>',
+  'Security':       '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>',
+  'Gym':            '<svg viewBox="0 0 24 24"><path d="M6 5v14M18 5v14M2 9h4M18 9h4M2 15h4M18 15h4M6 12h12"/></svg>',
+  'Swimming Pool':  '<svg viewBox="0 0 24 24"><path d="M2 12c2 2 4 2 6 0s4-2 6 0 4 2 6 0"/><circle cx="10" cy="6" r="2"/><path d="M10 8v2.5l2 1.5"/></svg>',
+  'Garden':         '<svg viewBox="0 0 24 24"><path d="M12 22V12M12 12C12 7 7 4 2 4s8 4 10 8M12 12c0-5 5-8 10-8-2 4-8 8-10 8"/></svg>',
+  'Power Backup':   '<svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>',
+  'Laundry':        '<svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="12" cy="13" r="5"/><path d="M8 7h1M11 7h1"/></svg>',
+  'Study Area':     '<svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>',
+  'Housekeeping':   '<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>',
+  'Meals Included': '<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>',
+  'Kitchen Access': '<svg viewBox="0 0 24 24"><path d="M3 11h18M11 21V11l-7-9h18l-7 9"/></svg>',
+  'Breakfast Included': '<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>',
+  'Dinner Included': '<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/></svg>',
+  'default':        '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+};
+function amenityIcon(name) {
+  return AMENITY_ICONS[name] || AMENITY_ICONS['default'];
+}
+
+/* ── Gallery ── */
+function setImg(idx) {
+  activeImg = idx;
+  const main = document.getElementById('gallery-main-img');
+  if (main) main.src = P.images[idx];
+  document.querySelectorAll('.prop-thumb').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+  document.getElementById('img-count-cur').textContent = idx + 1;
+}
+
+/* ── Lightbox ── */
+function openLightbox(idx) {
+  lbIndex = idx;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  updateLightbox();
+}
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox') && !e.target.closest('.prop-lb-close')) return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function lbNav(dir) {
+  lbIndex = (lbIndex + dir + P.images.length) % P.images.length;
+  updateLightbox();
+}
+function updateLightbox() {
+  document.getElementById('lb-img').src = P.images[lbIndex];
+  document.getElementById('lb-counter').textContent = `${lbIndex + 1} / ${P.images.length}`;
+}
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').classList.contains('open')) {
+    if (e.key === 'ArrowRight') lbNav(1);
+    if (e.key === 'ArrowLeft')  lbNav(-1);
+    if (e.key === 'Escape')     { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow = ''; }
+  }
+});
+
+/* ── Read More toggle ── */
+function toggleDesc() {
+  descExpanded = !descExpanded;
+  const txt = document.getElementById('desc-text');
+  const btn = document.getElementById('desc-toggle');
+  txt.classList.toggle('collapsed', !descExpanded);
+  btn.classList.toggle('open', descExpanded);
+  btn.innerHTML = descExpanded
+    ? 'Read less <svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>'
+    : 'Read more <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+}
+
+/* ── Star rating render ── */
+function renderStars(rating) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.floor(rating)) {
+      html += `<svg viewBox="0 0 24 24" width="13" height="13" fill="var(--amber)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    } else {
+      html += `<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--bg3)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+    }
+  }
+  return html;
+}
+
+/* ── STATIC REVIEWS DATA ──────────────────
+   Realistic review pool — each property uses
+   a deterministic slice based on property id.
+──────────────────────────────────────────── */
+const REVIEW_POOL = [
+  { name:'Aditya Sharma',   avatar:'https://i.pravatar.cc/80?img=12', date:'Feb 2026', rating:5, text:'Exactly as described. The owner was very responsive and the property was clean and move-in ready. Loved the natural light in the living room.', tags:['Clean','Responsive owner','Great location'] },
+  { name:'Priya Nair',      avatar:'https://i.pravatar.cc/80?img=23', date:'Jan 2026', rating:4, text:'Good value for the area. Society maintenance is excellent and the lift works reliably. A few minor repairs were needed but the owner sorted them quickly.', tags:['Good value','Well maintained'] },
+  { name:'Rahul Gupta',     avatar:'https://i.pravatar.cc/80?img=7',  date:'Mar 2026', rating:5, text:'We have been here 8 months now. The neighbourhood is quiet and safe. Metro connectivity is a huge plus for the daily commute.', tags:['Safe area','Metro nearby'] },
+  { name:'Sneha Pillai',    avatar:'https://i.pravatar.cc/80?img=47', date:'Dec 2025', rating:4, text:'Very spacious for the price. The kitchen is fully modular and the wardrobes are in great condition. Would recommend to young professionals.', tags:['Spacious','Great kitchen'] },
+  { name:'Karan Mehta',     avatar:'https://i.pravatar.cc/80?img=3',  date:'Feb 2026', rating:5, text:'Superb location. Walkable to everything you need — grocery stores, restaurants, gym. The building security is also top notch.', tags:['Prime location','Secure'] },
+  { name:'Divya Krishnan',  avatar:'https://i.pravatar.cc/80?img=49', date:'Nov 2025', rating:3, text:'Decent place overall. Parking is a bit tight during evenings but manageable. The owner is cooperative and addressed all our concerns.', tags:['Cooperative owner'] },
+  { name:'Amit Verma',      avatar:'https://i.pravatar.cc/80?img=32', date:'Jan 2026', rating:5, text:'Best rental experience I have had in Ahmedabad. The flat is exactly as shown in photos. Society has a great community feel.', tags:['As advertised','Great community'] },
+  { name:'Roshni Shah',     avatar:'https://i.pravatar.cc/80?img=44', date:'Mar 2026', rating:4, text:'Lovely apartment with beautiful views. A little premium priced but the amenities justify it. Swimming pool and gym are well-maintained.', tags:['Great views','Good amenities'] },
+  { name:'Vishal Patel',    avatar:'https://i.pravatar.cc/80?img=15', date:'Oct 2025', rating:4, text:'Stayed here for 6 months. Quiet floor, no noise issues. Power backup works seamlessly during outages. Good society management.', tags:['Quiet','Power backup'] },
+  { name:'Tanvi Joshi',     avatar:'https://i.pravatar.cc/80?img=40', date:'Feb 2026', rating:5, text:'The owner is transparent and honest. No hidden charges, everything discussed upfront. Deposit was returned on time when we left.', tags:['Transparent','Deposit returned'] },
+];
+
+function getReviews(property) {
+  /* Pick 3 reviews deterministically using property id */
+  const count = 3;
+  const start = (property.id * 3) % REVIEW_POOL.length;
+  const result = [];
+  for (let i = 0; i < count; i++) {
+    result.push(REVIEW_POOL[(start + i) % REVIEW_POOL.length]);
+  }
+  return result;
+}
+
+function renderReviewStars(r) {
+  let s = '';
+  for (let i = 1; i <= 5; i++) {
+    s += i <= r
+      ? `<svg viewBox="0 0 24 24" width="11" height="11" fill="var(--amber)" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`
+      : `<svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="var(--bg3)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+  }
+  return s;
+}
+
+/* ── Main render ── */
+function render() {
+  const isPG   = P.category === 'pg';
+  const isBuy  = P.category === 'buy';
+  const isRent = P.category === 'rent';
+
+  /* Spec items — adaptive per category */
+  const specs = [];
+  if (P.bhk)       specs.push({ icon: '<svg viewBox="0 0 24 24"><path d="M2 4v16M2 8h18a2 2 0 012 2v10"/><path d="M2 14h20"/></svg>', val: `${P.bhk} BHK`, lbl: 'Bedrooms' });
+  if (P.area)      specs.push({ icon: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>', val: `${P.area.toLocaleString()}`, lbl: 'Sq. ft.' });
+  if (P.bathrooms) specs.push({ icon: '<svg viewBox="0 0 24 24"><path d="M9 6a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v3H9V6Z"/><path d="M3 11h18M3 11v6a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-6"/></svg>', val: `${P.bathrooms}`, lbl: 'Bathrooms' });
+  if (P.floor)     specs.push({ icon: '<svg viewBox="0 0 24 24"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 10v11M12 10v11M16 10v11"/></svg>', val: P.floor, lbl: 'Floor' });
+  if (P.facing && P.facing !== 'null') specs.push({ icon: '<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>', val: P.facing, lbl: 'Facing' });
+  if (P.furnished) specs.push({ icon: '<svg viewBox="0 0 24 24"><path d="M20 9V7a2 2 0 00-2-2H6a2 2 0 00-2 2v2M1 9h22M4 9v11M20 9v11M9 21h6"/></svg>', val: P.furnished.replace(' Furnished',''), lbl: 'Furnishing' });
+
+  /* PG extra specs */
+  if (isPG && P.roomType)       specs.push({ icon: '<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>', val: P.roomType.split('/')[0].trim(), lbl: 'Room Type' });
+  if (isPG && P.genderPreference) specs.push({ icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>', val: P.genderPreference, lbl: 'For' });
+
+  /* Availability pill colour */
+  const avail = P.availability || 'Contact Owner';
+  const availColor = avail.toLowerCase().includes('immediate') || avail.toLowerCase().includes('ready')
+    ? 'background:var(--forest-pale);color:var(--forest);border:1px solid rgba(28,107,69,0.2);'
+    : 'background:var(--amber-pale);color:#854F0B;border:1px solid rgba(232,160,32,0.2);';
+
+  /* Build HTML */
+  let html = `
+
+  <!-- GALLERY -->
+  <div class="prop-gallery">
+    <div class="prop-gallery-main" onclick="openLightbox(${activeImg})">
+      <img id="gallery-main-img" src="${P.images[0]}" alt="${P.title}" loading="eager"/>
+      <span class="prop-cat-badge ${P.category}">${P.category === 'pg' ? 'PG' : P.category === 'buy' ? 'Buy' : 'Rent'}</span>
+      ${P.featured ? '<span class="prop-feat-badge">★ Featured</span>' : ''}
+      <div class="prop-img-count" onclick="event.stopPropagation();openLightbox(${activeImg})">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span id="img-count-cur">1</span> / ${P.images.length}
+      </div>
+    </div>
+    ${P.images.length > 1 ? `
+    <div class="prop-thumbs">
+      ${P.images.map((img, i) => `
+        <div class="prop-thumb ${i === 0 ? 'active' : ''}" onclick="setImg(${i})">
+          <img src="${img}" alt="${P.title} photo ${i+1}" loading="lazy"/>
+        </div>`).join('')}
+    </div>` : ''}
+  </div>
+
+  <!-- BODY -->
+  <div class="prop-body">
+
+    <!-- PRICE + TITLE -->
+    <div class="prop-header">
+      <div class="prop-price-row">
+        <span class="prop-price">${P.price}</span>
+        ${P.period ? `<span class="prop-period">${P.period}</span>` : ''}
+        ${P.deposit ? `<span class="prop-deposit">Deposit ${P.deposit}</span>` : ''}
+      </div>
+      <h1 class="prop-title">${P.title}</h1>
+      <div class="prop-rating-row">
+        <div class="prop-stars">
+          ${renderStars(P.rating)}
+          <span style="margin-left:4px;">${P.rating}</span>
+        </div>
+        <span class="prop-review-count">(${P.reviews} reviews)</span>
+        <span style="display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:0.7rem;font-weight:700;${availColor}">${avail}</span>
+        <span class="prop-posted">Listed ${P.postedDate}</span>
+      </div>
+    </div>
+
+    <!-- LOCATION -->
+    <div class="prop-location">
+      <div class="prop-loc-main">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+        <span class="prop-loc-text">${P.locality}</span>
+        <span class="prop-loc-city">${P.city}</span>
+      </div>
+      <div class="prop-transport">
+        <div class="prop-tr">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/><line x1="8" y1="15" x2="8" y2="17"/><line x1="16" y1="15" x2="16" y2="17"/></svg>
+          ${P.distanceMetro} km · Metro
+        </div>
+        <div class="prop-tr">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="14" rx="2"/><path d="M3 9h18"/><path d="M8 19v2M16 19v2"/><line x1="3" y1="14" x2="21" y2="14"/></svg>
+          ${P.distanceBus} km · Bus stop
+        </div>
+      </div>
+    </div>
+
+    <!-- KEY SPECS -->
+    <div class="prop-specs">
+      <h2 class="prop-section-title">Key Details</h2>
+      <div class="prop-specs-grid">
+        ${specs.map(s => `
+        <div class="prop-spec">
+          <div class="prop-spec-icon">${s.icon}</div>
+          <div class="prop-spec-val">${s.val}</div>
+          <div class="prop-spec-lbl">${s.lbl}</div>
+        </div>`).join('')}
+      </div>
+
+      ${isPG ? `
+      <div class="prop-pg-info" style="margin-top:12px;">
+        ${P.pgMeals ? `<div class="prop-pg-item"><div class="prop-pg-item-lbl">Meals</div><div class="prop-pg-item-val">${P.pgMeals}</div></div>` : ''}
+        ${P.pgCurfew ? `<div class="prop-pg-item"><div class="prop-pg-item-lbl">Curfew</div><div class="prop-pg-item-val">${P.pgCurfew}</div></div>` : ''}
+        ${P.pgGuests ? `<div class="prop-pg-item"><div class="prop-pg-item-lbl">Guests</div><div class="prop-pg-item-val">${P.pgGuests}</div></div>` : ''}
+        ${P.bathroomType ? `<div class="prop-pg-item"><div class="prop-pg-item-lbl">Bathroom</div><div class="prop-pg-item-val">${P.bathroomType}</div></div>` : ''}
+      </div>` : ''}
+    </div>
+
+    <!-- AMENITIES -->
+    ${P.amenities && P.amenities.length ? `
+    <div class="prop-amenities">
+      <h2 class="prop-section-title">Amenities</h2>
+      <div class="prop-amenities-grid">
+        ${P.amenities.map(a => `
+        <div class="prop-amenity">
+          ${amenityIcon(a)}
+          ${a}
+        </div>`).join('')}
+      </div>
+    </div>` : ''}
+
+    <!-- DESCRIPTION -->
+    <div class="prop-description">
+      <h2 class="prop-section-title">About this property</h2>
+      <p class="prop-desc-text collapsed" id="desc-text">${P.description}</p>
+      <button class="prop-read-more" id="desc-toggle" onclick="toggleDesc()">
+        Read more
+        <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- OWNER -->
+    <div class="prop-owner">
+      <h2 class="prop-section-title">Listed by</h2>
+      <div class="prop-owner-card">
+        <img class="prop-owner-av" src="${P.owner.avatar}" alt="${P.owner.name}"/>
+        <div class="prop-owner-info">
+          <div class="prop-owner-name">
+            ${P.owner.name}
+            ${P.owner.verified ? `<span class="prop-owner-verified"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Verified</span>` : ''}
+          </div>
+          <div class="prop-owner-type">
+            ${P.owner.type}
+          </div>
+          <div class="prop-owner-phone">${P.owner.phone}</div>
+        </div>
+        <button class="prop-owner-call" onclick="alert('Calling ${P.owner.name}…')">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.63A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.91a16 16 0 006.18 6.18l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Call
+        </button>
+      </div>
+
+      <!-- Broker CTA -->
+      <a class="prop-broker-link" href="#" onclick="alert('Broker selection coming soon');return false;">
+        <div class="prop-broker-link-icon">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg>
+        </div>
+        <div class="prop-broker-link-text">
+          <div class="prop-broker-link-t">Talk to a broker</div>
+          <div class="prop-broker-link-s">Get expert help to negotiate &amp; close faster</div>
+        </div>
+        <div class="prop-broker-link-arr">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+    </div>
+
+
+    <!-- REVIEWS -->
+    <div class="prop-reviews">
+      <div class="prop-reviews-header">
+        <h2 class="prop-reviews-title">What people who visited say</h2>
+        <div class="prop-reviews-summary">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <strong>${P.rating}</strong> · ${P.reviews} reviews
+        </div>
+      </div>
+      <div class="prop-review-list">
+        ${getReviews(P).map(r => `
+        <div class="prop-review">
+          <div class="prop-review-top">
+            <img class="prop-review-av" src="${r.avatar}" alt="${r.name}"/>
+            <div class="prop-review-info">
+              <div class="prop-review-name">${r.name}</div>
+              <div class="prop-review-date">${r.date}</div>
+            </div>
+            <div class="prop-review-stars">${renderReviewStars(r.rating)}</div>
+          </div>
+          <p class="prop-review-text">${r.text}</p>
+          <div class="prop-review-tags">${r.tags.map(t => `<span class="prop-review-tag">${t}</span>`).join('')}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+  </div><!-- /prop-body -->
+  `;
+
+  document.getElementById('prop-content').innerHTML = html;
+  document.getElementById('prop-sticky').style.display = 'block';
+}
+
+/* ── Error state ── */
+function showError() {
+  document.getElementById('prop-content').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:16px;padding:40px 20px;text-align:center;">
+      <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--forest-mid)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <h2 style="font-family:'Clash Display',sans-serif;font-size:1.3rem;color:var(--ink);">Property not found</h2>
+      <p style="font-size:0.88rem;color:var(--ink3);max-width:280px;">This listing may have been removed or the link is incorrect.</p>
+      <a href="explore.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:var(--forest);color:#fff;border-radius:100px;font-size:0.85rem;font-weight:700;text-decoration:none;margin-top:8px;">Browse all listings</a>
+    </div>`;
+}
+
+/* ── Boot (deferred) ── */
+(function init() {
+  const params = new URLSearchParams(window.location.search);
+  const id = parseInt(params.get('id'));
+  if (!id) { showError(); return; }
+  P = getPropertyById(id);
+  if (!P) { showError(); return; }
+  document.title = `${P.title} — HomeLink`;
+  render();
+})();
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

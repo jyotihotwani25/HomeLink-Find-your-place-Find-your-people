@@ -1,0 +1,389 @@
+/* ============================================================
+   HOMELINK — deal.css
+   Desktop ≥1024px : two-column grid, single page scroll.
+     Left col (360px): property image, parties, platform services
+     Right col (flex1): deal terms, moving packages
+   Tablet / Mobile  : single column
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+body { background: var(--bg); min-height: 100vh; }
+
+/* ══════════════════════════════════ TOPBAR */
+.deal-topbar {
+  position: sticky; top: 0; z-index: 100; height: 58px;
+  background: rgba(253,250,245,0.97);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 28px; gap: 14px;
+}
+.deal-back {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: var(--bg2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.deal-back:hover { background: var(--bg3); transform: translateX(-2px); }
+.deal-back svg { width: 15px; height: 15px; stroke: var(--ink2); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.deal-topbar-logo {
+  font-family: 'Clash Display', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--ink);
+  display: flex; align-items: center; gap: 8px; text-decoration: none; flex: 1;
+}
+.deal-topbar-logo .logo-mark {
+  width: 26px; height: 26px; border-radius: 7px; background: var(--forest);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.deal-topbar-logo .logo-mark svg { width: 14px; height: 14px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; }
+.deal-topbar-step { font-size: 0.72rem; font-weight: 600; color: var(--ink3); }
+
+/* ══════════════════════════════════ PROGRESS */
+.deal-progress {
+  display: flex; align-items: center; padding: 10px 28px;
+  background: var(--white); border-bottom: 1px solid var(--border);
+}
+.dp-step { display: flex; align-items: center; gap: 7px; flex: 1; }
+.dp-step:last-child { flex: 0; }
+.dp-dot {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.62rem; font-weight: 700; transition: all 0.3s;
+  border: 2px solid var(--border); background: var(--white); color: var(--ink3);
+}
+.dp-dot.active { background: var(--forest); border-color: var(--forest); color: #fff; }
+.dp-dot.done   { background: var(--forest-pale); border-color: var(--forest); color: var(--forest); font-size: 0; }
+.dp-dot.done::before { content: '✓'; font-size: 0.68rem; font-weight: 800; }
+.dp-label  { font-size: 0.68rem; font-weight: 600; color: var(--ink3); white-space: nowrap; }
+.dp-label.active { color: var(--forest); font-weight: 700; }
+.dp-line   { flex: 1; height: 1px; background: var(--border); margin: 0 8px; }
+.dp-line.done { background: var(--forest-mid); }
+
+/* ══════════════════════════════════ SETUP WRAPPER */
+.deal-setup.hide { display: none; }
+
+/* Outer page container — centres and gives breathing room */
+.deal-page {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 32px 36px 140px;
+}
+
+/* Two-column grid */
+.deal-columns {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.deal-col-left  { display: flex; flex-direction: column; gap: 16px; }
+.deal-col-right { display: flex; flex-direction: column; gap: 16px; }
+
+/* ══════════════════════════════════ SHARED SECTION CARD */
+.deal-section {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.deal-section-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+}
+.deal-section-icon {
+  width: 30px; height: 30px; border-radius: 8px; background: var(--forest-pale);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.deal-section-icon svg { width: 14px; height: 14px; stroke: var(--forest); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.deal-section-icon.amber-bg { background: var(--amber-pale); }
+.deal-section-icon.amber-bg svg { stroke: var(--amber); }
+.deal-section-title { font-family: 'Clash Display', sans-serif; font-size: 0.92rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+.deal-section-sub   { font-size: 0.68rem; color: var(--ink3); margin-top: 1px; }
+.deal-section-body  { padding: 16px 18px; }
+
+/* ══════════════════════════════════ PROPERTY CARD */
+.deal-prop-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 20px; overflow: hidden;
+}
+.deal-prop-img-wrap {
+  position: relative; height: 210px; overflow: hidden;
+}
+.deal-prop-img-wrap img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform 0.5s ease;
+}
+.deal-prop-card:hover .deal-prop-img-wrap img { transform: scale(1.03); }
+.deal-prop-img-wrap::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+  background: linear-gradient(to top, rgba(26,18,8,0.5), transparent); pointer-events: none;
+}
+.deal-prop-badge {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  padding: 4px 10px; border-radius: 100px;
+  font-size: 0.57rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
+}
+.deal-prop-badge.rent { background: var(--ink);    color: #fff; }
+.deal-prop-badge.buy  { background: var(--forest); color: #fff; }
+.deal-prop-badge.pg   { background: var(--amber);  color: var(--ink); }
+
+.deal-prop-price-overlay { position: absolute; bottom: 10px; left: 14px; z-index: 2; }
+.deal-prop-price-overlay .price-main {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1.15rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1;
+}
+.deal-prop-price-overlay .price-sub { font-size: 0.67rem; color: rgba(255,255,255,0.7); }
+
+.deal-prop-body { padding: 14px 16px; }
+.deal-prop-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: 1rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 4px;
+}
+.deal-prop-loc {
+  font-size: 0.73rem; color: var(--ink3);
+  display: flex; align-items: center; gap: 4px; margin-bottom: 10px;
+}
+.deal-prop-loc svg { width: 10px; height: 10px; stroke: var(--ink3); fill: none; stroke-width: 2; flex-shrink: 0; }
+.deal-prop-chips { display: flex; gap: 5px; flex-wrap: wrap; }
+.deal-prop-chip  { font-size: 0.66rem; color: var(--ink3); background: var(--bg2); padding: 3px 9px; border-radius: 100px; font-weight: 500; }
+
+/* ══════════════════════════════════ PARTIES */
+.deal-people { display: flex; align-items: center; gap: 8px; }
+.deal-person {
+  flex: 1; display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: var(--bg2); border-radius: 14px;
+}
+.deal-person-av { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--white); }
+.deal-person-name { font-size: 0.78rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.deal-person-role { font-size: 0.63rem; color: var(--ink3); }
+.deal-people-arrow { flex-shrink: 0; }
+.deal-people-arrow svg { width: 14px; height: 14px; stroke: var(--ink3); fill: none; stroke-width: 2; stroke-linecap: round; display: block; }
+
+/* ══════════════════════════════════ PLATFORM SERVICES */
+.service-card {
+  border: 1.5px solid var(--border); border-radius: 16px; overflow: hidden;
+  cursor: pointer; margin-bottom: 10px; background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.service-card:last-child { margin-bottom: 0; }
+.service-card:hover { border-color: var(--forest-mid); }
+.service-card.selected { border-color: var(--forest); box-shadow: 0 0 0 3px rgba(28,107,69,0.1); }
+.service-card-top { display: flex; align-items: flex-start; gap: 11px; padding: 13px 14px; }
+.service-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.service-icon svg { width: 16px; height: 16px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.service-icon.green { background: var(--forest-pale); }
+.service-icon.green svg { stroke: var(--forest); }
+.service-info { flex: 1; min-width: 0; }
+.service-name  { font-size: 0.84rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.service-desc  { font-size: 0.7rem; color: var(--ink3); line-height: 1.5; }
+.service-features { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.service-feat { font-size: 0.6rem; font-weight: 600; color: var(--forest); background: var(--forest-pale); padding: 2px 7px; border-radius: 100px; }
+.service-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+.service-price { font-family: 'Clash Display', sans-serif; font-size: 0.9rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.service-price-sub { font-size: 0.58rem; color: var(--ink3); font-weight: 400; }
+.service-checkbox {
+  width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; background: var(--white);
+}
+.service-card.selected .service-checkbox { background: var(--forest); border-color: var(--forest); }
+.service-checkbox svg { width: 10px; height: 10px; stroke: #fff; fill: none; stroke-width: 3; stroke-linecap: round; display: none; }
+.service-card.selected .service-checkbox svg { display: block; }
+.service-pay-bar {
+  display: none; padding: 10px 14px;
+  border-top: 1px solid var(--border); background: var(--forest-pale);
+  align-items: center; justify-content: space-between; gap: 10px;
+}
+.service-card.selected .service-pay-bar { display: flex; }
+.service-pay-info { font-size: 0.72rem; color: var(--forest); font-weight: 600; }
+.service-pay-btn {
+  padding: 7px 16px; background: var(--forest); color: #fff;
+  border: none; border-radius: 100px; cursor: pointer;
+  font-family: inherit; font-size: 0.72rem; font-weight: 700;
+  display: flex; align-items: center; gap: 5px; transition: background 0.16s; white-space: nowrap;
+}
+.service-pay-btn:hover { background: var(--forest2); }
+.service-pay-btn svg { width: 11px; height: 11px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.service-pay-btn.paid { background: rgba(28,107,69,0.12); color: var(--forest); pointer-events: none; border: 1px solid rgba(28,107,69,0.2); }
+.service-pay-btn.paid svg { stroke: var(--forest); }
+
+/* ══════════════════════════════════ DEAL TERMS */
+.deal-terms { display: flex; flex-direction: column; }
+.deal-term {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 0; border-bottom: 1px solid var(--border);
+}
+.deal-term:last-child { border-bottom: none; }
+.deal-term-lbl { font-size: 0.8rem; color: var(--ink3); font-weight: 500; }
+.deal-term-val { font-size: 0.86rem; font-weight: 700; color: var(--ink); }
+.deal-term-val.green { color: var(--forest); }
+.deal-term-edit { display: flex; align-items: center; gap: 7px; }
+.deal-term-input {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 9px; padding: 6px 11px;
+  font-family: 'Clash Display', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--ink);
+  width: 120px; text-align: right; outline: none; transition: border-color 0.2s, background 0.2s;
+}
+.deal-term-input:focus { border-color: var(--forest); background: var(--white); }
+.deal-term-unit { font-size: 0.76rem; color: var(--ink3); }
+
+/* ══════════════════════════════════ MOVING PACKAGES */
+.pkg-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.pkg-card {
+  border: 1.5px solid var(--border); border-radius: 14px; padding: 14px 12px 12px;
+  cursor: pointer; position: relative; transition: all 0.18s; text-align: center; background: var(--white);
+}
+.pkg-card:hover { border-color: var(--amber); background: var(--amber-pale); }
+.pkg-card.selected { border-color: var(--amber); background: var(--amber-pale); box-shadow: 0 0 0 3px rgba(232,160,32,0.14); }
+.pkg-radio {
+  position: absolute; top: 10px; right: 10px;
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--border); background: var(--white); transition: all 0.18s;
+}
+.pkg-card.selected .pkg-radio { border-color: var(--amber); background: var(--amber); }
+.pkg-radio::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: #fff; display: none; }
+.pkg-card.selected .pkg-radio::after { display: block; }
+.pkg-icon  { font-size: 1.4rem; margin-bottom: 6px; }
+.pkg-name  { font-size: 0.8rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.pkg-items { font-size: 0.64rem; color: var(--ink3); line-height: 1.6; }
+.pkg-price { margin-top: 8px; font-family: 'Clash Display', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--amber); }
+.pkg-explore {
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  margin-top: 10px; font-size: 0.73rem; font-weight: 600; color: var(--forest);
+  text-decoration: none; padding: 9px;
+  border: 1.5px dashed rgba(28,107,69,0.22); border-radius: 12px; transition: all 0.16s;
+}
+.pkg-explore:hover { border-color: var(--forest); background: var(--forest-pale); }
+.pkg-explore svg { width: 11px; height: 11px; stroke: var(--forest); fill: none; stroke-width: 2.5; stroke-linecap: round; }
+.pkg-pay-bar {
+  display: none; margin-top: 12px; padding: 11px 14px;
+  background: var(--amber-pale); border: 1px solid rgba(232,160,32,0.22);
+  border-radius: 12px; align-items: center; justify-content: space-between; gap: 10px;
+}
+.pkg-pay-bar.show { display: flex; }
+.pkg-pay-info { font-size: 0.75rem; color: #7A4800; font-weight: 600; }
+.pkg-pay-btn {
+  padding: 8px 18px; background: var(--amber); color: var(--ink);
+  border: none; border-radius: 100px; cursor: pointer;
+  font-family: inherit; font-size: 0.73rem; font-weight: 700;
+  display: flex; align-items: center; gap: 5px; transition: all 0.15s; white-space: nowrap;
+  box-shadow: 0 2px 10px rgba(232,160,32,0.28);
+}
+.pkg-pay-btn:hover { background: #f0b030; }
+.pkg-pay-btn.paid  { background: rgba(232,160,32,0.2); color: #7A4800; pointer-events: none; box-shadow: none; }
+.pkg-pay-btn svg   { width: 11px; height: 11px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ══════════════════════════════════ STICKY FINALIZE BAR */
+.deal-finalize-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(253,250,245,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border); padding: 12px 36px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+.deal-finalize-inner { max-width: 1160px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+.deal-finalize-total { flex: 1; }
+.deal-finalize-label { font-size: 0.62rem; color: var(--ink3); font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+.deal-finalize-amount { font-family: 'Clash Display', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; margin: 1px 0; }
+.deal-finalize-sub { font-size: 0.68rem; color: var(--ink3); }
+.deal-finalize-btn {
+  padding: 14px 34px; background: var(--forest); color: #fff;
+  border: none; border-radius: 13px; cursor: pointer;
+  font-family: 'Clash Display', sans-serif; font-size: 0.95rem; font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+  transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 4px 20px rgba(28,107,69,0.28); white-space: nowrap;
+}
+.deal-finalize-btn:hover { background: var(--forest2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(28,107,69,0.36); }
+.deal-finalize-btn svg { width: 16px; height: 16px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ══════════════════════════════════ SUCCESS */
+.deal-success { display: none; }
+.deal-success.show { display: block; }
+.success-hero {
+  background: linear-gradient(135deg, var(--forest) 0%, #1e7a4e 100%);
+  padding: 52px 24px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.success-hero::before { content:''; position:absolute; top:-60px; right:-40px; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.07); pointer-events:none; }
+.success-ring { position: relative; width: 82px; height: 82px; margin: 0 auto 22px; z-index: 1; }
+.success-ring::before { content:''; position:absolute; inset:5px; background:rgba(255,255,255,0.15); border-radius:50%; }
+.success-ring svg.ring  { position:absolute; inset:0; transform:rotate(-90deg); }
+.success-ring svg.ring circle { fill:none; stroke:#fff; stroke-width:3; stroke-dasharray:220; stroke-dashoffset:220; stroke-linecap:round; }
+.success-ring svg.ring circle.animating { animation: ring-draw 0.7s 0.1s cubic-bezier(0.4,0,0.2,1) forwards; }
+@keyframes ring-draw { to { stroke-dashoffset: 0; } }
+.success-ring svg.check { position:absolute; inset:0; opacity:0; }
+.success-ring svg.check.animating { animation: check-pop 0.3s 0.72s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes check-pop { from{opacity:0;transform:scale(0.5);} to{opacity:1;transform:scale(1);} }
+.success-title {
+  font-family: 'Clash Display', sans-serif; font-size: 1.65rem; font-weight: 700; color: #fff; letter-spacing: -0.03em;
+  margin-bottom: 8px; opacity: 0; transform: translateY(10px); position: relative; z-index: 1;
+}
+.success-title.animating { animation: fadeup 0.4s 0.9s ease forwards; }
+.success-sub {
+  font-size: 0.85rem; color: rgba(255,255,255,0.65); line-height: 1.65; max-width: 320px; margin: 0 auto;
+  opacity: 0; transform: translateY(8px); position: relative; z-index: 1;
+}
+.success-sub.animating { animation: fadeup 0.4s 1.05s ease forwards; }
+@keyframes fadeup { to { opacity:1; transform:translateY(0); } }
+.success-body { max-width: 640px; margin: 0 auto; padding: 28px 24px 110px; display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.deal-ref {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--forest-pale); color: var(--forest);
+  border-radius: 100px; padding: 5px 16px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.05em;
+}
+.summary-card {
+  width: 100%; background: var(--white); border: 1px solid var(--border);
+  border-radius: 18px; overflow: hidden; opacity: 0; transform: translateY(12px);
+}
+.summary-card.animating { animation: fadeup 0.4s ease forwards; }
+.summary-card-head {
+  display: flex; align-items: center; gap: 10px; padding: 12px 16px;
+  border-bottom: 1px solid var(--border); background: var(--bg2);
+}
+.summary-card-head svg { width: 14px; height: 14px; stroke: var(--forest); fill: none; stroke-width: 2; stroke-linecap: round; flex-shrink: 0; }
+.summary-card-title { font-size: 0.82rem; font-weight: 700; color: var(--ink); }
+.summary-card-body  { padding: 12px 16px; }
+.summary-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+.summary-row:last-child { border-bottom: none; }
+.summary-row-lbl { color: var(--ink3); }
+.summary-row-val { font-weight: 700; color: var(--ink); }
+.summary-row-val.green { color: var(--forest); }
+.summary-row.total { padding-top: 12px; }
+.summary-row.total .summary-row-lbl { font-weight: 700; color: var(--ink); font-size: 0.88rem; }
+.summary-row.total .summary-row-val { font-family: 'Clash Display', sans-serif; font-size: 1.05rem; color: var(--forest); }
+.summary-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.summary-chip { display: flex; align-items: center; gap: 5px; padding: 4px 11px; border-radius: 100px; font-size: 0.7rem; font-weight: 600; background: var(--forest-pale); color: var(--forest); border: 1px solid rgba(28,107,69,0.18); }
+.summary-chip svg { width: 9px; height: 9px; stroke: var(--forest); fill: none; stroke-width: 2.5; }
+.success-bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: rgba(253,250,245,0.98); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); padding: 12px 24px; padding-bottom: max(12px, env(safe-area-inset-bottom)); display: none; }
+.success-bar.show { display: block; }
+.success-bar-inner { max-width: 640px; margin: 0 auto; }
+.success-home-btn { width: 100%; padding: 14px; background: var(--forest); color: #fff; border: none; border-radius: 13px; cursor: pointer; font-family: 'Clash Display', sans-serif; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.18s; box-shadow: 0 4px 20px rgba(28,107,69,0.26); }
+.success-home-btn:hover { background: var(--forest2); }
+.success-home-btn svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ══════════════════════════════════ TABLET ≤1023px */
+@media (max-width: 1023px) {
+  .deal-page { padding: 24px 24px 140px; }
+  .deal-columns { grid-template-columns: 1fr; gap: 16px; }
+  .deal-prop-img-wrap { height: 220px; }
+}
+
+/* ══════════════════════════════════ MOBILE ≤640px */
+@media (max-width: 640px) {
+  .deal-topbar   { padding: 0 16px; height: 52px; }
+  .deal-progress { padding: 9px 16px; }
+  .dp-label      { display: none; }
+  .dp-line       { margin: 0 4px; }
+  .deal-page     { padding: 16px 14px 130px; }
+  .deal-columns  { gap: 12px; }
+  .deal-prop-img-wrap { height: 180px; }
+  .deal-prop-title    { font-size: 0.95rem; }
+  .deal-people        { flex-direction: column; gap: 6px; }
+  .deal-people-arrow  { transform: rotate(90deg); }
+  .pkg-grid           { grid-template-columns: 1fr; gap: 8px; }
+  .deal-finalize-bar  { padding: 10px 16px; padding-bottom: max(10px, env(safe-area-inset-bottom)); }
+  .deal-finalize-inner{ gap: 12px; }
+  .deal-finalize-btn  { padding: 12px 20px; font-size: 0.86rem; }
+  .success-hero  { padding: 40px 16px 32px; }
+  .success-body  { padding: 18px 14px 100px; }
+}

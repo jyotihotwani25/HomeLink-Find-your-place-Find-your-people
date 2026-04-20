@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HomeLink — Page Title Here</title>
+
+  <!-- ✅ SHARED CSS — keep these on every page -->
+  <link rel="stylesheet" href="../css/global.css"/>
+  <link rel="stylesheet" href="../css/navbar.css"/>
+  <link rel="stylesheet" href="../css/footer.css"/>
+  <link rel="stylesheet" href="../css/components.css"/>
+
+  <!-- ✅ PAGE-SPECIFIC CSS — create one per page if needed -->
+  <!-- <link rel="stylesheet" href="../css/pages/PAGENAME.css"/> -->
+
+  <style>
+    /* Page-specific styles can also go here directly
+       if the page is simple and doesn't need a separate file */
+  </style>
+</head>
+<body>
+
+  <!-- ============================
+    NAVBAR
+    Copy from components/navbar.html
+    Change hrefs: use "../" prefix since this is inside /pages/
+    e.g.  href="../index.html"
+         href="search.html"  (same folder)
+  ============================= -->
+
+
+  <!-- ============================
+    PAGE CONTENT
+    Your sections go here
+  ============================= -->
+  <main class="page-body">
+
+    <!-- SECTION EXAMPLE -->
+    <section style="padding: 80px 0;">
+      <div class="container">
+        <div class="sec-tag" data-r>Section Label</div>
+        <h2 class="sec-h" data-r>Section Heading</h2>
+        <!-- content -->
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================
+    FOOTER
+    Copy from components/footer.html
+    Change hrefs to use "../" prefix
+  ============================= -->
+
+
+  <!-- ✅ SHARED JS — always at bottom -->
+  <script src="../js/data/properties.js"></script>
+  <script src="../js/main.js"></script>
+
+  <!-- PAGE-SPECIFIC JS -->
+  <!-- <script src="../js/PAGENAME.js"></script> -->
+
+</body>
+</html>

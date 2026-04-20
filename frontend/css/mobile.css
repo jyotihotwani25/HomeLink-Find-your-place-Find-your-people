@@ -1,0 +1,110 @@
+/* ============================================================
+   HOMELINK — mobile.css
+   PURPOSE: Responsive overrides for PUBLIC pages only.
+   - index.html (landing page)
+   - signin.html / signup.html (auth pages)
+
+   Dashboard responsive rules live in dashboard.css.
+   Search hero responsive rules live in search-hero.css.
+   Card responsive rules live in global.css.
+
+   Load LAST on every page.
+   ============================================================ */
+
+
+/* ═══════════════════════════════════════════
+   TABLET  ≤ 1024px
+═══════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+}
+
+
+/* ═══════════════════════════════════════════
+   MOBILE  ≤ 768px
+═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── GLOBAL ── */
+  .container { padding: 0 16px; }
+
+  /* ── LANDING: HERO ── */
+  .hero           { padding-top: 68px; overflow-x: hidden; }
+  .hero-right     { display: none; }
+  .hero-left      { padding: 44px 16px 52px; }
+  .hero-h1        { font-size: clamp(2rem, 7vw, 2.8rem); }
+  .hero-p         { font-size: 0.88rem; max-width: 100%; }
+  .hero-btns      { flex-wrap: wrap; gap: 10px; }
+  .hero-btns .btn { flex: 1; min-width: 140px; justify-content: center; }
+
+  /* ── LANDING: SEARCH BAR ── */
+  .listings-search {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .ls-chips {
+    display: flex !important;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: 6px;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+  }
+  .ls-chips::-webkit-scrollbar { display: none; }
+  .sc           { flex-shrink: 0; }
+  .s-input-wrap { display: flex; flex: 1; gap: 8px; align-items: center; min-width: 0; }
+  .s-field      { flex: 1; min-width: 0; }
+
+  /* ── LANDING: BENTO ── */
+  .bento    { grid-template-columns: 1fr; margin-top: 28px; }
+  .bc.tall  { grid-row: span 1; }
+
+  /* ── LANDING: ROOMMATE SECTION ── */
+  .rm-wrap    { grid-template-columns: 1fr; gap: 32px; }
+  .rm-visual  { max-width: 420px; margin: 0 auto; }
+  .rmc-tl     { left: 0; }
+  .rmc-br     { right: 0; }
+
+  /* ── LANDING: CTA ── */
+  .cta-inner      { padding: 48px 16px; }
+  .cta-h          { font-size: clamp(1.8rem, 6vw, 2.6rem); }
+  .cta-btns       { flex-direction: column; gap: 10px; }
+  .cta-btns .btn  { width: 100%; justify-content: center; }
+
+  /* ── LANDING: FOOTER ── */
+  .foot-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+  footer     { padding: 44px 0 24px; }
+
+  /* ── AUTH: SIGNUP ── */
+  .page      { grid-template-columns: 1fr !important; }
+  .left      { display: none !important; }
+  .right     { padding: 80px 24px 24px !important; height: auto !important; min-height: 100vh; overflow-y: auto !important; }
+  .right-top { top: 22px; right: 22px; }
+  .form-wrap { max-width: 100% !important; }
+  .role-row  { gap: 6px; }
+  .rb-desc   { display: none; }
+
+  /* ── AUTH: SIGNIN ── */
+  .panel      { padding: 16px; align-items: flex-end; }
+  .card       { max-width: 100% !important; padding: 36px 24px !important; border-radius: 22px; }
+  .bg-caption { display: none; }
+  .site-logo  { top: 20px; left: 20px; }
+  .top-right  { top: 22px; right: 20px; }
+}
+
+
+/* ═══════════════════════════════════════════
+   SMALL MOBILE  ≤ 480px
+═══════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .container      { padding: 0 14px; }
+  .hero-h1        { font-size: 2rem; }
+  .hero-btns .btn { font-size: 0.82rem; padding: 12px 18px; }
+  .foot-grid      { grid-template-columns: 1fr; gap: 20px; }
+  .foot-bottom    { flex-direction: column; text-align: center; gap: 10px; }
+  .card           { padding: 28px 18px !important; border-radius: 18px; }
+  .card-h         { font-size: 1.7rem; }
+  .right          { padding: 68px 16px 16px !important; }
+}

@@ -1,0 +1,48 @@
+<!-- ============================================
+  HOMELINK — NAVBAR COMPONENT
+  Copy-paste this block into every page.
+  Adjust href paths based on folder depth:
+    Root pages (index.html):  href="pages/search.html"
+    Inside /pages/:           href="search.html" or href="../index.html"
+  ============================================ -->
+
+<!-- Mobile Menu -->
+<div class="mob-menu" id="mob">
+  <a href="#features" onclick="cM()">Features</a>
+  <a href="#listings" onclick="cM()">Listings</a>
+  <a href="#roommates" onclick="cM()">Roommates</a>
+  <a href="#cta" onclick="cM()">Get Started</a>
+  <div class="mob-btns">
+    <a href="pages/signin.html" class="btn btn-outline btn-sm">Sign in</a>
+    <a href="pages/signup.html" class="btn btn-forest btn-sm">Get started →</a>
+  </div>
+</div>
+
+<!-- Navbar -->
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <span class="logo-mark">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+              fill="rgba(255,255,255,0.25)" stroke="#fff" stroke-width="1.8"/>
+        <circle cx="12" cy="9" r="2.8" fill="#fff"/>
+      </svg>
+    </span>
+    HomeLink
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="pages/search.html">Listings</a></li>
+    <li><a href="index.html#roommates">Roommates</a></li>
+  </ul>
+
+  <div class="nav-r">
+    <a href="pages/signin.html" class="btn-nav btn-nav-ghost">Sign in</a>
+    <a href="pages/signup.html" class="btn btn-forest btn-sm">Get started →</a>
+  </div>
+
+  <button class="burger" onclick="tM()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>

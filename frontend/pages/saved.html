@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeLink — Saved Properties</title>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/components.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/footer.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<style>
+
+/* ═══════════════════════════════════
+   SAVED PAGE — SPECIFIC STYLES
+═══════════════════════════════════ */
+
+/* ── FILTER / SORT BAR ── */
+.sv-bar {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 22px; flex-wrap: wrap;
+}
+.sv-tabs { display: flex; gap: 6px; flex: 1; flex-wrap: wrap; }
+.sv-tab {
+  padding: 8px 16px; border-radius: 100px;
+  font-size: 0.77rem; font-weight: 600;
+  color: var(--ink2); background: var(--white);
+  border: 1.5px solid var(--border);
+  cursor: pointer; transition: all 0.18s; font-family: inherit;
+  white-space: nowrap;
+}
+.sv-tab:hover { border-color: var(--forest); color: var(--forest); }
+.sv-tab.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+.sv-sort {
+  appearance: none; -webkit-appearance: none;
+  padding: 8px 30px 8px 12px; border-radius: 100px;
+  border: 1.5px solid var(--border); background: var(--white);
+  font-size: 0.75rem; font-weight: 600; color: var(--ink2);
+  font-family: inherit; cursor: pointer; flex-shrink: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239A8E7E' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+}
+.sv-sort:focus { outline: none; border-color: var(--forest); }
+
+/* ── COUNT / RESULT BAR ── */
+.sv-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 18px; gap: 10px;
+}
+.sv-count { font-size: 0.82rem; color: var(--ink2); }
+.sv-count strong { color: var(--ink); font-weight: 700; }
+.sv-clear-all {
+  font-size: 0.75rem; font-weight: 700; color: var(--coral);
+  background: none; border: none; cursor: pointer; font-family: inherit;
+}
+.sv-clear-all:hover { text-decoration: underline; }
+
+/* ── PROPERTY CARD OVERRIDE — saved variant adds unsave button ── */
+/* Uses standard .pgrid + .pc from global.css + buildPropertyCard from main.js */
+/* We override .pc-fav to show filled heart (saved state) and add unsave on mobile */
+
+/* Force all saved cards to show filled heart */
+.saved-grid .pc-fav svg { stroke: var(--coral); fill: var(--coral); }
+.saved-grid .pc-fav:hover svg { opacity: 0.7; }
+
+/* Remove confirmation tooltip */
+.unsave-confirm {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: #fff;
+  padding: 9px 18px; border-radius: 100px;
+  font-size: 0.76rem; font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: var(--shadow-md); z-index: 600;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.2s; white-space: nowrap;
+}
+.unsave-confirm.show { opacity: 1; pointer-events: all; }
+.uc-undo { color: var(--amber); font-weight: 700; cursor: pointer; background: none; border: none; font-family: inherit; font-size: 0.76rem; padding: 0; }
+
+/* ── EMPTY STATE ── */
+.sv-empty {
+  padding: 72px 24px; text-align: center;
+  background: var(--white); border: 1.5px dashed var(--border);
+  border-radius: 22px;
+}
+.sv-empty svg { width: 52px; height: 52px; stroke: var(--border); fill: none; stroke-width: 1.5; margin: 0 auto 16px; display: block; }
+.sv-empty-t { font-size: 1rem; font-weight: 700; color: var(--ink2); margin-bottom: 7px; }
+.sv-empty-s { font-size: 0.82rem; color: var(--ink3); margin-bottom: 20px; line-height: 1.6; }
+.sv-empty-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 11px 26px; background: var(--forest); color: #fff;
+  border: none; border-radius: 100px; cursor: pointer;
+  font-family: inherit; font-size: 0.82rem; font-weight: 700;
+  transition: background 0.16s;
+}
+.sv-empty-btn:hover { background: var(--forest2); }
+.sv-empty-btn svg { width: 14px; height: 14px; stroke: #fff; fill: none; stroke-width: 2.5; stroke-linecap: round; }
+
+/* ── COLLECTION CARD  (alternate view: list) ── */
+.sv-list-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  display: flex; align-items: center; gap: 0;
+  cursor: pointer; transition: box-shadow 0.22s, transform 0.22s, border-color 0.22s;
+  margin-bottom: 10px;
+}
+.sv-list-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: rgba(28,107,69,0.18); }
+.sv-list-img { width: 110px; height: 80px; flex-shrink: 0; overflow: hidden; }
+.sv-list-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+.sv-list-card:hover .sv-list-img img { transform: scale(1.05); }
+.sv-list-body { flex: 1; padding: 12px 16px; min-width: 0; }
+.sv-list-price { font-family: 'Clash Display', sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+.sv-list-price small { font-size: 0.62rem; font-weight: 400; color: var(--ink3); font-family: 'Plus Jakarta Sans', sans-serif; }
+.sv-list-name { font-size: 0.8rem; font-weight: 600; color: var(--ink); margin: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sv-list-loc  { font-size: 0.68rem; color: var(--ink3); display: flex; align-items: center; gap: 3px; }
+.sv-list-loc svg { width: 9px; height: 9px; stroke: var(--ink3); fill: none; stroke-width: 2; flex-shrink: 0; }
+.sv-list-badge { padding: 2px 7px; border-radius: 100px; font-size: 0.55rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 3px; display: inline-block; }
+.sv-list-badge.rent { background: var(--ink); color: #fff; }
+.sv-list-badge.buy  { background: var(--forest); color: #fff; }
+.sv-list-badge.pg   { background: var(--amber); color: var(--ink); }
+.sv-list-actions { flex-shrink: 0; padding: 0 14px; display: flex; flex-direction: column; gap: 7px; align-items: center; }
+.sv-la-btn {
+  width: 34px; height: 34px; border-radius: 9px; border: 1.5px solid var(--border);
+  background: var(--white); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.16s;
+}
+.sv-la-btn svg { width: 14px; height: 14px; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.sv-la-btn.unsave svg { stroke: var(--coral); fill: var(--coral); }
+.sv-la-btn.unsave:hover { background: var(--coral-pale); border-color: var(--coral); }
+.sv-la-btn.visit svg { stroke: var(--forest); }
+.sv-la-btn.visit:hover { background: var(--forest-pale); border-color: var(--forest); }
+
+/* View toggle */
+.sv-view-toggle { display: flex; gap: 5px; }
+.sv-vt {
+  width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border);
+  background: var(--white); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.16s;
+}
+.sv-vt svg { width: 14px; height: 14px; stroke: var(--ink3); fill: none; stroke-width: 2; stroke-linecap: round; }
+.sv-vt.on { background: var(--ink); border-color: var(--ink); }
+.sv-vt.on svg { stroke: #fff; }
+
+/* ── FOOTER ── */
+footer { background: var(--ink); padding: 56px 0 28px; margin-top: 56px; }
+.ft-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 40px; max-width: 1240px; margin: 0 auto; padding: 0 28px; margin-bottom: 40px; }
+.ft-brand-n { font-family: 'Clash Display', sans-serif; font-size: 1.15rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.ft-brand-d { font-size: 0.8rem; color: rgba(255,255,255,0.3); line-height: 1.7; max-width: 230px; }
+.ft-col h5 { font-size: 0.63rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 14px; }
+.ft-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+.ft-col ul a { font-size: 0.79rem; color: rgba(255,255,255,0.35); transition: color 0.18s; }
+.ft-col ul a:hover { color: #fff; }
+.ft-btm { max-width: 1240px; margin: 0 auto; padding: 20px 28px 0; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.ft-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+.ft-socs { display: flex; gap: 7px; }
+.ft-soc { width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.3); font-size: 0.65rem; font-weight: 700; transition: all 0.18s; text-decoration: none; }
+.ft-soc:hover { background: #fff; color: var(--ink); border-color: #fff; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sv-bar { gap: 6px; }
+  .sv-sort { display: none; } /* sort moves inline below */
+  .sv-list-img { width: 88px; height: 68px; }
+  .sv-list-body { padding: 10px 12px; }
+  .sv-list-price { font-size: 0.88rem; }
+  .ft-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+@media (max-width: 480px) {
+  .sv-tabs { gap: 4px; }
+  .sv-tab  { padding: 7px 12px; font-size: 0.72rem; }
+  .sv-list-img { width: 80px; height: 64px; }
+  .ft-grid { grid-template-columns: 1fr; }
+  .ft-btm  { flex-direction: column; text-align: center; }
+}
+</style>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni" href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="visits.html" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr" id="visit-bdg">1</span></a>
+    <a class="ni" href="brokers.html" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni act" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+</span><span class="ni-lbl">Saved</span><span class="nbdg gr" id="sv-badge">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">User · Ahmedabad</div></div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+
+<!-- ══════════ MAIN ══════════ -->
+<div class="main" id="main">
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="top-l">
+      <div class="top-l-sub">Your wishlist</div>
+      <h1 class="top-l-h">Saved <span>Properties</span></h1>
+    </div>
+    <div class="top-r">
+      <div class="nw">
+        <div class="t-ic" onclick="toggleNotif()" title="Notifications">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="dot g" id="notif-dot"></span>
+        </div>
+        <div class="ndrop" id="ndrop">
+          <div class="ndrop-hd"><span class="ndrop-hd-t">Notifications</span><span class="ndrop-clr" onclick="markAllRead()">Mark all read</span></div>
+          <div id="notif-list">
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 g"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div><div><div class="nt"><strong>Price drop</strong> — 2BHK at Vastrapur now ₹25,000/month</div><div class="nts">1 hour ago</div></div></div>
+            <div class="nitem" onclick="readNotif(this)"><div class="ni-ic2 a"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div><div class="nt"><strong>New similar listing</strong> — 3BHK in Bodakdev matches your saved preferences</div><div class="nts">3 hours ago</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="t-ic" title="Messages" onclick="openChat()">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="dot r" id="chat-dot"></span>
+      </div>
+      <button class="t-post" onclick="location.href='explore.html'">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <span>Explore More</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="pg">
+
+    <!-- FILTER + SORT BAR -->
+    <div class="sv-bar" data-r>
+      <div class="sv-tabs">
+        <button class="sv-tab on" onclick="filterSaved('all',this)">All</button>
+        <button class="sv-tab" onclick="filterSaved('rent',this)">Rent</button>
+        <button class="sv-tab" onclick="filterSaved('buy',this)">Buy</button>
+        <button class="sv-tab" onclick="filterSaved('pg',this)">PG</button>
+      </div>
+      <select class="sv-sort" id="sort-sel" onchange="render()">
+        <option value="saved">Recently Saved</option>
+        <option value="price-asc">Price ↑</option>
+        <option value="price-desc">Price ↓</option>
+        <option value="rating">Top Rated</option>
+      </select>
+      <div class="sv-view-toggle">
+        <button class="sv-vt on" id="vt-grid" title="Grid view" onclick="setView('grid')">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="sv-vt" id="vt-list" title="List view" onclick="setView('list')">
+          <svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- RESULT COUNT -->
+    <div class="sv-meta" data-r>
+      <div class="sv-count"><strong id="sv-count">0</strong> saved properties</div>
+      <button class="sv-clear-all" id="clear-all-btn" onclick="clearAll()">Clear all</button>
+    </div>
+
+    <!-- GRID -->
+    <div id="sv-grid" data-r data-d="1"></div>
+
+  </div><!-- /pg -->
+
+  <footer>
+    <div class="ft-grid">
+      <div>
+        <div class="ft-brand-n"><div class="logo-m" style="width:28px;height:28px;border-radius:8px;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg></div>HomeLink</div>
+        <div class="ft-brand-d">One platform for property discovery, roommates, PGs, brokers and relocation — all in Ahmedabad.</div>
+      </div>
+      <div class="ft-col"><h5>Explore</h5><ul><li><a href="#">Buy Property</a></li><li><a href="#">Rent a Home</a></li><li><a href="#">PG &amp; Hostels</a></li></ul></div>
+      <div class="ft-col"><h5>Services</h5><ul><li><a href="brokers.html">Find a Broker</a></li><li><a href="post-property.html">Post Property</a></li><li><a href="#">Rental Agreement</a></li></ul></div>
+      <div class="ft-col"><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Contact</a></li></ul></div>
+    </div>
+    <div class="ft-btm">
+      <span class="ft-copy">&copy; 2025 HomeLink Technologies. All rights reserved.</span>
+      <div class="ft-socs"><a class="ft-soc" href="#">in</a><a class="ft-soc" href="#">tw</a><a class="ft-soc" href="#">ig</a></div>
+    </div>
+  </footer>
+</div><!-- /main -->
+
+<!-- UNSAVE TOAST -->
+<div class="unsave-confirm" id="unsave-toast">
+  <span id="toast-msg">Removed from saved</span>
+  <button class="uc-undo" onclick="undoUnsave()">Undo</button>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mob-nav">
+  <div class="mob-nw">
+    <div class="mn-i" onclick="location.href='home.html'">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      Home
+    </div>
+    <div class="mn-i" onclick="location.href='explore.html'">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg>
+      Explore
+    </div>
+    <div class="mn-fab" onclick="location.href='post-property.html'" style="width:50px;height:50px;border-radius:50%;background:var(--forest);display:flex;align-items:center;justify-content:center;margin-top:-16px;box-shadow:0 4px 18px rgba(28,107,69,0.4);cursor:pointer;border:3px solid var(--bg);flex-shrink:0;">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </div>
+    <div class="mn-i on" onclick="location.href='saved.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+      Saved
+    </div>
+    <div class="mn-i" onclick="location.href='profile.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+  </div>
+</nav>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/main.js"></script>
+<script>
+/* ══════════════════════════════════════
+   SAVED STATE  — stored in localStorage
+══════════════════════════════════════ */
+/* Default saved IDs — seeded from session user or fallback */
+var DEFAULT_SAVED = [1, 3, 8]; /* property IDs */
+
+function getSavedIds() {
+  try {
+    var raw = localStorage.getItem('hl_saved');
+    return raw ? JSON.parse(raw) : DEFAULT_SAVED.slice();
+  } catch(e) { return DEFAULT_SAVED.slice(); }
+}
+
+function setSavedIds(ids) {
+  try { localStorage.setItem('hl_saved', JSON.stringify(ids)); } catch(e) {}
+}
+
+var savedIds   = getSavedIds();
+var activeFilter = 'all';
+var activeView   = 'grid';
+var lastRemoved  = null;   /* for undo */
+var toastTimer   = null;
+
+/* ══════════════════════════════════════
+   FILTER & SORT
+══════════════════════════════════════ */
+function filterSaved(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.sv-tab').forEach(function(t){ t.classList.remove('on'); });
+  if (btn) btn.classList.add('on');
+  render();
+}
+
+function setView(v) {
+  activeView = v;
+  document.getElementById('vt-grid').classList.toggle('on', v === 'grid');
+  document.getElementById('vt-list').classList.toggle('on', v === 'list');
+  render();
+}
+
+/* ══════════════════════════════════════
+   RENDER
+══════════════════════════════════════ */
+function render() {
+  var sort  = document.getElementById('sort-sel').value;
+  var ids   = savedIds.slice();
+
+  /* Get matching properties */
+  var list = ids
+    .map(function(id){ return properties.find(function(p){ return p.id === id; }); })
+    .filter(Boolean);
+
+  /* Category filter */
+  if (activeFilter !== 'all') {
+    list = list.filter(function(p){ return p.category === activeFilter; });
+  }
+
+  /* Sort */
+  if (sort === 'price-asc')  list.sort(function(a,b){ return a.priceNum - b.priceNum; });
+  if (sort === 'price-desc') list.sort(function(a,b){ return b.priceNum - a.priceNum; });
+  if (sort === 'rating')     list.sort(function(a,b){ return b.rating - a.rating; });
+
+  /* Update badge + count */
+  var total = savedIds.length;
+  document.getElementById('sv-count').textContent  = list.length;
+  document.getElementById('sv-badge').textContent  = total;
+  document.getElementById('clear-all-btn').style.display = total ? '' : 'none';
+
+  var container = document.getElementById('sv-grid');
+
+  if (!list.length) {
+    container.innerHTML =
+      '<div class="sv-empty">' +
+        '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>' +
+        '<div class="sv-empty-t">' + (activeFilter !== 'all' ? 'No ' + activeFilter + ' properties saved' : 'Nothing saved yet') + '</div>' +
+        '<div class="sv-empty-s">Tap the heart icon on any property to save it here for later.</div>' +
+        '<button class="sv-empty-btn" onclick="location.href=\'explore.html\'"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>Browse properties</button>' +
+      '</div>';
+    return;
+  }
+
+  if (activeView === 'list') {
+    container.innerHTML = list.map(buildListCard).join('');
+  } else {
+    container.className = 'pgrid saved-grid';
+    container.innerHTML = list.map(function(p){
+      return buildPropertyCard(p);
+    }).join('');
+    /* Override fav buttons to show filled + unsave behaviour */
+    container.querySelectorAll('.pc-fav').forEach(function(btn, i) {
+      btn.classList.add('sv');
+      btn.setAttribute('onclick', 'event.stopPropagation();unsaveById(' + list[i].id + ')');
+    });
+  }
+}
+
+/* ── List card builder ── */
+function buildListCard(p) {
+  var period = p.period || '';
+  var badge  = '<span class="sv-list-badge ' + p.category + '">' + (p.category === 'pg' ? 'PG' : p.category === 'buy' ? 'Buy' : 'Rent') + '</span>';
+  return '<div class="sv-list-card" onclick="location.href=\'property.html?id=' + p.id + '\'">' +
+    '<div class="sv-list-img"><img src="' + p.thumbnail + '" alt="' + p.title + '" loading="lazy"/></div>' +
+    '<div class="sv-list-body">' +
+      badge +
+      '<div class="sv-list-price">' + p.price + '<small>' + period + '</small></div>' +
+      '<div class="sv-list-name">' + p.title + '</div>' +
+      '<div class="sv-list-loc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>' + p.locality + '</div>' +
+    '</div>' +
+    '<div class="sv-list-actions">' +
+      '<button class="sv-la-btn unsave" title="Remove from saved" onclick="event.stopPropagation();unsaveById(' + p.id + ')"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>' +
+      '<button class="sv-la-btn visit" title="Schedule visit" onclick="event.stopPropagation();location.href=\'schedule-visit.html?id=' + p.id + '\'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ── Unsave / undo ── */
+function unsaveById(id) {
+  lastRemoved = id;
+  savedIds = savedIds.filter(function(x){ return x !== id; });
+  setSavedIds(savedIds);
+  render();
+  showToastMsg('Removed from saved');
+}
+
+function clearAll() {
+  if (!confirm('Remove all ' + savedIds.length + ' saved properties?')) return;
+  savedIds = [];
+  setSavedIds(savedIds);
+  render();
+}
+
+function undoUnsave() {
+  if (!lastRemoved) return;
+  savedIds.unshift(lastRemoved);
+  setSavedIds(savedIds);
+  lastRemoved = null;
+  hideToast();
+  render();
+}
+
+function showToastMsg(msg) {
+  var toast = document.getElementById('unsave-toast');
+  document.getElementById('toast-msg').textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 4000);
+}
+
+function hideToast() {
+  document.getElementById('unsave-toast').classList.remove('show');
+}
+
+function openChat() { document.getElementById('chat-dot').classList.add('gone'); }
+
+render();
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>

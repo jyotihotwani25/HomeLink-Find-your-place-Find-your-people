@@ -1,0 +1,100 @@
+/* ============================================================
+   HOMELINK — SEARCH HERO CSS
+   The green gradient search bar used on dashboard pages.
+   Shared by: home.html, explore.html, any future page.
+   Import after dashboard.css.
+   ============================================================ */
+
+.search-hero {
+  background: linear-gradient(135deg, var(--forest) 0%, #1e7a4e 100%);
+  border-radius: 20px;
+  padding: 24px 28px 26px;
+  margin-bottom: 32px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 6px 32px rgba(28,107,69,0.22);
+}
+.search-hero::before {
+  content: ''; position: absolute;
+  top: -60px; right: -40px;
+  width: 240px; height: 240px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  pointer-events: none;
+}
+
+.sh-hero-label {
+  font-size: 0.66rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55); margin-bottom: 7px;
+}
+.sh-hero-title {
+  font-family: 'Clash Display', sans-serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 700;
+  color: #fff; letter-spacing: -0.025em; margin-bottom: 18px;
+}
+
+/* Bar: chips + input + button in a flex row */
+.sh-hero-bar {
+  display: flex; align-items: center; gap: 10px;
+  position: relative; z-index: 1;
+}
+
+/* Category chips */
+.sh-chips    { display: flex; gap: 6px; flex-shrink: 0; }
+.sh-chip {
+  padding: 8px 16px; border-radius: 100px;
+  font-size: 0.76rem; font-weight: 600;
+  background: rgba(255,255,255,0.14); color: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(255,255,255,0.2);
+  cursor: pointer; transition: all 0.18s; font-family: inherit;
+}
+.sh-chip:hover { background: rgba(255,255,255,0.22); color: #fff; }
+.sh-chip.on    { background: #fff; color: var(--forest); border-color: #fff; }
+
+/* Wrapper that keeps input + button on one line (needed for mobile stacking) */
+.sh-input-wrap {
+  display: flex; flex: 1; gap: 10px;
+  align-items: center; min-width: 0;
+}
+
+/* Search input */
+.sh-input {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.15);
+  border: 1.5px solid rgba(255,255,255,0.22);
+  border-radius: 100px; padding: 11px 20px;
+  transition: background 0.2s, border-color 0.2s;
+}
+.sh-input:focus-within { background: rgba(255,255,255,0.22); border-color: rgba(255,255,255,0.5); }
+.sh-input svg   { width: 15px; height: 15px; color: rgba(255,255,255,0.55); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+.sh-input input { flex: 1; background: none; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.875rem; color: #fff; }
+.sh-input input::placeholder { color: rgba(255,255,255,0.45); }
+
+/* Search button */
+.sh-btn {
+  padding: 11px 22px; border-radius: 100px;
+  background: #fff; color: var(--forest);
+  font-size: 0.82rem; font-weight: 700;
+  border: none; cursor: pointer; font-family: inherit;
+  display: flex; align-items: center; gap: 6px;
+  transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+.sh-btn svg    { width: 13px; height: 13px; stroke: var(--forest); fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.sh-btn:hover  { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,0,0,0.18); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .search-hero   { padding: 16px 14px 18px; border-radius: 14px; margin-bottom: 20px; }
+  .sh-hero-label { display: none; }
+  .sh-hero-title { display: none; } /* removed to save space per design decision */
+  .sh-hero-bar   { flex-direction: column; gap: 8px; }
+  .sh-chips      { width: 100%; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+  .sh-chips::-webkit-scrollbar { display: none; }
+  .sh-chip       { flex-shrink: 0; padding: 6px 13px; font-size: 0.72rem; }
+  .sh-input-wrap { width: 100%; }
+  .sh-input      { padding: 10px 14px; }
+  .sh-input input { font-size: 0.82rem; }
+  .sh-btn        { padding: 10px 18px; font-size: 0.78rem; }
+  .sh-btn svg    { display: none; }
+}

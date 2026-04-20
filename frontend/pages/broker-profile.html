@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Broker Profile — HomeLink</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="../css/global.css"/>
+<link rel="stylesheet" href="../css/dashboard.css"/>
+<link rel="stylesheet" href="../css/profile.css"/>
+<link rel="stylesheet" href="../css/brokers.css"/>
+<link rel="stylesheet" href="../css/mobile.css"/>
+<link rel="stylesheet" href="../css/chatbot-widget.css"/>
+</head>
+<body>
+
+<aside class="sb" id="sb">
+  <div class="sb-head">
+    <div class="logo-m">
+      <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="rgba(255,255,255,0.18)"/><circle cx="12" cy="9" r="2.5" fill="#fff" stroke="none"/></svg>
+    </div>
+    <span class="logo-t">HomeLink</span>
+    <button class="sb-close" onclick="toggleSb()" aria-label="Close menu" style="display:none;margin-left:auto;width:32px;height:32px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="var(--ink2)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <button class="sb-tog" id="sb-tog" onclick="toggleSb()" aria-label="Toggle sidebar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <nav class="sb-nav">
+    <a class="ni act" href="home.html" data-t="Home"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></span><span class="ni-lbl">Home</span></a>
+    <a class="ni" href="explore.html" data-t="Explore"><span class="ni-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24,7.76 14.12,14.12 7.76,16.24 9.88,9.88"/></svg></span><span class="ni-lbl">Explore</span></a>
+    <a class="ni" href="post-property.html" data-t="Post Property"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></span><span class="ni-lbl">Post Property</span></a>
+    <a class="ni" href="visits.html" data-t="My Visits"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1" fill="currentColor"/><circle cx="12" cy="15" r="1" fill="currentColor"/></svg></span><span class="ni-lbl">My Visits</span><span class="nbdg gr" id="visit-bdg">1</span></a>
+    <a class="ni" href="brokers.html" data-t="Brokers"><span class="ni-ic"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="12"/><path d="M2 12h9m11 0h-4"/></svg></span><span class="ni-lbl">Brokers</span></a>
+    <a class="ni prem" href="roommates.html" data-t="Roommate Matching"><span class="ni-ic"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span><span class="ni-lbl">Roommate Matching</span><span class="nbdg am">✦</span></a>
+    <a class="ni" href="saved.html" data-t="Saved"><span class="ni-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+</span><span class="ni-lbl">Saved</span><span class="nbdg gr">3</span></a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-usr" onclick="location.href='profile.html'" style="cursor:pointer;" title="View profile">
+      <img class="u-av" src="https://i.pravatar.cc/80?img=12" alt="" id="sb-av"/>
+      <div class="u-inf"><div class="u-nm" id="sb-nm">Aarav Shah</div><div class="u-rl" id="sb-rl">User · Ahmedabad</div></div>
+    </div>
+  </div>
+</aside>
+<div id="sb-overlay" onclick="toggleSb()"></div>
+<div class="main" id="main">
+
+  <!-- Topbar with back -->
+  <header class="top">
+    <button class="mob-hamburger" onclick="toggleSb()" aria-label="Open menu">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="brokers.html" class="bp-back" title="Back to Brokers">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </a>
+    <div class="top-greet" style="flex:1;">
+      <div class="top-greet-sub">Broker Profile</div>
+      <h1 class="top-greet-h" id="topbar-name">Loading…</h1>
+    </div>
+  </header>
+
+  <div class="pg" style="padding:0;">
+
+    <!-- HERO — reuses .prof-hero from profile.css -->
+    <div class="prof-hero">
+      <div class="prof-hero-inner">
+
+        <!-- Avatar (no edit button — read only) -->
+        <div class="prof-av-wrap">
+          <img class="prof-av" id="bp-avatar" src="" alt="Broker"/>
+        </div>
+
+        <!-- Identity -->
+        <div class="prof-identity">
+          <div class="prof-name" id="bp-name">—</div>
+          <!-- Rating row (broker-specific, inside hero) -->
+          <div class="bp-rating-row">
+            <span class="bp-stars-big" id="bp-stars">★★★★★</span>
+            <span class="bp-rating-num" id="bp-rating">—</span>
+            <span class="bp-rating-sub" id="bp-reviews">— reviews</span>
+          </div>
+          <div class="prof-pills" id="bp-pills"></div>
+        </div>
+
+      </div>
+
+      <!-- Tagline in hero bio panel -->
+      <div class="prof-hero-bio">
+        <div class="prof-hero-bio-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        </div>
+        <span id="bp-tagline">Loading…</span>
+      </div>
+
+      <!-- 4-stat quick row -->
+      <div class="bp-hero-stats">
+        <div class="bp-stat"><div class="bp-stat-num" id="stat-exp">—</div><div class="bp-stat-lbl">Yrs Exp</div></div>
+        <div class="bp-stat"><div class="bp-stat-num" id="stat-deals">—</div><div class="bp-stat-lbl">Deals</div></div>
+        <div class="bp-stat"><div class="bp-stat-num" id="stat-days">—</div><div class="bp-stat-lbl">Avg Days</div></div>
+        <div class="bp-stat"><div class="bp-stat-num" id="stat-success">—</div><div class="bp-stat-lbl">Success</div></div>
+      </div>
+    </div>
+
+    <!-- TABS — reuses .prof-tabs -->
+    <div class="prof-tabs">
+      <button class="prof-tab active" data-tab="about"   onclick="switchTab('about')">About</button>
+      <button class="prof-tab"        data-tab="services" onclick="switchTab('services')">Services</button>
+      <button class="prof-tab"        data-tab="reviews"  onclick="switchTab('reviews')">Reviews</button>
+    </div>
+
+    <!-- BODY — reuses .prof-body + .prof-grid + .prof-card -->
+    <div class="prof-body">
+
+      <!-- ── ABOUT TAB ── -->
+      <div id="tab-about">
+        <div class="prof-grid">
+
+          <!-- LEFT: bio + areas + languages -->
+          <div>
+            <div class="prof-card">
+              <div class="prof-card-head"><span class="prof-card-label">About</span></div>
+              <div class="prof-card-body">
+                <p style="font-size:0.875rem;color:var(--ink2);line-height:1.7;" id="bp-bio">—</p>
+              </div>
+            </div>
+
+            <div class="prof-card">
+              <div class="prof-card-head"><span class="prof-card-label">Areas Covered</span></div>
+              <div class="prof-card-body">
+                <div class="bp-areas" id="bp-areas"></div>
+              </div>
+            </div>
+
+            <div class="prof-card">
+              <div class="prof-card-head"><span class="prof-card-label">Languages</span></div>
+              <div class="prof-card-body"><div class="bp-langs" id="bp-langs"></div></div>
+            </div>
+          </div>
+
+          <!-- RIGHT: charges + trust + activity -->
+          <div>
+            <!-- Charges card -->
+            <div class="prof-card">
+              <div class="prof-card-head"><span class="prof-card-label">Transparent Pricing</span></div>
+              <div class="prof-card-body">
+                <div class="bp-charge-card">
+                  <div class="bp-charge-main" id="bp-charge-main">—</div>
+                  <div class="bp-charge-detail" id="bp-charge-detail">—</div>
+                  <div class="bp-charge-buying" id="bp-charge-buying" style="display:none;"></div>
+                </div>
+                <div style="margin-top:12px;font-size:0.74rem;color:var(--ink3);display:flex;align-items:flex-start;gap:7px;line-height:1.5;">
+                  <svg viewBox="0 0 24 24" width="13" height="13" style="stroke:var(--forest);fill:none;stroke-width:2;stroke-linecap:round;flex-shrink:0;margin-top:2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  Fee payable only on successful deal. No upfront charges.
+                </div>
+              </div>
+            </div>
+
+            <!-- Trust & badges -->
+            <div class="prof-card">
+              <div class="prof-card-head"><span class="prof-card-label">Trust &amp; Credentials</span></div>
+              <div class="prof-card-body">
+                <div class="bp-badges" id="bp-badges"></div>
+                <!-- Success rate bar -->
+                <div class="bp-stat-bar-wrap" id="bp-rate-wrap">
+                  <div class="bp-stat-bar-row">
+                    <span class="bp-stat-bar-lbl">Deal Success Rate</span>
+                    <span class="bp-stat-bar-val" id="bp-rate-val">—</span>
+                  </div>
+                  <div class="bp-stat-bar-track">
+                    <div class="bp-stat-bar-fill" id="bp-rate-fill" style="width:0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Response info -->
+            <div class="prof-card">
+              <div class="prof-card-head"><span class="prof-card-label">Availability</span></div>
+              <div class="prof-card-body">
+                <div class="prof-row"><span class="prof-row-key">Status</span><span class="prof-row-val green" id="bp-avail">—</span></div>
+                <div class="prof-row"><span class="prof-row-key">Response</span><span class="prof-row-val" id="bp-response">—</span></div>
+                <div class="prof-row"><span class="prof-row-key">Experience</span><span class="prof-row-val" id="bp-exp-row">—</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SERVICES TAB ── -->
+      <div id="tab-services" style="display:none;">
+        <div style="max-width:560px;">
+          <div class="prof-card">
+            <div class="prof-card-head"><span class="prof-card-label">Services Offered</span></div>
+            <div class="prof-card-body"><div class="bp-services" id="bp-services"></div></div>
+          </div>
+          <div class="prof-card" style="margin-top:16px;">
+            <div class="prof-card-head"><span class="prof-card-label">What to Expect</span></div>
+            <div class="prof-card-body">
+              <div class="prof-row"><span class="prof-row-key">Avg. Closing</span><span class="prof-row-val green" id="svc-days">— days</span></div>
+              <div class="prof-row"><span class="prof-row-key">Deals Closed</span><span class="prof-row-val" id="svc-deals">—</span></div>
+              <div class="prof-row"><span class="prof-row-key">Success Rate</span><span class="prof-row-val green" id="svc-rate">—</span></div>
+              <div class="prof-row"><span class="prof-row-key">Approach</span><span class="prof-row-val" style="font-size:0.78rem;">Request-based. No cold calls, no spam.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── REVIEWS TAB ── -->
+      <div id="tab-reviews" style="display:none;">
+        <div style="max-width:560px;">
+          <!-- Summary banner -->
+          <div style="background:var(--forest-pale);border:1.5px solid rgba(28,107,69,0.18);border-radius:18px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;gap:16px;">
+            <div style="text-align:center;flex-shrink:0;">
+              <div style="font-family:'Clash Display',sans-serif;font-size:2rem;font-weight:700;color:var(--forest);line-height:1;" id="rev-num">—</div>
+              <div style="font-size:0.65rem;color:var(--forest);font-weight:700;margin-top:2px;">out of 5</div>
+            </div>
+            <div>
+              <div style="font-size:0.9rem;font-weight:700;color:var(--ink);" id="rev-stars">★★★★★</div>
+              <div style="font-size:0.76rem;color:var(--ink3);margin-top:3px;" id="rev-count">— verified reviews</div>
+            </div>
+          </div>
+          <div id="reviews-list"></div>
+        </div>
+      </div>
+
+    </div><!-- /prof-body -->
+  </div><!-- /pg -->
+</div><!-- /main -->
+
+
+<!-- STICKY ACTION BAR -->
+<div class="bp-action-bar">
+  <div class="bp-action-inner">
+    <div class="bp-action-info">
+      <div class="bp-action-charge" id="act-charge">—</div>
+      <div class="bp-action-label" id="act-label">Payable on successful deal only</div>
+    </div>
+    <button class="bp-req-btn" id="bp-req-btn" onclick="sendRequest()">
+      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      Request Chat
+    </button>
+  </div>
+</div>
+
+<!-- REQUEST SENT MODAL -->
+<div class="req-modal-overlay" id="req-modal">
+  <div class="req-modal">
+    <div class="req-modal-ring">✓</div>
+    <div class="req-modal-title">Request Sent!</div>
+    <div class="req-modal-sub" id="req-modal-msg">Your chat request has been sent. The broker will respond soon.</div>
+    <button class="req-modal-close" onclick="closeModal()">Got it</button>
+  </div>
+</div>
+
+<script src="../js/data/properties.js"></script>
+<script src="../js/data/users.js"></script>
+<script src="../js/data/brokers.js"></script>
+<script src="../js/main.js"></script>
+<script>
+var B = null;
+var reqSent = false;
+
+(function boot() {
+  var id = parseInt(new URLSearchParams(location.search).get('id'));
+  B = typeof getBrokerById==='function' ? getBrokerById(id) : null;
+  if (!B) { document.getElementById('bp-name').textContent = 'Broker not found'; return; }
+  populate();
+  restoreUser();
+  var u = typeof getCurrentUser==='function' ? getCurrentUser() : null;
+  if (u) {
+    document.getElementById('sb-av').src = u.avatar || '';
+    document.getElementById('sb-nm').textContent = u.name || 'User';
+    document.getElementById('sb-rl').textContent = (u.city||'HomeLink') + (u.occupation ? ' · '+u.occupation.split(',')[0] : '');
+  }
+})();
+
+function populate() {
+  var b = B;
+  document.title = b.name + ' — Broker · HomeLink';
+  document.getElementById('topbar-name').textContent = b.name;
+
+  /* Hero */
+  document.getElementById('bp-avatar').src = b.avatar || '';
+  document.getElementById('bp-name').textContent = b.name;
+  document.getElementById('bp-tagline').textContent = b.tagline;
+
+  /* Rating */
+  var stars = '★'.repeat(Math.round(b.rating)) + '☆'.repeat(5-Math.round(b.rating));
+  document.getElementById('bp-stars').textContent = stars;
+  document.getElementById('bp-rating').textContent = b.rating;
+  document.getElementById('bp-reviews').textContent = b.reviewCount + ' reviews';
+
+  /* Pills */
+  var pills = '<span class="prof-pill city">'+h(b.specialty)+'</span>';
+  if (b.isPremium) pills += '<span class="prof-pill premium"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Premium</span>';
+  if (b.isVerified) pills += '<span class="prof-pill xp">✓ Verified</span>';
+  if (b.isTopBroker) pills += '<span class="prof-pill premium">⭐ Top Broker</span>';
+  document.getElementById('bp-pills').innerHTML = pills;
+
+  /* Stats */
+  document.getElementById('stat-exp').textContent     = b.experience + 'y';
+  document.getElementById('stat-deals').textContent   = b.stats.deals;
+  document.getElementById('stat-days').textContent    = b.stats.avgDays;
+  document.getElementById('stat-success').textContent = b.stats.successRate + '%';
+
+  /* About tab */
+  document.getElementById('bp-bio').textContent = b.bio;
+  document.getElementById('bp-areas').innerHTML = b.areas.map(function(a){ return '<span class="bp-area">'+h(a)+'</span>'; }).join('');
+  document.getElementById('bp-langs').innerHTML = b.languages.map(function(l){ return '<span class="bp-lang">'+h(l)+'</span>'; }).join('');
+
+  /* Charges */
+  document.getElementById('bp-charge-main').textContent   = b.charges.label;
+  document.getElementById('bp-charge-detail').textContent = b.charges.detail;
+  if (b.charges.buying && b.charges.buying !== 'Not offered') {
+    var buyEl = document.getElementById('bp-charge-buying');
+    buyEl.textContent = b.charges.buying;
+    buyEl.style.display = '';
+  }
+
+  /* Trust badges */
+  var badgesHtml = b.trustBadges.map(function(t){
+    return '<span class="bp-badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'+h(t)+'</span>';
+  }).join('');
+  if (!b.trustBadges.length) badgesHtml = '<span style="font-size:0.8rem;color:var(--ink3);">Verification in progress</span>';
+  document.getElementById('bp-badges').innerHTML = badgesHtml;
+
+  /* Success rate bar */
+  var rateEl = document.getElementById('bp-rate-val');
+  var fillEl = document.getElementById('bp-rate-fill');
+  rateEl.textContent = b.stats.successRate + '%';
+  setTimeout(function(){ fillEl.style.width = b.stats.successRate + '%'; }, 150);
+
+  /* Availability */
+  document.getElementById('bp-avail').textContent    = b.availability;
+  document.getElementById('bp-response').textContent = b.responseTime;
+  document.getElementById('bp-exp-row').textContent  = b.experience + ' years in Ahmedabad real estate';
+
+  /* Services tab */
+  document.getElementById('bp-services').innerHTML = b.services.map(function(s){ return '<span class="bp-service">'+h(s)+'</span>'; }).join('');
+  document.getElementById('svc-days').textContent  = b.stats.avgDays + ' days';
+  document.getElementById('svc-deals').textContent = b.stats.deals + ' deals closed';
+  document.getElementById('svc-rate').textContent  = b.stats.successRate + '%';
+
+  /* Reviews tab */
+  document.getElementById('rev-num').textContent   = b.rating;
+  document.getElementById('rev-stars').textContent = '★'.repeat(Math.round(b.rating)) + '☆'.repeat(5-Math.round(b.rating));
+  document.getElementById('rev-count').textContent = b.reviewCount + ' verified reviews';
+  document.getElementById('reviews-list').innerHTML = b.reviews.map(function(r){
+    return '<div class="bp-review">' +
+      '<div class="bp-review-head">' +
+        '<span class="bp-review-name">'+h(r.name)+'</span>' +
+        '<span class="bp-review-stars">'+'★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</span>' +
+      '</div>' +
+      '<div class="bp-review-text">'+h(r.text)+'</div>' +
+    '</div>';
+  }).join('');
+
+  /* Action bar */
+  document.getElementById('act-charge').textContent = b.charges.label;
+  document.getElementById('act-label').textContent  = b.responseTime;
+}
+
+/* ── Tab switching ── */
+function switchTab(tab) {
+  document.querySelectorAll('.prof-tab').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===tab); });
+  ['about','services','reviews'].forEach(function(t){
+    document.getElementById('tab-'+t).style.display = t===tab ? '' : 'none';
+  });
+}
+
+/* ── Send request ── */
+function sendRequest() {
+  if (reqSent) return;
+  reqSent = true;
+  var btn = document.getElementById('bp-req-btn');
+  btn.className = 'bp-req-btn sent';
+  btn.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Request Sent';
+  var msg = B ? 'Your chat request has been sent to ' + B.name + '. They usually respond ' + B.responseTime.toLowerCase() + '.' : 'Request sent.';
+  document.getElementById('req-modal-msg').textContent = msg;
+  document.getElementById('req-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('req-modal').classList.remove('open');
+}
+document.getElementById('req-modal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+
+function h(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+</script>
+<script src="../js/chatbot-widget.js"></script>
+</body>
+</html>
