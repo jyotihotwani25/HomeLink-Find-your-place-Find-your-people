@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-from knowledge_base.homelink_knowledge import KNOWLEDGE_BASE
+from backend.knowledge_base.homelink_knowledge import KNOWLEDGE_BASE
 
 
 class GroqRAGChatbot:

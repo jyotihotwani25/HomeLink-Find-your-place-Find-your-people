@@ -3,7 +3,7 @@ HomeLink — Chatbot API Routes
 Groq-powered RAG chatbot endpoints
 """
 from flask import Blueprint, request, jsonify
-from services.chatbot import get_chatbot
+from backend.services.chatbot import get_chatbot
 
 chatbot_bp = Blueprint('chatbot', __name__, url_prefix='/api/chatbot')
 
